@@ -484,6 +484,7 @@ function genSocial(t, ids, hard) {
     return { pub: { K, hints, max: K * 30 }, secret: { vals } };
   }
   if (t === 'rps') return { pub: {}, secret: {} };
+  if (t === 'telepathy') { const [text, ...options] = pick(TELE); return { pub: { text, options: shuffle(options) }, secret: {} }; }
   return { pub: {}, secret: {} };
 }
 
@@ -492,7 +493,7 @@ const GEN2 = {
   hap: genHap, lights: genLights, sudoku: genSudoku, nono: genNono, match: genMatch, knights: genKnights, zebra: genZebra, coin: genCoin, paths: genPaths,
   simon: genSimon, count: genCount, odd: genOdd, schulte: genSchulte,
 };
-for (const t of ['beauty', 'minority', 'lowest', 'split', 'indian', 'goods', 'auction', 'rps']) GEN2[t] = (hard, ids) => genSocial(t, ids, hard);
+for (const t of ['beauty', 'minority', 'lowest', 'split', 'indian', 'goods', 'auction', 'rps', 'telepathy']) GEN2[t] = (hard, ids) => genSocial(t, ids, hard);
 
 const NORM2 = {
   hap: (raw, pub) => {
@@ -514,6 +515,7 @@ const NORM2 = {
   goods: (raw, pub) => intIn(raw, 0, pub.C),
   auction: (raw, pub) => intIn(raw, 0, pub.max),
   rps: (raw) => intIn(raw, 0, 2),
+  telepathy: (raw, pub) => intIn(raw, 0, pub.options.length - 1),
 };
 const JUDGE2 = {
   hap: (v, s, pub) => (pub.mode === 'count' ? v === s.n : isHap(pub.tiles, v[0], v[1], v[2])),

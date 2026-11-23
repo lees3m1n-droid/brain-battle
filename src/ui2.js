@@ -270,6 +270,12 @@ const UI2 = {
       <div class="small dim center">낙찰자 점수 = 가치 − 입찰가 (마이너스가 될 수도!) · 나머지 0점</div>` + u.numInput(`입찰가 (0~${q.max})`);
     u.bindInput((v) => { const n = Number(v); return Number.isInteger(n) && n >= 0 && n <= q.max ? n : (toast(`0~${q.max} 정수`), undefined); });
   },
+  telepathy(u) {
+    const q = u.q;
+    u.stage.innerHTML = u.qbox(esc(q.text), '나와 같은 답을 고른 사람 1명당 +25 · 남들은 뭘 고를까?') +
+      `<div class="opts" style="grid-template-columns:1fr 1fr">${q.options.map((o, i) => `<button class="opt tp" style="text-align:center;padding:22px 8px" data-i="${i}">${esc(o)}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;
+    pickConfirm(u, '.tp');
+  },
   rps(u) {
     u.stage.innerHTML = u.qbox('단체 가위바위보!', '두 가지만 나오면 승부 · 한 가지나 세 가지 다 나오면 무승부') +
       `<div class="three">${['✊', '✌️', '🖐️'].map((x, i) => `<button data-i="${i}">${x}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;

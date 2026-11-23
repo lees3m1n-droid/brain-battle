@@ -1,4 +1,4 @@
-# 혼자 연습 모드를 GitHub Pages에 올린다 (멀티플레이는 server.js를 띄운 주소에서만 동작)
+# public/index.html 을 GitHub Pages에 올린다
 name: Deploy to GitHub Pages
 on:
   push: { branches: [main] }

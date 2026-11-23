@@ -4,7 +4,8 @@ const pick = (a) => a[rand(a.length)];
 const between = (lo, hi) => lo + rand(hi - lo + 1);
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
-// limit: 타임어택 제한시간(초). speed: 속도만 겨루는 게임 → 시간 무제한 모드에서는 빠진다. social: 2명 이상.
+// limit: 타임어택 제한시간(초). speed: 속도만 겨루는 게임 → 시간 무제한 모드에서는 빠진다.
+// style: turn(기기를 돌려 가며 각자 자기 문제) · secret(각자 몰래 선택 후 공개) · party(다같이 한 화면). minP: 최소 인원
 const TYPES = {
   // 수학
   calc24:   { emoji: '🧮', label: '숫자 조합',     cat: '수학', limit: 45, desc: '네 숫자를 한 번씩만 써서 목표 숫자를 만들어라' },
@@ -24,7 +25,6 @@ const TYPES = {
   // 퍼즐
   liar:     { emoji: '🕵️', label: '범인 추리',     cat: '퍼즐', limit: 45, desc: '진실을 말한 사람 수로 범인을 가려내라' },
   code:     { emoji: '🔐', label: '금고 털기',     cat: '퍼즐', limit: 60, desc: '숫자야구 단서로 비밀번호를 찾아라' },
-  hap:      { emoji: '🃏', label: '결! 합!',       cat: '퍼즐', limit: 45, desc: '더 지니어스의 그 게임. 모양·색·배경이 각각 모두 같거나 모두 다른 3장이 「합」' },
   lights:   { emoji: '💡', label: '불 끄기',       cat: '퍼즐', limit: 60, desc: '누르면 자신과 상하좌우가 뒤집힌다. 모든 불을 꺼라' },
   sudoku:   { emoji: '🔢', label: '미니 스도쿠',   cat: '퍼즐', limit: 75, desc: '가로·세로·굵은 칸마다 숫자가 한 번씩' },
   nono:     { emoji: '⬛', label: '노노그램',      cat: '퍼즐', limit: 80, desc: '숫자 단서대로 칸을 칠해 그림을 완성하라' },
@@ -50,7 +50,20 @@ const TYPES = {
   goods:    { emoji: '💰', label: '공공재 게임',   cat: '심리', limit: 20, social: true, desc: '공동 금고에 낸 돈은 불어나서 모두에게 똑같이 나뉜다. 얼마나 낼까?' },
   auction:  { emoji: '🔨', label: '블라인드 경매', cat: '심리', limit: 25, social: true, desc: '숨은 숫자들의 합이 상품 가치. 나는 그중 하나만 안다. 최고가 낙찰!' },
   rps:      { emoji: '✊', label: '단체 가위바위보', cat: '심리', limit: 12, social: true, desc: '두 가지만 나오면 승부, 한 가지나 세 가지 다 나오면 무승부' },
+  telepathy:{ emoji: '💞', label: '이심전심',      cat: '심리', limit: 15, social: true, minP: 3, desc: '다른 사람과 같은 답을 고를수록 점수! 남들은 뭘 고를까?' },
+  // 파티 (다같이 한 화면을 둘러싸고)
+  hap:      { emoji: '🃏', label: '결! 합!',       cat: '파티', limit: 150, style: 'party', desc: '더 지니어스의 그 게임. 「합」을 찾으면 버저! 더 없다고 생각되면 「결」! 판이 끝날 때까지 계속된다' },
+  pair:     { emoji: '👯', label: '짝꿍 그림',     cat: '파티', limit: 90, style: 'party', desc: '두 카드에 딱 하나 겹치는 그림이 있다. 먼저 찾은 사람이 버저!' },
+  quiz:     { emoji: '🔔', label: '버저 퀴즈',     cat: '파티', limit: 150, style: 'party', minP: 2, desc: '문제를 보고 아는 사람이 먼저 버저! 틀리면 그 문제는 다시 못 누른다' },
+  reaction: { emoji: '🚦', label: '반응속도',      cat: '파티', limit: 60, style: 'party', minP: 2, speed: true, desc: '화면이 초록색이 되는 순간 자기 버튼을 눌러라. 먼저 누르면 감점!' },
+  nunchi:   { emoji: '🙈', label: '눈치 게임',     cat: '파티', limit: 20, style: 'party', minP: 3, desc: '한 명씩 차례로 버튼! 동시에 누르면 둘 다 탈락, 끝까지 못 누르면 탈락' },
+  updown:   { emoji: '💣', label: '업다운 폭탄',   cat: '파티', limit: 12, style: 'party', minP: 2, desc: '숨은 폭탄 숫자를 피해 차례로 숫자를 부른다. 폭탄을 부르면 펑!' },
+  g369:     { emoji: '👏', label: '369 게임',      cat: '파티', limit: 3, style: 'party', minP: 2, desc: '차례대로 숫자를 세다가 규칙에 걸리면 짝! 규칙과 시작 숫자는 매번 바뀐다' },
+  hilo:     { emoji: '📈', label: '하이 로우',     cat: '파티', limit: 8, style: 'party', desc: '다음 카드가 더 높을까 낮을까? 연속으로 맞힐수록 점수가 쌓인다' },
+  stopwatch:{ emoji: '⏱️', label: '타이밍 스톱',   cat: '파티', limit: 30, style: 'party', desc: '눈 감고도 시간을 셀 수 있을까? 목표 시간에 가장 가깝게 멈춰라' },
+  liarw:    { emoji: '🤥', label: '라이어 게임',   cat: '파티', limit: 120, style: 'party', minP: 3, desc: '모두 같은 제시어를 받지만 라이어만 모른다. 설명을 듣고 라이어를 찾아라' },
 };
+for (const t of Object.values(TYPES)) { if (!t.style) t.style = t.social ? 'secret' : 'turn'; if (!t.minP) t.minP = t.social ? 2 : 1; }
 
 const SABOTAGE = {
   fog:    { emoji: '🌫️', label: '안개',     desc: '다음 문제를 5초간 흐리게' },
@@ -259,7 +272,7 @@ function makeQ(type, ctx) {
   }
 }
 function buildPlan(n, playerCount, mode, cats) {
-  let types = Object.keys(TYPES).filter((t) => (playerCount >= 2 || !TYPES[t].social) && !(mode === 'free' && TYPES[t].speed));
+  let types = Object.keys(TYPES).filter((t) => playerCount >= TYPES[t].minP && !(mode === 'free' && TYPES[t].speed));
   if (cats && cats.length) { const f = types.filter((t) => cats.includes(TYPES[t].cat)); if (f.length) types = f; }
   const plan = [];
   while (plan.length < n) { const bag = shuffle(types); if (plan.length && bag[0] === plan[plan.length - 1]) bag.push(bag.shift()); plan.push(...bag); }

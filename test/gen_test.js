@@ -2,13 +2,13 @@
 const vm = require('vm'), fs = require('fs'), path = require('path');
 const ctx = { Buffer, console, Math, JSON, Set, Map, Number, String, Array, Object, RegExp, Date };
 vm.createContext(ctx);
-for (const f of ['expr.js', 'data.js', 'gen.js', 'gen2.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '../src', f), 'utf8').replace(/^const /gm, 'var '), ctx);
+for (const f of ['expr.js', 'data.js', 'data2.js', 'gen.js', 'gen2.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '../src', f), 'utf8').replace(/^const /gm, 'var '), ctx);
 vm.runInContext(`
 const fail = (m) => { throw new Error(m); };
 const used = new Set(), ids = ['aa', 'bb', 'cc', 'dd'];
 let maxPub = 0, maxType = '';
 const N = Number(globalThis.N || 60);
-for (const t of Object.keys(TYPES)) for (const hard of [false, true]) for (let i = 0; i < N; i++) {
+for (const t of Object.keys(TYPES).filter((x) => TYPES[x].style !== 'party')) for (const hard of [false, true]) for (let i = 0; i < N; i++) {
   const q = makeQ(t, { used, hard, ids });
   if (!q || !q.pub || !q.secret) fail(t + ' no pub');
   const sz = Buffer.byteLength(JSON.stringify(q.pub));
@@ -30,10 +30,7 @@ for (const hard of [false, true]) for (let i = 0; i < 100; i++) { const q = make
 
 // 새 게임 판정기
 for (const hard of [false, true]) for (let i = 0; i < 80; i++) {
-  // 결합
-  let q = GEN2.hap(hard); const haps = allHaps(q.pub.tiles);
-  if (hard) { if (!JUDGE2.hap(haps.length, q.secret, q.pub)) fail('hap count'); }
-  else { if (!JUDGE2.hap(NORM2.hap(haps[0], q.pub), q.secret, q.pub)) fail('hap find'); if (haps.length < 1) fail('hap none'); }
+  let q;
   // 불 끄기: 생성에 쓴 버튼을 다시 누르면 꺼진다 (정답 텍스트에서 복원)
   q = GEN2.lights(hard); const n = q.pub.n;
   const presses = [...q.answerText.matchAll(/(\\d+)행(\\d+)열/g)].map((m) => (m[1] - 1) * n + (m[2] - 1));
@@ -61,6 +58,9 @@ for (const hard of [false, true]) for (let i = 0; i < 80; i++) {
 // 연산자 넣기: 정답 식 통과
 for (let i = 0; i < 50; i++) { const q = GEN2.ops(i % 2 === 0); const ops = q.answerText.split('=')[0].replace(/[0-9 ]/g, '').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'); if (!JUDGE2.ops(NORM2.ops(ops, q.pub), q.secret)) fail('ops ' + q.answerText); }
 
+for (const [c, ws] of Object.entries(LIAR_WORDS)) if (new Set(ws).size !== ws.length || ws.length < 8) fail('liar words ' + c);
+for (const q of TELE) if (q.length < 5 || new Set(q.slice(1)).size !== q.length - 1) fail('tele ' + q[0]);
+if (new Set(PAIR_EMOJI).size !== PAIR_EMOJI.length || PAIR_EMOJI.length < 20) fail('pair emoji');
 const sample = (t, hard) => { const q = makeQ(t, { used: new Set(), hard, ids }); return (q.pub.text || '') + ' ' + (q.pub.lines ? q.pub.lines.join(' | ') : '') + ' → ' + q.answerText; };
 for (const t of ['fruit', 'word', 'knights', 'zebra', 'liar', 'match']) console.log('  ·', t, '어려움:', sample(t, true).slice(0, 220));
 console.log('✅ 생성기 통과:', Object.keys(TYPES).length, '종 × 2난이도,', TRIVIA.length, '상식,', FERMI.length, '어림 · 가장 큰 문제', maxType, maxPub + 'B');
