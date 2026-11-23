@@ -2,7 +2,7 @@
 const fs = require('fs');
 const read = (f) => fs.readFileSync('src/' + f, 'utf8');
 const css = read('style.css');
-const js = ['expr.js', 'data.js', 'gen.js', 'rt.js', 'app.js'].map(read).join('\n');
+const js = ['expr.js', 'data.js', 'gen.js', 'gen2.js', 'rt.js', 'app.js', 'ui2.js', 'main.js'].map(read).join('\n');
 const icon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='32' y='48' font-size='44' text-anchor='middle'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E";
 const html = `<!DOCTYPE html>
 <html lang="ko">

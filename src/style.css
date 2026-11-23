@@ -102,3 +102,76 @@ button.big{padding:18px;font-size:20px}
 @keyframes pulse{50%{opacity:.55}}
 .pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+/* ── 모드 / 대기실 ── */
+.two.mode button{padding:14px 0;font-size:30px;line-height:1.2}
+.two.mode button span{font-size:18px}
+.two.mode button small{display:block;font-size:12px;font-weight:600;color:var(--dim);margin-top:4px}
+.chip.on{background:var(--cyan);color:#10122a;border-color:var(--cyan)}
+.chip.off{opacity:.45;color:var(--txt)}
+button.chip{padding:8px 14px;font-size:15px}
+.modetag{display:inline-block;margin-top:12px;padding:6px 14px;border-radius:999px;font-weight:800;font-size:14px;background:var(--panel2);border:1px solid var(--line)}
+.modetag.free{color:var(--vio);border-color:var(--vio)}
+.modetag.time{color:var(--yel)}
+.timer.free i{background:linear-gradient(90deg,var(--vio),var(--cyan));opacity:.5}
+/* ── 공용 문제 ── */
+.clues{gap:6px}
+.clue{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:700;font-size:16px;line-height:1.4;word-break:keep-all}
+.dgrid{display:grid;gap:5px;max-width:360px;margin:0 auto;width:100%}
+.dgrid span,.pyr span{display:flex;align-items:center;justify-content:center;min-height:46px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:900;font-size:21px;font-variant-numeric:tabular-nums}
+.dgrid span.qm,.pyr span.qm{background:var(--yel);color:#10122a}
+.dgrid span.blk{background:#3a3f6e;color:#3a3f6e}
+.dgrid span.emp,.pyr span.emp{background:#0e1130}
+.pyr{display:flex;flex-direction:column;gap:5px;align-items:center}
+.pyr div{display:flex;gap:5px}
+.pyr span{width:56px;min-height:42px;font-size:18px}
+/* 결합 */
+.hapg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:330px;margin:0 auto;width:100%}
+.hapt{position:relative;padding:4px;background:var(--panel2);border:3px solid var(--line);border-radius:14px}
+.hapt svg{display:block;width:100%}
+.hapt b{position:absolute;top:2px;left:7px;font-size:13px;color:var(--cyan);text-shadow:0 0 3px #000}
+.hapt.sel{border-color:var(--yel);transform:scale(.95)}
+/* 불 끄기 / 순서 기억 */
+.lights .cell.on{background:var(--yel);border-color:#fff3b0;box-shadow:0 0 14px #ffd23f88}
+.simon .cell.pick{background:var(--vio)}
+/* 스도쿠 */
+.sdk{display:grid;gap:0;max-width:360px;margin:0 auto;width:100%;border:3px solid var(--txt);border-radius:8px;overflow:hidden}
+.sdk button{aspect-ratio:1;border-radius:0;padding:0;font-size:24px;background:#0e1130;color:var(--cyan);border:1px solid var(--line)}
+.sdk button.giv{color:var(--txt);background:var(--panel2)}
+.sdk button.sel{background:#203a5c}
+.sdk button.bad{color:var(--pink)}
+.sdk button.bl{border-left:3px solid var(--txt)}
+.sdk button.bt{border-top:3px solid var(--txt)}
+/* 노노그램 */
+.nono{display:grid;gap:2px;justify-content:center;align-items:end}
+.nono .cc{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:800;color:var(--dim);line-height:1.25}
+.nono .cc i{font-style:normal}
+.nono .rc{font-size:13px;font-weight:800;color:var(--dim);text-align:right;padding-right:6px;white-space:nowrap;align-self:center}
+.nono .ok{color:var(--grn)}
+.nono .nc{padding:0;border-radius:5px;background:#0e1130;border:1px solid var(--line);color:var(--dim);font-size:16px}
+.nono .nc.s1{background:var(--cyan);border-color:var(--cyan)}
+/* 성냥개비 */
+.mtc{background:#0e1130;border:1px solid var(--line);border-radius:14px;padding:12px}
+/* 연산자 */
+.opsrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:28px;font-weight:900}
+.opsrow button{width:46px;padding:8px 0;font-size:24px;background:var(--panel2);color:var(--yel);border:2px dashed var(--line)}
+.opsrow button.f{border-style:solid;border-color:var(--cyan);color:var(--txt)}
+.opsrow .tg{color:var(--yel)}
+/* 순간 포착 / 틀린 하나 / 순서대로 */
+.cgrid{display:grid;gap:4px;max-width:360px;margin:0 auto;width:100%}
+.cgrid span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:30px}
+.oddg{display:grid;gap:4px;max-width:380px;margin:0 auto;width:100%}
+.oddg button{aspect-ratio:1;padding:0;font-size:22px;font-weight:700;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px}
+.schulte button{font-size:22px;font-weight:900}
+.schulte button.done2{opacity:.18}
+.oddg button.wrong{background:var(--pink)}
+.nums button.csel{background:var(--yel)}
+/* 인디언 포커 / 가위바위보 */
+.icards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ic{width:74px;background:linear-gradient(160deg,#fff,#dfe3ff);color:#10122a;border-radius:12px;padding:10px 4px;text-align:center;box-shadow:0 4px 14px #0006}
+.ic b{display:block;font-size:34px;line-height:1}
+.ic span{display:block;font-size:12px;font-weight:800;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 2px #fff}
+.ic.me{background:linear-gradient(160deg,#3a2a6e,#20285a);color:var(--txt)}
+.ic.me span{text-shadow:none}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.three button{padding:30px 0;font-size:46px;background:var(--panel2);border:3px solid var(--line)}
+.three button.sel{border-color:var(--yel);background:#2b2a12}

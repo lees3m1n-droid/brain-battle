@@ -13,7 +13,8 @@ let toastT;
 function toast(m) { $toast.textContent = m; $toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => $toast.classList.remove('show'), 2400); }
 const cleanName = (s) => String(s || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 8) || '익명';
 const PALETTE = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff9f1c', '#f15bb5', '#9ef01a', '#00f5d4', '#ff7b00'];
-const INTRO_MS = 4500, REVEAL_MS = 12000, MAX_PLAYERS = 10;
+const INTRO_MS = 4500, REVEAL_MS = 12000, MAX_PLAYERS = 10, FREE_LIM = 20 * 60 * 1000;
+const CATS = ['수학', '상식', '퍼즐', '두뇌', '심리'];
 
 let myId = ss.get('pb:id');
 if (!myId) { myId = Math.random().toString(36).slice(2, 10); ss.set('pb:id', myId); }
@@ -49,7 +50,7 @@ let mine = {}; // 내 입력 (ans, rdy, sab)
 const curK = () => (S ? S.k : -1);
 
 function hostCreate(code, solo) {
-  H = { code, solo, phase: 'lobby', rounds: 8, g: 1, idx: -1, plan: [], type: null, q: null, used: new Set(), pl: new Map(), phaseEnd: 0, res: null, card: null, fin: null, endGo: false };
+  H = { code, solo, phase: 'lobby', rounds: solo ? 12 : 8, mode: 'time', cats: CATS.slice(), g: 1, idx: -1, plan: [], type: null, q: null, used: new Set(), pl: new Map(), phaseEnd: 0, res: null, card: null, fin: null, endGo: false };
   role = solo ? 'solo' : 'host';
   mine = {};
   hostTimer = setInterval(hostTick, 250);
@@ -57,7 +58,7 @@ function hostCreate(code, solo) {
 }
 function newPl(id, n) {
   const used = new Set([...H.pl.values()].map((p) => p.c));
-  return { id, n: cleanName(n), c: PALETTE.find((c) => !used.has(c)) || pick(PALETTE), s: 0, on: true, answer: null, el: 0, lim: 0, ready: false, fx: [], pending: [], stats: { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 } };
+  return { id, n: cleanName(n), c: PALETTE.find((c) => !used.has(c)) || pick(PALETTE), s: 0, on: true, answer: null, gave: false, el: 0, lim: 0, ready: false, fx: [], pending: [], stats: { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 } };
 }
 function collectInputs() {
   const m = new Map();
@@ -72,7 +73,9 @@ function collectInputs() {
   return m;
 }
 const kOf = () => H.g * 1000 + H.idx;
-const baseLim = () => TYPES[H.type].limit * 1000;
+const isFree = () => H.mode === 'free';
+const baseLim = () => (isFree() ? FREE_LIM : TYPES[H.type].limit * 1000);
+const answered = (p) => p.answer !== null || p.gave;
 
 function hostTick() {
   if (!H) return;
@@ -91,12 +94,13 @@ function hostTick() {
   } else if (H.phase === 'play') {
     for (const P of act) {
       const a = inp.get(P.id).ans;
-      if (P.answer === null && a && a.k === k) {
-        const v = normalize(H.type, a.v); const el = Number(a.el);
+      if (P.answer === null && !P.gave && a && a.k === k) {
+        if (a.gu) { P.gave = true; P.el = P.lim; continue; }
+        const v = normalize(H.type, a.v, H.q.pub); const el = Number(a.el);
         if (v !== null && Number.isFinite(el) && el <= P.lim + 1500) { P.answer = v; P.el = Math.max(0, Math.min(el, P.lim)); }
       }
     }
-    if (!H.endGo && act.every((p) => p.answer !== null)) { H.endGo = true; H.phaseEnd = Math.min(H.phaseEnd, now + 700); }
+    if (!H.endGo && act.length && act.every(answered)) { H.endGo = true; H.phaseEnd = Math.min(H.phaseEnd, now + 700); }
     if (now >= H.phaseEnd) resolve();
   } else if (H.phase === 'reveal') {
     for (const P of act) {
@@ -113,75 +117,97 @@ function hostTick() {
 
 function startGame() {
   const n = [...H.pl.values()].filter((p) => p.on).length;
-  H.plan = buildPlan(H.rounds, n); H.idx = -1; H.used = new Set(); H.fin = null;
+  H.plan = buildPlan(H.rounds, n, H.mode, H.cats); H.idx = -1;
+  const dbg = (location.hash.match(/t=([\w,]+)/) || [])[1]; // 개발용: #t=hap,lights 처럼 게임을 고정
+  if (dbg) { const only = dbg.split(',').filter((t) => TYPES[t]); if (only.length) H.plan = H.plan.map((_, i) => only[i % only.length]); } H.used = new Set(); H.fin = null;
   for (const P of H.pl.values()) { P.s = 0; P.stats = { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 }; P.pending = []; }
   nextRound();
 }
 function nextRound() {
   H.idx++;
   if (H.idx >= H.plan.length) return finish();
-  H.type = H.plan[H.idx]; H.q = makeQ(H.type, H.used);
+  H.type = H.plan[H.idx];
+  H.q = makeQ(H.type, { used: H.used, hard: isFree(), ids: [...H.pl.values()].filter((p) => p.on).map((p) => p.id) });
   H.res = null; H.card = null; H.endGo = false;
-  for (const P of H.pl.values()) { P.answer = null; P.el = 0; P.ready = false; P.fx = []; }
+  for (const P of H.pl.values()) { P.answer = null; P.gave = false; P.el = 0; P.ready = false; P.fx = []; }
   H.phase = 'intro'; H.phaseEnd = Date.now() + INTRO_MS;
 }
 function startPlay() {
   const base = baseLim();
-  for (const P of H.pl.values()) { P.fx = P.pending; P.pending = []; P.lim = P.fx.includes('shrink') ? Math.round(base * 0.65) : base; }
+  for (const P of H.pl.values()) { P.fx = P.pending.filter((f) => !(isFree() && f === 'shrink')); P.pending = []; P.lim = P.fx.includes('shrink') ? Math.round(base * 0.65) : base; }
   H.phase = 'play'; H.phaseEnd = Date.now() + base + 900;
 }
 function applySab(P, sab) {
   const T = H.pl.get(String(sab.t)); const kind = String(sab.kind);
-  if (!SABOTAGE[kind] || !T || T === P) return;
+  if (!SABOTAGE[kind] || !T || T === P || (isFree() && SABOTAGE[kind].timeOnly)) return;
   H.card.used = true;
   if (kind === 'steal') { T.s -= 40; P.s += 40; P.stats.steals++; } else T.pending.push(kind);
   H.card.log = `${SABOTAGE[kind].emoji} ${P.n} → ${T.n} : ${SABOTAGE[kind].label}`;
 }
 
-function normalize(t, raw) {
+function normalize(t, raw, q) {
   const int = (v, lo, hi) => { v = Number(v); return Number.isInteger(v) && v >= lo && v <= hi ? v : null; };
   const arr = (v, max, lo, hi) => (Array.isArray(v) && v.length <= max ? v.map((x) => (Number.isFinite(Number(x)) ? Number(x) : null)).filter((x) => x !== null && x >= lo && x <= hi) : null);
   const str = (v, re) => { v = String(v == null ? '' : v).replace(/\s+/g, '').slice(0, 24); return re.test(v) ? v : null; };
+  q = q || {};
+  if (q.ui) return normGeneric(raw, q);
+  if (NORM2[t]) return NORM2[t](raw, q);
   switch (t) {
     case 'calc24': return typeof raw === 'string' && raw.length <= 60 ? raw : null;
-    case 'trivia': case 'liar': return int(raw, 0, 3);
+    case 'trivia': case 'liar': return int(raw, 0, (q.names || q.options || [0, 0, 0, 0]).length - 1);
     case 'fermi': { const v = Number(raw); return Number.isFinite(v) && v > 0 && v < 1e15 ? v : null; }
     case 'sequence': return int(raw, -1e12, 1e12);
-    case 'memory': { const a = arr(raw, 16, 0, 15); return a ? [...new Set(a)].sort((x, y) => x - y) : null; }
-    case 'timeline': { const a = arr(raw, 4, 0, 3); return a && a.length === 4 && new Set(a).size === 4 ? a : null; }
+    case 'memory': { const m = (q.n || 4) ** 2 - 1; const a = arr(raw, m + 1, 0, m); return a ? [...new Set(a)].sort((x, y) => x - y) : null; }
+    case 'timeline': { const n = (q.items || []).length; const a = arr(raw, n, 0, n - 1); return a && a.length === n && new Set(a).size === n ? a : null; }
     case 'mental': return arr(raw, 5, -1e6, 1e6);
     case 'stroop': return arr(raw, 8, -1, 3);
-    case 'code': return str(raw, /^\d{3}$/);
-    case 'digits': return str(raw, /^\d{1,12}$/);
+    case 'code': return str(raw, new RegExp(`^\\d{${q.L || 3}}$`));
+    case 'digits': return str(raw, /^\d{1,14}$/);
     case 'chosung': return str(raw, /^.{1,24}$/);
-    case 'beauty': return int(raw, 0, 100);
+    case 'beauty': return int(raw, 0, q.max || 100);
     case 'minority': case 'split': return int(raw, 0, 1);
-    case 'lowest': return int(raw, 1, 10);
+    case 'lowest': return int(raw, 1, q.max || 10);
   }
   return null;
 }
 function shownOf(t, v) {
   if (v === null) return '—';
   switch (t) {
-    case 'trivia': case 'liar': return ['①', '②', '③', '④'][v];
+    case 'trivia': return ['①', '②', '③', '④'][v];
+    case 'liar': case 'zebra': return (H.q.pub.names || H.q.pub.options)[v];
+    case 'knights': return H.q.pub.names.map((n, i) => (v >> i & 1 ? '😇' : '😈')).join('');
+    case 'coin': return circ(v >> 1) + (H.q.pub.hl ? (v & 1 ? '↓' : '↑') : '');
+    case 'hap': return Array.isArray(v) ? v.map((x) => x + 1).join('-') : `${v}개`;
+    case 'lights': case 'sudoku': case 'nono': return '완성 제출';
+    case 'ops': return [...v].map((o) => ({ '*': '×', '/': '÷', '-': '−' }[o] || o)).join(' ');
+    case 'match': return v.replace(/-/g, '−');
+    case 'simon': return `${v.length}단계`;
+    case 'odd': return `${Math.floor(v / H.q.pub.cols) + 1}행 ${v % H.q.pub.cols + 1}열`;
+    case 'schulte': return `실수 ${v}번`;
+    case 'indian': return v ? '🏳️ 포기' : '⚔️ 승부';
+    case 'rps': return ['✊', '✌️', '🖐️'][v];
+    case 'goods': return `${v}코인`;
+    case 'auction': return `${fmt(v)}원`;
+    case 'minority': return v ? H.q.pub.B : H.q.pub.A;
     case 'memory': return `${v.length}칸`;
     case 'timeline': return '순서 제출';
     case 'mental': case 'stroop': return `${v.length}문항`;
-    case 'minority': return v ? 'B' : 'A';
     case 'split': return v ? '🗡️ 배신' : '🤝 협력';
     case 'calc24': return v.replace(/\*/g, '×').replace(/\//g, '÷').slice(0, 18);
     case 'fermi': return fmt(v);
+    case 'clock': return v + '°';
     default: return String(v).slice(0, 14);
   }
 }
 
 function resolve() {
-  const t = H.type, sec = H.q.secret, P = [...H.pl.values()];
+  const t = H.type, sec = H.q.secret, pub = H.q.pub, P = [...H.pl.values()], free = isFree();
   const ans = P.filter((p) => p.answer !== null);
-  const sp = (p) => (p.answer === null ? 0 : Math.max(0, 1 - p.el / p.lim));
+  const sp = (p) => (p.answer === null || free ? 0 : Math.max(0, 1 - p.el / p.lim));
   const rows = [];
   let answerText = H.q.answerText || '', expl = H.q.expl || '';
-  const row = (p, ok, d, note) => rows.push({ id: p.id, n: p.n, c: p.c, sh: shownOf(t, p.answer), ok: !!ok, d, note: note || '', sp: ok ? sp(p) : 0 });
+  const miss = (p) => (p.gave ? '🏳️ 포기' : p.answer === null ? (free ? '미제출' : '시간 초과') : '');
+  const row = (p, ok, d, note) => rows.push({ id: p.id, n: p.n, c: p.c, sh: p.gave ? '🏳️' : shownOf(t, p.answer), ok: !!ok, d, note: note || '', sp: ok ? sp(p) : 0 });
   const BIN = {
     calc24: (v) => Expr.check(v, sec.nums, sec.target).ok,
     trivia: (v) => v === sec.ans, liar: (v) => v === sec.ans, sequence: (v) => v === sec.ans,
@@ -189,20 +215,25 @@ function resolve() {
     timeline: (v) => v.every((x, i) => x === sec.ans[i]),
     code: (v) => v === sec.ans, digits: (v) => v === sec.ans, chosung: (v) => v === sec.ans,
   };
+  const judge = pub.ui ? (v) => judgeGeneric(v, sec, pub) : JUDGE2[t] && !TYPES[t].social ? (v) => JUDGE2[t](v, sec, pub) : BIN[t];
   const SER = { mental: 1, stroop: 1 };
 
-  if (BIN[t] || SER[t]) {
+  if (judge || SER[t]) {
     const J = new Map();
     for (const p of ans) {
-      if (BIN[t]) J.set(p.id, { ok: BIN[t](p.answer) });
+      if (judge) J.set(p.id, { ok: !!judge(p.answer) });
       else { const a = sec.ans; let c = 0; a.forEach((x, i) => { if (p.answer[i] === x) c++; }); J.set(p.id, { ok: c / a.length >= 0.75, acc: c / a.length, c, n: a.length }); }
     }
     const oks = ans.filter((p) => J.get(p.id).ok).sort((a, b) => a.el - b.el);
     for (const p of P) {
       const j = J.get(p.id); let d, note = '';
-      if (j && j.ok) { d = Math.round((BIN[t] ? 50 + 70 * sp(p) : 30 + 60 * j.acc + 40 * sp(p))); if (p === oks[0] && P.length > 1) { d += 25; note = '⚡ 최속 +25'; } }
-      else { d = 0; note = p.answer === null ? '시간 초과' : '오답'; }
+      if (j && j.ok) {
+        if (free) d = judge ? 100 : Math.round(40 + 70 * j.acc);
+        else d = Math.round(judge ? 50 + 70 * sp(p) : 30 + 60 * j.acc + 40 * sp(p));
+        if (p === oks[0] && P.length > 1) { d += free ? 20 : 25; note = free ? '🥇 첫 정답 +20' : '⚡ 최속 +25'; }
+      } else { d = 0; note = miss(p) || '오답'; }
       if (SER[t] && j) note = `${j.c}/${j.n} 정답` + (note ? ' · ' + note : '');
+      if (t === 'schulte' && j) note = `실수 ${p.answer}번` + (note ? ' · ' + note : '');
       row(p, j && j.ok, d, note);
     }
     if (t === 'calc24') answerText = sec.expr.replace(/\*/g, '×').replace(/\//g, '÷') + ' = ' + sec.target;
@@ -210,35 +241,38 @@ function resolve() {
   } else if (t === 'fermi') {
     let best = Infinity; const E = new Map();
     for (const p of ans) { const e = Math.abs(Math.log(p.answer / sec.value)); E.set(p.id, e); best = Math.min(best, e); }
+    const tol = free ? 0.18 : 0.25;
     for (const p of P) {
-      const e = E.get(p.id), ok = e !== undefined && e <= 0.25; let d, note = '';
-      if (ok) { d = Math.round(40 + 80 * (1 - e / 0.25)); if (e === best) { d += 25; note = '🎯 최근접 +25'; } }
-      else { d = 0; note = e === undefined ? '시간 초과' : `${Math.round((Math.exp(e) - 1) * 100)}% 빗나감`; }
+      const e = E.get(p.id), ok = e !== undefined && e <= tol; let d, note = '';
+      if (ok) { d = Math.round(40 + 80 * (1 - e / tol)); if (e === best) { d += 25; note = '🎯 최근접 +25'; } }
+      else { d = 0; note = e === undefined ? miss(p) : `${Math.round((Math.exp(e) - 1) * 100)}% 빗나감`; }
       row(p, ok, d, note);
     }
   } else if (t === 'beauty') {
-    const avg = ans.length ? ans.reduce((a, p) => a + p.answer, 0) / ans.length : 0, target = avg * 2 / 3;
+    const [mn, md] = pub.mul || [2, 3];
+    const avg = ans.length ? ans.reduce((a, p) => a + p.answer, 0) / ans.length : 0, target = avg * mn / md;
     const bd = Math.min(...ans.map((p) => Math.abs(p.answer - target)));
     const W = ans.filter((p) => Math.abs(p.answer - target) === bd);
-    for (const p of P) { const win = W.includes(p); row(p, win, win ? Math.round(110 / (W.length > 1 ? 1.5 : 1)) : 0, p.answer === null ? '시간 초과' : win ? '🏆 승리' : `거리 ${Math.abs(p.answer - target).toFixed(1)}`); }
-    answerText = ans.length ? `평균 ${avg.toFixed(1)} × 2/3 = ${target.toFixed(1)}` : '제출 없음';
+    for (const p of P) { const win = W.includes(p); row(p, win, win ? Math.round(110 / (W.length > 1 ? 1.5 : 1)) : 0, p.answer === null ? miss(p) : win ? '🏆 승리' : `거리 ${Math.abs(p.answer - target).toFixed(1)}`); }
+    answerText = ans.length ? `평균 ${avg.toFixed(1)} × ${mn}/${md} = ${target.toFixed(1)}` : '제출 없음';
     expl = '남의 생각을 읽으려 할수록 숫자는 0으로 미끄러진다.';
   } else if (t === 'minority') {
     const c = [0, 0]; ans.forEach((p) => c[p.answer]++);
     const ws = c[0] !== c[1] && c[0] && c[1] ? (c[0] < c[1] ? 0 : 1) : -1;
+    const nm = [pub.A || 'A', pub.B || 'B'];
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
+      if (p.answer === null) row(p, false, 0, miss(p));
       else if (ws < 0) row(p, false, 0, '무승부');
       else if (p.answer === ws) row(p, true, 100, '🏆 소수파');
       else row(p, false, 0, '다수파');
     }
-    answerText = `A ${c[0]}명 : B ${c[1]}명${ws < 0 ? ' (무승부)' : ` → ${ws ? 'B' : 'A'} 승`}`;
+    answerText = `${nm[0]} ${c[0]}명 : ${nm[1]} ${c[1]}명${ws < 0 ? ' (무승부)' : ` → ${nm[ws]} 승`}`;
   } else if (t === 'lowest') {
     const cnt = {}; ans.forEach((p) => { cnt[p.answer] = (cnt[p.answer] || 0) + 1; });
     const uniq = Object.keys(cnt).filter((k) => cnt[k] === 1).map(Number).sort((a, b) => a - b);
     const win = uniq.length ? uniq[0] : null;
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
+      if (p.answer === null) row(p, false, 0, miss(p));
       else if (p.answer === win) row(p, true, 120, '🏆 유일한 최저수');
       else row(p, false, 0, cnt[p.answer] > 1 ? `${cnt[p.answer]}명 겹침` : '더 작은 유일수 있음');
     }
@@ -246,15 +280,64 @@ function resolve() {
     expl = Object.keys(cnt).sort((a, b) => a - b).map((k) => `${k}(${cnt[k]}명)`).join(' ');
   } else if (t === 'split') {
     const co = ans.filter((p) => p.answer === 0).length, be = ans.length - co;
+    const C = pub.coop || 60, POT = pub.pot || 130, L = pub.lose || 30;
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
-      else if (be === 0) row(p, true, 60, '🤝 전원 협력');
-      else if (co === 0) row(p, false, -30, '💥 공멸');
-      else if (p.answer === 1) row(p, true, Math.round(130 / be), '🗡️ 배신 성공');
-      else row(p, false, -30, '😱 배신당함');
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (be === 0) row(p, true, C, '🤝 전원 협력');
+      else if (co === 0) row(p, false, -L, '💥 공멸');
+      else if (p.answer === 1) row(p, true, Math.round(POT / be), '🗡️ 배신 성공');
+      else row(p, false, -L, '😱 배신당함');
     }
     answerText = `🤝 협력 ${co}명 · 🗡️ 배신 ${be}명`;
     expl = be === 0 ? '모두가 믿었다.' : co === 0 ? '아무도 믿지 않았다.' : '배신자들이 보상을 나눠 가졌다.';
+  } else if (t === 'indian') {
+    const card = (p) => pub.cards[p.id] || 0;
+    const go = ans.filter((p) => p.answer === 0), fold = ans.filter((p) => p.answer === 1);
+    const top = go.length ? Math.max(...go.map(card)) : 0, maxAll = Math.max(0, ...P.map(card));
+    const W = go.filter((p) => card(p) === top), L = go.filter((p) => card(p) !== top);
+    const pot = 30 * L.length + 10 * fold.length;
+    for (const p of P) {
+      const c = card(p);
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (p.answer === 1) { const pen = c === maxAll ? 30 : 10; row(p, false, -pen, `내 카드 ${c} · 포기${pen > 10 ? ' (최고 카드를 버림!)' : ''}`); }
+      else if (W.includes(p)) row(p, true, 30 + Math.round(pot / W.length), `내 카드 ${c} · 🏆 승부 승리`);
+      else row(p, false, -30, `내 카드 ${c} · 승부 패배`);
+    }
+    answerText = P.map((p) => `${p.n} ${card(p)}`).join(' · ');
+    expl = '승부 승자: +30 + (패자 1명당 30, 포기자 1명당 10). 패자 −30, 포기 −10 (최고 카드를 버리면 −30)';
+  } else if (t === 'goods') {
+    const C = pub.C, m = pub.m, N = Math.max(1, ans.length), tot = ans.reduce((a, p) => a + p.answer, 0), share = (tot * m) / N;
+    for (const p of P) {
+      if (p.answer === null) { row(p, false, 0, miss(p)); continue; }
+      const pay = C - p.answer + share, d = Math.round(((pay - C) * 100) / C);
+      row(p, d > 0, d, `냄 ${p.answer} · 받음 ${share.toFixed(1)}`);
+    }
+    answerText = `금고 ${tot}코인 × ${m} = ${(tot * m).toFixed(1)} → 1인당 ${share.toFixed(1)}`;
+    expl = '모두 다 내면 모두가 이득, 혼자만 안 내면 더 이득. 그래서 다들 안 내면 아무도 이득이 없다.';
+  } else if (t === 'auction') {
+    const val = sec.vals.reduce((a, b) => a + b, 0);
+    const bids = ans.map((p) => p.answer), top = bids.length ? Math.max(...bids) : -1, tops = ans.filter((p) => p.answer === top);
+    const win = tops.length === 1 && top > 0 ? tops[0] : null;
+    for (const p of P) {
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (p === win) row(p, val - top > 0, val - top, `🔨 낙찰! 가치 ${val} − 입찰 ${top}`);
+      else row(p, false, 0, tops.length > 1 && p.answer === top ? '최고가 동점 → 유찰' : `입찰 ${p.answer}`);
+    }
+    answerText = `상품 가치 ${val} (${sec.vals.join('+')})`;
+    expl = win ? (val - top >= 0 ? '싸게 샀다!' : '승자의 저주 — 너무 비싸게 샀다.') : '낙찰자 없음';
+  } else if (t === 'rps') {
+    const c = [0, 0, 0]; ans.forEach((p) => c[p.answer]++);
+    const kinds = c.filter((x) => x).length;
+    let winK = -1; if (kinds === 2) { if (!c[0]) winK = 1; else if (!c[1]) winK = 2; else winK = 0; } // 바위0 가위1 보2: 바위>가위, 가위>보, 보>바위
+    const winners = winK < 0 ? 0 : c[winK], losers = ans.length - winners;
+    for (const p of P) {
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (winK < 0) row(p, false, 0, '무승부');
+      else if (p.answer === winK) row(p, true, 30 + Math.round(90 * losers / Math.max(1, ans.length - 1)), '🏆 승리');
+      else row(p, false, -20, '패배');
+    }
+    answerText = `✊ ${c[0]} · ✌️ ${c[1]} · 🖐️ ${c[2]}` + (winK < 0 ? ' → 무승부' : ` → ${['✊', '✌️', '🖐️'][winK]} 승`);
+    expl = '이긴 사람이 적을수록, 진 사람이 많을수록 점수가 크다.';
   }
 
   for (const r of rows) {
@@ -284,7 +367,12 @@ function finish() {
 }
 
 function hostAction(type, x) {
-  if (type === 'settings' && H.phase === 'lobby' && [8, 12, 16].includes(x.rounds)) H.rounds = x.rounds;
+  if (type === 'settings' && H.phase === 'lobby') {
+    if ([8, 12, 16, 24].includes(x.rounds)) H.rounds = x.rounds;
+    if (x.mode === 'time' || x.mode === 'free') H.mode = x.mode;
+    if (Array.isArray(x.cats)) { const c = CATS.filter((k) => x.cats.includes(k)); if (c.length) H.cats = c; }
+  }
+  if (type === 'close' && H.phase === 'play') resolve();
   if (type === 'start' && H.phase === 'lobby') startGame();
   if (type === 'rematch' && H.phase === 'final') { H.phase = 'lobby'; H.g++; H.idx = -1; H.type = null; H.fin = null; for (const P of H.pl.values()) P.s = 0; }
   hostTick();
@@ -294,11 +382,11 @@ function buildSt() {
   const play = H.phase === 'play', base = H.type ? baseLim() : 0;
   const pl = [...H.pl.values()].map((p) => {
     const o = { id: p.id, n: p.n, c: p.c, s: p.s, on: p.on };
-    if (play) { o.dn = p.answer !== null; if (p.fx.length) o.fx = p.fx; if (p.lim !== base) o.lim = p.lim; }
+    if (play) { o.dn = answered(p); if (p.fx.length) o.fx = p.fx; if (p.lim !== base) o.lim = p.lim; }
     if (H.phase === 'reveal') o.dn = p.ready;
     return o;
   });
-  const st = { v: 2, g: H.g, ph: H.phase, code: H.code, rounds: H.rounds, idx: H.idx, total: H.plan.length, type: H.type, pl, host: myId };
+  const st = { v: 2, g: H.g, ph: H.phase, code: H.code, rounds: H.rounds, mode: H.mode, cats: H.cats, solo: H.solo, idx: H.idx, total: H.plan.length, type: H.type, pl, host: myId, lim: base };
   if (play) st.q = H.q.pub;
   if (H.phase === 'reveal') { st.res = H.res; st.card = H.card; }
   if (H.phase === 'final') st.fin = H.fin;
@@ -352,9 +440,9 @@ function leaveRoom() {
   homeView();
 }
 function act(type, x = {}) {
-  if (['settings', 'start', 'rematch'].includes(type)) { if (H) hostAction(type, x); return; }
+  if (['settings', 'start', 'rematch', 'close'].includes(type)) { if (H) hostAction(type, x); return; }
   const k = curK(); let patch = null;
-  if (type === 'answer') patch = { ans: { k, v: x.value, el: Math.round(performance.now() - playT0) } };
+  if (type === 'answer') patch = { ans: x.giveup ? { k, v: null, gu: 1, el: 0 } : { k, v: x.value, el: Math.round(performance.now() - playT0) } };
   if (type === 'ready') patch = { rdy: k };
   if (type === 'sabotage') patch = { sab: { k, kind: x.kind, t: x.target } };
   if (!patch) return;
@@ -371,7 +459,7 @@ function onState(st) {
   const k = st.g * 1000 + st.idx;
   const meP = st.pl.find((p) => p.id === myId);
   S = {
-    k, code: st.code, phase: st.ph, me: myId, hostPid: st.host, rounds: st.rounds, inGame: !!meP,
+    k, code: st.code, phase: st.ph, me: myId, hostPid: st.host, rounds: st.rounds, mode: st.mode || 'time', cats: st.cats || CATS, solo: !!st.solo, inGame: !!meP,
     players: st.pl.map((p) => ({ pid: p.id, name: p.n, color: p.c, score: p.s, connected: p.on, done: p.dn })),
     round: st.type ? { idx: st.idx + 1, total: st.total, type: st.type, ...TYPES[st.type] } : null,
     q: st.q, fx: (meP && meP.fx) || [], myLim: meP && meP.lim, rem: st.rem || 0,
@@ -384,7 +472,7 @@ function onState(st) {
   if (key !== viewKey) {
     viewKey = key; locked = false; cur = null;
     if (S.phase === 'play') {
-      const base = TYPES[st.type].limit * 1000;
+      const base = st.lim || TYPES[st.type].limit * 1000;
       playT0 = performance.now() - Math.max(0, base + 900 - S.rem);
       tTotal = S.myLim || base; tEnd = playT0 + tTotal;
     } else tTotal = Math.max(1, S.rem);
@@ -395,6 +483,13 @@ function onState(st) {
 }
 setInterval(() => {
   const bar = document.getElementById('tbar'); if (!bar) return;
+  if (S && S.mode === 'free' && S.phase === 'play') {
+    bar.style.transform = 'scaleX(1)'; bar.parentNode.classList.add('free');
+    const e = Math.max(0, Math.floor((performance.now() - playT0) / 1000)), t = document.getElementById('tsec');
+    if (t) t.textContent = `⏱ ${Math.floor(e / 60)}:${String(e % 60).padStart(2, '0')}`;
+    return;
+  }
+  bar.parentNode.classList.remove('free');
   const rem = Math.max(0, tEnd - performance.now());
   bar.style.transform = `scaleX(${Math.min(1, rem / tTotal)})`;
   const t = document.getElementById('tsec'); if (t) t.textContent = Math.ceil(rem / 1000) + '초';
@@ -437,21 +532,25 @@ function takeName() {
 }
 function homeView() {
   role = null;
+  const n = Object.keys(TYPES).length;
   $app.innerHTML = `
     <div class="logo">두뇌 배틀</div>
-    <div class="tag">16가지 두뇌 대결, 최후의 1인은 누구? 🧠</div>
+    <div class="tag">${n}가지 두뇌 대결, 최후의 1인은 누구? 🧠</div>
     <div class="card col" style="margin-top:14px">
       <input id="nm" type="text" maxlength="8" placeholder="닉네임 (최대 8자)" value="${esc(myName)}" autocomplete="off">
       <div class="col" id="mp"></div>
     </div>
-    <button class="sec" id="solo">🎯 혼자 연습 (12라운드)</button>
+    <button class="sec" id="solo">🎯 혼자 연습</button>
     <div class="card small dim" style="line-height:1.7">
-      <b style="color:var(--txt)">16가지 미니게임</b><br>
-      ${['수학', '상식', '퍼즐', '두뇌', '심리'].map((c) => `<b style="color:var(--cyan)">${c}</b> ${Object.values(TYPES).filter((t) => t.cat === c).map((t) => t.emoji + ' ' + t.label).join(' · ')}`).join('<br>')}<br><br>
-      빠르고 정확하게 맞힐수록 높은 점수! 라운드 1등은 상대에게 <b style="color:var(--vio)">방해 카드</b>를 날립니다.
+      <b style="color:var(--txt)">두 가지 모드</b><br>
+      <b style="color:var(--yel)">⏱ 타임어택</b> 제한시간 안에 빠르게! 빠를수록 점수가 높다<br>
+      <b style="color:var(--vio)">♾️ 무제한</b> 어려운 문제, 시간 제한 없음. 정확하게만 풀면 된다<br><br>
+      <b style="color:var(--txt)">${n}가지 미니게임</b> — 같은 게임도 숫자와 상황이 매번 바뀐다<br>
+      ${CATS.map((c) => `<b style="color:var(--cyan)">${c}</b> ${Object.values(TYPES).filter((t) => t.cat === c).map((t) => t.emoji + ' ' + t.label).join(' · ')}`).join('<br>')}<br><br>
+      라운드 1등은 상대에게 <b style="color:var(--vio)">방해 카드</b>를 날립니다. 심리전은 더 지니어스·데블스 플랜 같은 서바이벌 예능에서 나온 게임을 바탕으로 했어요.
     </div>`;
   renderMP(document.getElementById('mp'));
-  document.getElementById('solo').onclick = () => { if (!takeName()) return; hostCreate('SOLO', true); H.rounds = 12; startGame(); hostTick(); };
+  document.getElementById('solo').onclick = () => { if (!takeName()) return; hostCreate('SOLO', true); };
 }
 
 /* ═════════════ 공통 조각 ═════════════ */
@@ -470,27 +569,39 @@ function topbar() { const r = S.round; return `<div class="topbar"><span class="
 
 /* ═════════════ 로비 ═════════════ */
 function lobbyView() {
+  const solo = S.solo;
   $app.innerHTML = `
-    <div class="card col">
+    ${solo ? '<div class="logo" style="font-size:34px;margin-top:3vh">혼자 연습</div>' : `<div class="card col">
       <div class="center dim small">방 코드</div>
       <div class="code">${esc(S.code)}</div>
       <div class="small dim center" style="line-height:1.5">이 페이지를 공유받은 친구가 홈 화면의 <b style="color:var(--txt)">열린 방</b>에서 누르거나<br>코드 <b style="color:var(--yel)">${esc(S.code)}</b>를 입력하면 들어옵니다</div>
     </div>
-    <div class="card col"><div class="row"><b class="grow">참가자</b><span class="dim small" id="cnt"></span></div><div class="chips" id="pl"></div></div>
+    <div class="card col"><div class="row"><b class="grow">참가자</b><span class="dim small" id="cnt"></span></div><div class="chips" id="pl"></div></div>`}
     <div class="card col" id="host"></div>
     <button class="sec" id="lv">나가기</button>`;
   document.getElementById('lv').onclick = leaveRoom;
   const upd = () => {
-    document.getElementById('pl').innerHTML = S.players.map((p) => `<span class="chip"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}${p.pid === S.hostPid ? ' 👑' : ''}${p.pid === S.me ? ' <span class="dim small">(나)</span>' : ''}</span>`).join('');
-    document.getElementById('cnt').textContent = S.players.length + '명';
+    const pl = document.getElementById('pl');
+    if (pl) {
+      pl.innerHTML = S.players.map((p) => `<span class="chip"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}${p.pid === S.hostPid ? ' 👑' : ''}${p.pid === S.me ? ' <span class="dim small">(나)</span>' : ''}</span>`).join('');
+      document.getElementById('cnt').textContent = S.players.length + '명';
+    }
     const host = document.getElementById('host');
-    if (role === 'host') {
-      host.innerHTML = `<b>라운드 수</b><div class="row">${[8, 12, 16].map((n) => `<button class="${S.rounds === n ? '' : 'sec'} grow" data-r="${n}">${n}</button>`).join('')}</div>
-        <button class="big grn" id="go">게임 시작 (${S.players.length}명)</button>
-        ${S.players.length < 2 ? '<div class="dim small center">1명이면 심리전 4종은 빠져요</div>' : ''}`;
+    const modeTxt = S.mode === 'free' ? '♾️ 무제한 · 어려운 문제 · 시간 제한 없음' : '⏱ 타임어택 · 빠를수록 고득점';
+    if (H) {
+      const pc = S.players.length;
+      const avail = Object.keys(TYPES).filter((t) => (pc >= 2 || !TYPES[t].social) && !(S.mode === 'free' && TYPES[t].speed) && S.cats.includes(TYPES[t].cat)).length;
+      host.innerHTML = `<b>모드</b>
+        <div class="two mode"><button data-m="time" class="${S.mode === 'time' ? 'sel' : ''}">⏱<br><span>타임어택</span><small>제한시간 · 속도 보너스</small></button><button data-m="free" class="${S.mode === 'free' ? 'sel' : ''}">♾️<br><span>무제한</span><small>어려운 문제 · 시간 무제한</small></button></div>
+        <b>라운드 수</b><div class="row">${[8, 12, 16, 24].map((n) => `<button class="${S.rounds === n ? '' : 'sec'} grow" data-r="${n}">${n}</button>`).join('')}</div>
+        <b>게임 종류</b><div class="chips">${CATS.map((c) => `<button class="chip ${S.cats.includes(c) ? 'on' : 'off'}" data-c="${c}">${c}</button>`).join('')}</div>
+        <div class="dim small">이 설정으로 나올 수 있는 게임 ${avail}종${pc < 2 ? ' · 1명이면 심리전은 빠져요' : ''}${S.mode === 'free' ? ' · 속도만 겨루는 게임은 빠져요' : ''}</div>
+        <button class="big grn" id="go" ${avail ? '' : 'disabled'}>게임 시작${solo ? '' : ` (${pc}명)`}</button>`;
+      host.querySelectorAll('[data-m]').forEach((b) => { b.onclick = () => act('settings', { mode: b.dataset.m }); });
       host.querySelectorAll('[data-r]').forEach((b) => { b.onclick = () => act('settings', { rounds: Number(b.dataset.r) }); });
+      host.querySelectorAll('[data-c]').forEach((b) => { b.onclick = () => { const c = b.dataset.c; const next = S.cats.includes(c) ? S.cats.filter((x) => x !== c) : [...S.cats, c]; if (!next.length) return toast('하나는 골라야 해요'); act('settings', { cats: next }); }; });
       document.getElementById('go').onclick = () => act('start');
-    } else host.innerHTML = `<div class="center dim pulse">방장이 시작하길 기다리는 중…</div><div class="center small dim">${S.rounds}라운드</div>`;
+    } else host.innerHTML = `<div class="center dim pulse">방장이 시작하길 기다리는 중…</div><div class="center small">${modeTxt}</div><div class="center small dim">${S.rounds}라운드 · ${S.cats.join(' · ')}</div>`;
   };
   upd(); cur = { update: upd };
 }
@@ -507,7 +618,8 @@ function introView() {
   $app.innerHTML = `
     <div class="topbar"><span class="badge">라운드 ${r.idx}/${r.total} · ${esc(r.cat)}</span><span class="badge">곧 시작</span></div>
     <div class="timer"><i id="tbar"></i></div>
-    <div class="hero pop"><div class="em">${r.emoji}</div><h2>${esc(r.label)}</h2><p>${esc(r.desc)}</p></div>
+    <div class="hero pop"><div class="em">${r.emoji}</div><h2>${esc(r.label)}</h2><p>${esc(r.desc)}</p>
+      <div class="modetag ${S.mode}">${S.mode === 'free' ? '♾️ 시간 무제한 · 어려움' : `⏱ 제한시간 ${r.limit}초`}</div></div>
     <div class="center dim pulse">준비하세요…</div>
     <div id="bd"></div>`;
   const upd = () => { document.getElementById('bd').innerHTML = boardHTML(); };
@@ -522,10 +634,17 @@ function playView() {
   $app.innerHTML = `${topbar()}
     ${fx.length ? `<div class="fxbar">${fx.filter((f) => FXN[f]).map((f) => FXN[f]).join('<br>')}</div>` : ''}
     <div class="row"><span class="grow"></span><span class="badge" id="tsec"></span></div>
-    <div id="stage" class="col"></div><div id="bd"></div>`;
+    <div id="stage" class="col"></div>
+    ${S.mode === 'free' ? `<div class="row" id="freebar"><button class="sec grow" id="giveup">🏳️ 포기</button>${H && !S.solo ? '<button class="sec grow" id="closeR">⏹ 라운드 마감</button>' : ''}</div>` : ''}
+    <div id="bd"></div>`;
   const stage = document.getElementById('stage');
-  const showDone = () => { stage.innerHTML = '<div class="done pop">✔ 제출 완료<br><span class="dim small">다른 사람을 기다리는 중…</span></div>'; };
-  const submit = (v) => { if (locked) return; if (performance.now() > tEnd + 300) return toast('시간이 지났어요'); locked = true; act('answer', { value: v }); showDone(); };
+  const free = S.mode === 'free';
+  const showDone = (gave) => { stage.innerHTML = `<div class="done pop">${gave || (mine.ans && mine.ans.k === S.k && mine.ans.gu) ? '🏳️ 포기했어요' : '✔ 제출 완료'}<br><span class="dim small">다른 사람을 기다리는 중…</span></div>`; const fb = document.getElementById('freebar'); if (fb && !H) fb.remove(); const g = document.getElementById('giveup'); if (g) g.remove(); };
+  const submit = (v) => { if (locked) return; if (!free && performance.now() > tEnd + 300) return toast('시간이 지났어요'); locked = true; act('answer', { value: v }); showDone(); };
+  if (free) {
+    const g = document.getElementById('giveup'); if (g) g.onclick = () => { if (locked) return; if (!confirm('이 문제를 포기할까요? (0점)')) return; locked = true; act('answer', { giveup: true }); showDone(true); };
+    const c = document.getElementById('closeR'); if (c) c.onclick = () => { if (confirm('아직 안 푼 사람이 있어도 지금 라운드를 끝낼까요?')) act('close'); };
+  }
   const upd = () => { const w = document.getElementById('who'); if (w) w.textContent = '제출 ' + doneCount(); document.getElementById('bd').innerHTML = boardHTML(); };
   cur = { update: upd }; upd();
   if (S.submitted) { showDone(); return; }
@@ -544,7 +663,7 @@ function playView() {
     stage.innerHTML = qbox(esc(q.text), q.cat) + `<div class="opts">${q.options.map((o, i) => `<button class="opt" data-i="${i}">${['①', '②', '③', '④'][i]}&nbsp; ${esc(o)}</button>`).join('')}</div>`;
     choice('.opt');
   } else if (T === 'liar') {
-    stage.innerHTML = qbox('범인은 누구일까?', `4명 중 정확히 ${q.T}명만 진실을 말한다`) +
+    stage.innerHTML = qbox(`${esc(q.crime || '범인')}${q.crime && /[가-힣]/.test(q.crime) && hasB(q.crime) ? '은' : '는'} 누구일까?`, `${q.names.length}명 중 정확히 ${q.T}명만 진실을 말한다 · ${q.crime || '범인'}은 1명`) +
       `<div class="col${cls}">${q.lines.map((l) => `<div class="card" style="padding:12px;font-weight:700;font-size:17px">${esc(l)}</div>`).join('')}</div>
       <div class="opts" style="grid-template-columns:1fr 1fr">${q.names.map((n, i) => `<button class="opt" style="text-align:center" data-i="${i}">${esc(n)}</button>`).join('')}</div>`;
     choice('.opt');
@@ -558,32 +677,17 @@ function playView() {
     stage.innerHTML = qbox(`<span style="font-size:44px;letter-spacing:6px;color:var(--yel)">${esc(q.cho)}</span>`, `분류: ${q.cat} · 띄어쓰기 없이`) + numInput('단어 입력', 'text');
     bindInput((v) => (v ? v.replace(/\s+/g, '') : (toast('단어를 입력하세요'), undefined)));
   } else if (T === 'code') {
-    stage.innerHTML = qbox('세 자리 비밀번호는?', '0~9 서로 다른 숫자 · S=숫자·자리 일치, B=숫자만 일치') +
-      `<div class="col${cls}">${q.clues.map((c) => `<div class="card row" style="padding:10px 14px"><b style="font-size:24px;letter-spacing:6px" class="grow">${c.g}</b><b>${c.s || c.b ? `${c.s ? `<span class="pos">${c.s}S</span> ` : ''}${c.b ? `<span style="color:var(--yel)">${c.b}B</span>` : ''}` : '<span class="neg">OUT</span>'}</b></div>`).join('')}</div>` + numInput('예: 482');
-    bindInput((v) => (/^\d{3}$/.test(v) && new Set(v).size === 3 ? v : (toast('서로 다른 숫자 3자리를 입력하세요'), undefined)));
+    const L = q.L || 3;
+    stage.innerHTML = qbox(`${L === 4 ? '네' : '세'} 자리 비밀번호는?`, '0~9 서로 다른 숫자 · S=숫자·자리 일치, B=숫자만 일치') +
+      `<div class="col${cls}">${q.clues.map((c) => `<div class="card row" style="padding:10px 14px"><b style="font-size:24px;letter-spacing:6px" class="grow">${c.g}</b><b>${c.s || c.b ? `${c.s ? `<span class="pos">${c.s}S</span> ` : ''}${c.b ? `<span style="color:var(--yel)">${c.b}B</span>` : ''}` : '<span class="neg">OUT</span>'}</b></div>`).join('')}</div>` + numInput(L === 4 ? '예: 4829' : '예: 482');
+    bindInput((v) => (new RegExp(`^\\d{${L}}$`).test(v) && new Set(v).size === L ? v : (toast(`서로 다른 숫자 ${L}자리를 입력하세요`), undefined)));
   } else if (T === 'timeline') timelineUI(stage, q, cls, submit);
   else if (T === 'calc24') calcUI(stage, q, cls, submit);
   else if (T === 'memory') memoryUI(stage, q, submit);
   else if (T === 'digits') digitsUI(stage, q, cls, submit);
   else if (T === 'mental') mentalUI(stage, q, cls, submit);
   else if (T === 'stroop') stroopUI(stage, q, cls, submit);
-  else if (T === 'beauty') {
-    stage.innerHTML = qbox('모두의 평균 × 2/3에<br>가장 가까운 숫자는?', '0 ~ 100') + `<div class="bignum" id="bn">50</div><input class="slider" id="sl" type="range" min="0" max="100" value="50"><button class="big" id="ok">이 숫자로 확정</button>`;
-    const sl = document.getElementById('sl'); sl.oninput = () => { document.getElementById('bn').textContent = sl.value; };
-    document.getElementById('ok').onclick = () => submit(Number(sl.value));
-  } else if (T === 'minority' || T === 'split') {
-    const L = T === 'split' ? ['🤝<br><span style="font-size:18px">협력</span>', '🗡️<br><span style="font-size:18px">배신</span>'] : ['A', 'B'];
-    stage.innerHTML = qbox(T === 'split' ? '전원 협력: 모두 +60<br>배신자 있음: 배신자끼리 130 나눠 갖기, 협력자 −30<br>전원 배신: 모두 −30' : '사람이 더 적은 쪽이 이깁니다', T === 'split' ? '' : '소수결') +
-      `<div class="two"><button data-i="0">${L[0]}</button><button data-i="1">${L[1]}</button></div><button class="big" id="ok" disabled>확정</button>`;
-    let sel = null;
-    stage.querySelectorAll('.two button').forEach((b) => { b.onclick = () => { sel = Number(b.dataset.i); stage.querySelectorAll('.two button').forEach((x) => x.classList.toggle('sel', x === b)); document.getElementById('ok').disabled = false; }; });
-    document.getElementById('ok').onclick = () => { if (sel !== null) submit(sel); };
-  } else if (T === 'lowest') {
-    stage.innerHTML = qbox('나만 고른 수 중 가장 작으면 승리', '1 ~ 10') + `<div class="nums" style="grid-template-columns:repeat(5,1fr)">${[...Array(10)].map((_, i) => `<button data-i="${i + 1}">${i + 1}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;
-    let sel = null;
-    stage.querySelectorAll('.nums button').forEach((b) => { b.onclick = () => { sel = Number(b.dataset.i); stage.querySelectorAll('.nums button').forEach((x) => x.classList.toggle('used', x !== b)); document.getElementById('ok').disabled = false; }; });
-    document.getElementById('ok').onclick = () => { if (sel !== null) submit(sel); };
-  }
+  else if (UI2[T] || q.ui) (q.ui ? UI2.generic : UI2[T])({ stage, q, cls, submit, qbox, numInput, bindInput, choice, T });
   unfog();
 }
 
@@ -592,7 +696,7 @@ function timelineUI(stage, q, cls, submit) {
   const draw = () => {
     stage.innerHTML = `<div class="q${cls}"><small>오래된 것부터 차례로 누르세요</small>역사 줄 세우기</div>
       <div class="opts">${q.items.map((it, i) => { const n = order.indexOf(i); return `<button class="opt ${n >= 0 ? 'sel' : ''}" data-i="${i}"><b style="color:var(--yel);display:inline-block;width:28px">${n >= 0 ? n + 1 : '·'}</b>${esc(it)}</button>`; }).join('')}</div>
-      <div class="row"><button class="sec grow" id="bk">⌫ 되돌리기</button><button class="big grow" id="ok" ${order.length === 4 ? '' : 'disabled'}>제출</button></div>`;
+      <div class="row"><button class="sec grow" id="bk">⌫ 되돌리기</button><button class="big grow" id="ok" ${order.length === q.items.length ? '' : 'disabled'}>제출</button></div>`;
     stage.querySelectorAll('.opt').forEach((b) => { b.onclick = () => { const i = Number(b.dataset.i); if (!order.includes(i)) order.push(i); draw(); }; });
     document.getElementById('bk').onclick = () => { order.pop(); draw(); };
     document.getElementById('ok').onclick = () => submit(order.slice());
@@ -631,7 +735,7 @@ function memoryUI(stage, q, submit) {
   let showing = performance.now() - playT0 < q.showMs;
   const draw = () => {
     stage.innerHTML = `<div class="q"><small>패턴 기억</small>${showing ? '빛나는 칸을 외우세요!' : `기억한 칸을 모두 누르세요 <span class="dim">(${q.cells.length}칸)</span>`}</div>
-      <div class="grid4">${[...Array(16).keys()].map((i) => `<button class="cell ${showing && q.cells.includes(i) ? 'lit' : ''} ${!showing && picks.has(i) ? 'pick' : ''}" data-i="${i}" ${showing ? 'disabled' : ''}></button>`).join('')}</div>
+      <div class="grid4" style="grid-template-columns:repeat(${q.n || 4},1fr)">${[...Array((q.n || 4) ** 2).keys()].map((i) => `<button class="cell ${showing && q.cells.includes(i) ? 'lit' : ''} ${!showing && picks.has(i) ? 'pick' : ''}" data-i="${i}" ${showing ? 'disabled' : ''}></button>`).join('')}</div>
       <button class="big" id="ok" ${showing || !picks.size ? 'disabled' : ''}>제출 (${picks.size}칸)</button>`;
     stage.querySelectorAll('.cell').forEach((c) => { c.onclick = () => { const i = Number(c.dataset.i); picks.has(i) ? picks.delete(i) : picks.add(i); draw(); }; });
     document.getElementById('ok').onclick = () => submit([...picks]);
@@ -707,7 +811,7 @@ function updReveal() {
     if (mine.sab && mine.sab.k === S.k) { box.innerHTML = '<div class="card2 center pulse">카드 발동 중…</div>'; return; }
     const targets = S.players.filter((p) => p.pid !== S.me);
     box.innerHTML = `<div class="card2 col"><b style="color:var(--vio)">🏆 라운드 1등 — 방해 카드를 쓰세요</b>
-      <div class="sab">${Object.entries(SABOTAGE).map(([k, v]) => `<button data-k="${k}" class="${selKind === k ? 'sel' : ''}">${v.emoji} ${v.label}<small>${v.desc}</small></button>`).join('')}</div>
+      <div class="sab">${Object.entries(SABOTAGE).filter(([, v]) => !(S.mode === 'free' && v.timeOnly)).map(([k, v]) => `<button data-k="${k}" class="${selKind === k ? 'sel' : ''}">${v.emoji} ${v.label}<small>${v.desc}</small></button>`).join('')}</div>
       <div class="chips">${targets.map((p) => `<button class="chip" style="${selTarget === p.pid ? 'background:var(--vio);color:#10122a' : 'color:var(--txt)'};padding:8px 12px;font-size:15px" data-t="${p.pid}"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}</button>`).join('')}</div>
       <button class="pink" id="fire" ${selKind && selTarget ? '' : 'disabled'}>발동!</button></div>`;
     box.querySelectorAll('[data-k]').forEach((b) => { b.onclick = () => { selKind = b.dataset.k; updReveal(); }; });
@@ -737,4 +841,3 @@ function finalView() {
   cur = { update() { } };
 }
 
-homeView();

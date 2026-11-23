@@ -111,6 +111,79 @@ button.big{padding:18px;font-size:20px}
 @keyframes pulse{50%{opacity:.55}}
 .pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+/* ── 모드 / 대기실 ── */
+.two.mode button{padding:14px 0;font-size:30px;line-height:1.2}
+.two.mode button span{font-size:18px}
+.two.mode button small{display:block;font-size:12px;font-weight:600;color:var(--dim);margin-top:4px}
+.chip.on{background:var(--cyan);color:#10122a;border-color:var(--cyan)}
+.chip.off{opacity:.45;color:var(--txt)}
+button.chip{padding:8px 14px;font-size:15px}
+.modetag{display:inline-block;margin-top:12px;padding:6px 14px;border-radius:999px;font-weight:800;font-size:14px;background:var(--panel2);border:1px solid var(--line)}
+.modetag.free{color:var(--vio);border-color:var(--vio)}
+.modetag.time{color:var(--yel)}
+.timer.free i{background:linear-gradient(90deg,var(--vio),var(--cyan));opacity:.5}
+/* ── 공용 문제 ── */
+.clues{gap:6px}
+.clue{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:700;font-size:16px;line-height:1.4;word-break:keep-all}
+.dgrid{display:grid;gap:5px;max-width:360px;margin:0 auto;width:100%}
+.dgrid span,.pyr span{display:flex;align-items:center;justify-content:center;min-height:46px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:900;font-size:21px;font-variant-numeric:tabular-nums}
+.dgrid span.qm,.pyr span.qm{background:var(--yel);color:#10122a}
+.dgrid span.blk{background:#3a3f6e;color:#3a3f6e}
+.dgrid span.emp,.pyr span.emp{background:#0e1130}
+.pyr{display:flex;flex-direction:column;gap:5px;align-items:center}
+.pyr div{display:flex;gap:5px}
+.pyr span{width:56px;min-height:42px;font-size:18px}
+/* 결합 */
+.hapg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:330px;margin:0 auto;width:100%}
+.hapt{position:relative;padding:4px;background:var(--panel2);border:3px solid var(--line);border-radius:14px}
+.hapt svg{display:block;width:100%}
+.hapt b{position:absolute;top:2px;left:7px;font-size:13px;color:var(--cyan);text-shadow:0 0 3px #000}
+.hapt.sel{border-color:var(--yel);transform:scale(.95)}
+/* 불 끄기 / 순서 기억 */
+.lights .cell.on{background:var(--yel);border-color:#fff3b0;box-shadow:0 0 14px #ffd23f88}
+.simon .cell.pick{background:var(--vio)}
+/* 스도쿠 */
+.sdk{display:grid;gap:0;max-width:360px;margin:0 auto;width:100%;border:3px solid var(--txt);border-radius:8px;overflow:hidden}
+.sdk button{aspect-ratio:1;border-radius:0;padding:0;font-size:24px;background:#0e1130;color:var(--cyan);border:1px solid var(--line)}
+.sdk button.giv{color:var(--txt);background:var(--panel2)}
+.sdk button.sel{background:#203a5c}
+.sdk button.bad{color:var(--pink)}
+.sdk button.bl{border-left:3px solid var(--txt)}
+.sdk button.bt{border-top:3px solid var(--txt)}
+/* 노노그램 */
+.nono{display:grid;gap:2px;justify-content:center;align-items:end}
+.nono .cc{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:800;color:var(--dim);line-height:1.25}
+.nono .cc i{font-style:normal}
+.nono .rc{font-size:13px;font-weight:800;color:var(--dim);text-align:right;padding-right:6px;white-space:nowrap;align-self:center}
+.nono .ok{color:var(--grn)}
+.nono .nc{padding:0;border-radius:5px;background:#0e1130;border:1px solid var(--line);color:var(--dim);font-size:16px}
+.nono .nc.s1{background:var(--cyan);border-color:var(--cyan)}
+/* 성냥개비 */
+.mtc{background:#0e1130;border:1px solid var(--line);border-radius:14px;padding:12px}
+/* 연산자 */
+.opsrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:28px;font-weight:900}
+.opsrow button{width:46px;padding:8px 0;font-size:24px;background:var(--panel2);color:var(--yel);border:2px dashed var(--line)}
+.opsrow button.f{border-style:solid;border-color:var(--cyan);color:var(--txt)}
+.opsrow .tg{color:var(--yel)}
+/* 순간 포착 / 틀린 하나 / 순서대로 */
+.cgrid{display:grid;gap:4px;max-width:360px;margin:0 auto;width:100%}
+.cgrid span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:30px}
+.oddg{display:grid;gap:4px;max-width:380px;margin:0 auto;width:100%}
+.oddg button{aspect-ratio:1;padding:0;font-size:22px;font-weight:700;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px}
+.schulte button{font-size:22px;font-weight:900}
+.schulte button.done2{opacity:.18}
+.oddg button.wrong{background:var(--pink)}
+.nums button.csel{background:var(--yel)}
+/* 인디언 포커 / 가위바위보 */
+.icards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ic{width:74px;background:linear-gradient(160deg,#fff,#dfe3ff);color:#10122a;border-radius:12px;padding:10px 4px;text-align:center;box-shadow:0 4px 14px #0006}
+.ic b{display:block;font-size:34px;line-height:1}
+.ic span{display:block;font-size:12px;font-weight:800;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 2px #fff}
+.ic.me{background:linear-gradient(160deg,#3a2a6e,#20285a);color:var(--txt)}
+.ic.me span{text-shadow:none}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.three button{padding:30px 0;font-size:46px;background:var(--panel2);border:3px solid var(--line)}
+.three button.sel{border-color:var(--yel);background:#2b2a12}
 
 </style>
 </head>
@@ -348,31 +421,61 @@ const WORDS = [
 /* ───────── 공통 ───────── */
 const rand = (n) => Math.floor(Math.random() * n);
 const pick = (a) => a[rand(a.length)];
+const between = (lo, hi) => lo + rand(hi - lo + 1);
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
+// limit: 타임어택 제한시간(초). speed: 속도만 겨루는 게임 → 시간 무제한 모드에서는 빠진다. social: 2명 이상.
 const TYPES = {
+  // 수학
   calc24:   { emoji: '🧮', label: '숫자 조합',     cat: '수학', limit: 45, desc: '네 숫자를 한 번씩만 써서 목표 숫자를 만들어라' },
   mental:   { emoji: '⚡', label: '암산 질주',     cat: '수학', limit: 40, desc: '암산 5문제를 최대한 빨리. 4개 이상 맞히면 득점' },
   sequence: { emoji: '🔢', label: '수열 추리',     cat: '수학', limit: 35, desc: '규칙을 찾아 ?에 들어갈 수를 맞혀라' },
+  fruit:    { emoji: '🍎', label: '과일 방정식',   cat: '수학', limit: 45, desc: 'SNS에서 유행한 그 문제. 과일 값을 구해 마지막 식을 계산하라 (곱셈 먼저!)' },
+  clock:    { emoji: '🕐', label: '시계 각도',     cat: '수학', limit: 35, desc: '시침과 분침 사이의 작은 각도는 몇 도?' },
+  magic:    { emoji: '🔮', label: '마방진',        cat: '수학', limit: 45, desc: '가로·세로·대각선의 합이 모두 같다. ?에 들어갈 수는?' },
+  pyramid:  { emoji: '🔺', label: '숫자 피라미드', cat: '수학', limit: 45, desc: '각 칸은 바로 아래 두 칸의 합. ?를 구하라' },
+  ops:      { emoji: '➕', label: '연산자 넣기',   cat: '수학', limit: 45, desc: '빈칸에 + − × ÷ 를 넣어 등식을 완성하라 (곱셈·나눗셈 먼저)' },
+  word:     { emoji: '📝', label: '문장제',        cat: '수학', limit: 50, desc: '닭과 토끼, 나이, 일률, 소금물… 숫자는 매번 바뀐다' },
+  // 상식
   fermi:    { emoji: '📏', label: '어림 감각',     cat: '상식', limit: 25, desc: '정답에 가까운 수를 찍어라' },
   trivia:   { emoji: '🧠', label: '상식 번개',     cat: '상식', limit: 15, desc: '4지선다. 빠를수록 점수가 높다' },
-  timeline: { emoji: '📜', label: '역사 줄 세우기', cat: '상식', limit: 25, desc: '네 사건을 오래된 순서대로 눌러라' },
+  timeline: { emoji: '📜', label: '역사 줄 세우기', cat: '상식', limit: 25, desc: '사건들을 오래된 순서대로 눌러라' },
   chosung:  { emoji: '🔤', label: '초성 퀴즈',     cat: '상식', limit: 25, desc: '초성과 분류만 보고 단어를 맞혀라' },
+  // 퍼즐
   liar:     { emoji: '🕵️', label: '범인 추리',     cat: '퍼즐', limit: 45, desc: '진실을 말한 사람 수로 범인을 가려내라' },
-  code:     { emoji: '🔐', label: '금고 털기',     cat: '퍼즐', limit: 60, desc: '숫자야구 단서로 세 자리 비밀번호를 찾아라' },
+  code:     { emoji: '🔐', label: '금고 털기',     cat: '퍼즐', limit: 60, desc: '숫자야구 단서로 비밀번호를 찾아라' },
+  hap:      { emoji: '🃏', label: '결! 합!',       cat: '퍼즐', limit: 45, desc: '더 지니어스의 그 게임. 모양·색·배경이 각각 모두 같거나 모두 다른 3장이 「합」' },
+  lights:   { emoji: '💡', label: '불 끄기',       cat: '퍼즐', limit: 60, desc: '누르면 자신과 상하좌우가 뒤집힌다. 모든 불을 꺼라' },
+  sudoku:   { emoji: '🔢', label: '미니 스도쿠',   cat: '퍼즐', limit: 75, desc: '가로·세로·굵은 칸마다 숫자가 한 번씩' },
+  nono:     { emoji: '⬛', label: '노노그램',      cat: '퍼즐', limit: 80, desc: '숫자 단서대로 칸을 칠해 그림을 완성하라' },
+  match:    { emoji: '🔥', label: '성냥개비',      cat: '퍼즐', limit: 60, desc: '성냥개비 딱 하나만 옮겨서 식을 참으로 만들어라' },
+  knights:  { emoji: '😇', label: '기사와 건달',   cat: '퍼즐', limit: 60, desc: '기사는 늘 참, 건달은 늘 거짓만 말한다. 누가 기사일까?' },
+  zebra:    { emoji: '🦓', label: '논리 그리드',   cat: '퍼즐', limit: 70, desc: '단서를 조합해 누가 무엇을 가졌는지 밝혀라' },
+  coin:     { emoji: '⚖️', label: '가짜 동전',     cat: '퍼즐', limit: 50, desc: '저울 결과를 보고 무게가 다른 가짜 동전을 찾아라' },
+  paths:    { emoji: '🗺️', label: '최단 경로',     cat: '퍼즐', limit: 50, desc: '오른쪽·아래로만 갈 때, 출발에서 도착까지 길은 몇 가지?' },
+  // 두뇌
   memory:   { emoji: '🟦', label: '패턴 기억',     cat: '두뇌', limit: 16, desc: '잠깐 빛나는 칸을 그대로 눌러라' },
+  simon:    { emoji: '🎹', label: '순서 기억',     cat: '두뇌', limit: 25, desc: '하나씩 빛나는 순서를 그대로 따라 눌러라' },
   digits:   { emoji: '📟', label: '숫자 기억',     cat: '두뇌', limit: 16, desc: '잠깐 보인 숫자를 그대로, 때로는 거꾸로' },
-  stroop:   { emoji: '🎨', label: '색깔 함정',     cat: '두뇌', limit: 25, desc: '글자 뜻과 색이 다르다. 묻는 것만 골라라' },
-  beauty:   { emoji: '🎯', label: '2/3 게임',      cat: '심리', limit: 20, social: true, desc: '0~100. 모두의 평균×2/3에 가장 가까운 사람이 승리' },
-  minority: { emoji: '⚖️', label: '소수결',        cat: '심리', limit: 12, social: true, desc: 'A 또는 B. 사람이 더 적은 쪽이 승리' },
-  lowest:   { emoji: '🥷', label: '최저 유일수',   cat: '심리', limit: 15, social: true, desc: '1~10. 나만 고른 수 중 가장 작은 수가 승리' },
+  count:    { emoji: '👀', label: '순간 포착',     cat: '두뇌', limit: 18, desc: '잠깐 보이는 그림 속 특정 그림의 개수를 세라' },
+  stroop:   { emoji: '🎨', label: '색깔 함정',     cat: '두뇌', limit: 25, speed: true, desc: '글자 뜻과 색이 다르다. 묻는 것만 골라라' },
+  odd:      { emoji: '🔍', label: '틀린 하나',     cat: '두뇌', limit: 20, speed: true, desc: '비슷한 것들 사이에 숨은 딱 하나를 찾아라' },
+  schulte:  { emoji: '🔟', label: '순서대로 터치', cat: '두뇌', limit: 40, speed: true, desc: '1부터 차례대로 최대한 빨리 눌러라' },
+  // 심리 (서바이벌 예능에서 나온 게임들)
+  beauty:   { emoji: '🎯', label: '평균의 함정',   cat: '심리', limit: 20, social: true, desc: '모두의 평균 × 배율에 가장 가까운 사람이 승리 (배율은 매번 바뀐다)' },
+  minority: { emoji: '⚖️', label: '소수결',        cat: '심리', limit: 15, social: true, desc: '두 선택지 중 사람이 더 적은 쪽이 승리' },
+  lowest:   { emoji: '🥷', label: '최저 유일수',   cat: '심리', limit: 15, social: true, desc: '나만 고른 수 중 가장 작은 수가 승리' },
   split:    { emoji: '🗡️', label: '배신의 금고',   cat: '심리', limit: 15, social: true, desc: '모두 협력하면 다 같이 이득. 혼자 배신하면 대박, 다 배신하면 공멸' },
+  indian:   { emoji: '🎴', label: '인디언 포커',   cat: '심리', limit: 20, social: true, desc: '내 카드만 안 보인다. 남의 카드를 보고 승부할지 포기할지' },
+  goods:    { emoji: '💰', label: '공공재 게임',   cat: '심리', limit: 20, social: true, desc: '공동 금고에 낸 돈은 불어나서 모두에게 똑같이 나뉜다. 얼마나 낼까?' },
+  auction:  { emoji: '🔨', label: '블라인드 경매', cat: '심리', limit: 25, social: true, desc: '숨은 숫자들의 합이 상품 가치. 나는 그중 하나만 안다. 최고가 낙찰!' },
+  rps:      { emoji: '✊', label: '단체 가위바위보', cat: '심리', limit: 12, social: true, desc: '두 가지만 나오면 승부, 한 가지나 세 가지 다 나오면 무승부' },
 };
 
 const SABOTAGE = {
   fog:    { emoji: '🌫️', label: '안개',     desc: '다음 문제를 5초간 흐리게' },
   mirror: { emoji: '🪞', label: '거울',     desc: '다음 문제를 좌우 반전' },
-  shrink: { emoji: '⏳', label: '시간 단축', desc: '다음 제한시간 35% 삭감' },
+  shrink: { emoji: '⏳', label: '시간 단축', desc: '다음 제한시간 35% 삭감', timeOnly: true },
   steal:  { emoji: '🫳', label: '점수 강탈', desc: '즉시 40점을 빼앗는다' },
 };
 
@@ -396,24 +499,29 @@ function solveTarget(nums, target) {
   })(nums.map((x) => ({ n: x, d: 1, e: String(x) })));
   return { expr: found && found.replace(/^\((.*)\)$/, '$1'), count };
 }
-function makeCalc24() {
-  for (let t = 0; t < 400; t++) {
-    const nums = [0, 0, 0, 0].map(() => 1 + rand(10));
-    const target = pick([24, 24, 24, 24, 10, 12, 18, 20, 30, 36]);
+function makeCalc24(hard) {
+  for (let t = 0; t < 600; t++) {
+    const nums = [0, 0, 0, 0].map(() => 1 + rand(hard ? 13 : 10));
+    const target = hard ? pick([24, 24, 24, 10, 17, 23, 27, 31, 36, 42, 48, 50]) : pick([24, 24, 24, 24, 10, 12, 18, 20, 30, 36]);
     const { expr, count } = solveTarget(nums, target);
     if (!expr) continue;
-    if (count > 60 && Math.random() < 0.7) continue;
+    if (hard ? count > 12 : count > 60 && Math.random() < 0.7) continue;
     return { pub: { nums, target }, secret: { nums, target, expr } };
   }
   return { pub: { nums: [3, 3, 8, 8], target: 24 }, secret: { nums: [3, 3, 8, 8], target: 24, expr: '8/(3-8/3)' } };
 }
 
 /* ───────── 암산 질주 ───────── */
-function makeMental() {
+function makeMental(hard) {
   const qs = [];
   for (const k of shuffle(['+', '-', '×', '÷', '+', '×', '-']).slice(0, 5)) {
     let a, b, ans;
-    if (k === '+') { a = 12 + rand(78); b = 12 + rand(78); ans = a + b; }
+    if (hard) {
+      if (k === '+') { a = between(120, 899); b = between(120, 899); ans = a + b; }
+      else if (k === '-') { a = between(300, 999); b = between(101, a - 30); ans = a - b; }
+      else if (k === '×') { a = between(12, 39); b = between(12, 49); ans = a * b; }
+      else { b = between(7, 19); ans = between(12, 49); a = b * ans; }
+    } else if (k === '+') { a = 12 + rand(78); b = 12 + rand(78); ans = a + b; }
     else if (k === '-') { a = 40 + rand(60); b = 11 + rand(a - 15); ans = a - b; }
     else if (k === '×') { a = 3 + rand(7); b = 11 + rand(19); ans = a * b; }
     else { b = 3 + rand(10); ans = 4 + rand(12); a = b * ans; }
@@ -437,71 +545,90 @@ function makeFermi(used) {
   const [text, unit, value, note] = fromPool(FERMI, used, 'f');
   return { pub: { text, unit }, secret: { value }, answerText: `${value.toLocaleString('ko-KR')}${unit}`, expl: note || '' };
 }
-function makeTimeline(used) {
+function makeTimeline(used, hard) {
+  const n = hard ? 5 : 4, gap = hard ? 2 : 4;
   for (;;) {
-    const ev = shuffle(EVENTS).slice(0, 4);
+    const ev = shuffle(EVENTS).slice(0, n);
     const ys = ev.map((e) => e[0]).sort((a, b) => a - b);
-    if (ys.some((y, i) => i && y - ys[i - 1] < 4)) continue;
-    const order = [0, 1, 2, 3].sort((a, b) => ev[a][0] - ev[b][0]);
+    if (ys.some((y, i) => i && y - ys[i - 1] < gap)) continue;
+    const order = ev.map((_, i) => i).sort((a, b) => ev[a][0] - ev[b][0]);
     return { pub: { items: ev.map((e) => e[1]) }, secret: { ans: order }, answerText: order.map((i) => `${ev[i][1]}(${ev[i][0]})`).join(' → ') };
   }
 }
 const CHO = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
 const toCho = (s) => [...s].map((ch) => { const c = ch.charCodeAt(0) - 0xac00; return c >= 0 && c < 11172 ? CHO[Math.floor(c / 588)] : ch; }).join('');
-function makeChosung(used) {
+function makeChosung(used, hard) {
   const [cat, word] = fromPool(WORDS, used, 'w');
-  return { pub: { cat, cho: toCho(word) }, secret: { ans: word }, answerText: word };
+  return { pub: { cat: hard ? '???' : cat, cho: toCho(word) }, secret: { ans: word }, answerText: word, expl: hard ? `분류: ${cat}` : '' };
 }
 
 /* ───────── 수열 ───────── */
-function makeSequence() {
-  const k = pick(['arith', 'geo', 'quad', 'fib', 'square', 'inter', 'lin', 'tri', 'prime']);
+function makeSequence(hard) {
+  const kinds = hard ? ['quad', 'fib', 'inter', 'lin', 'alt', 'trib', 'cubic', 'mulinc', 'sqpair', 'digsum'] : ['arith', 'geo', 'quad', 'fib', 'square', 'inter', 'lin', 'tri', 'prime'];
+  const k = pick(kinds);
   let seq = [], ans, rule;
   if (k === 'arith') { const a = 1 + rand(20), d = pick([-1, 1]) * (2 + rand(11)); for (let i = 0; i < 7; i++) seq.push(a + d * i); ans = a + d * 7; rule = `등차수열 (공차 ${d})`; }
   else if (k === 'geo') { const a = 1 + rand(4), r = 2 + rand(3); for (let i = 0; i < 6; i++) seq.push(a * r ** i); ans = a * r ** 6; rule = `등비수열 (공비 ${r})`; }
-  else if (k === 'quad') { const a = 1 + rand(9), d0 = 1 + rand(4), dd = 1 + rand(3); let cur = a, d = d0; seq.push(cur); for (let i = 0; i < 6; i++) { cur += d; d += dd; seq.push(cur); } ans = cur + d; rule = `차이가 ${dd}씩 커짐`; }
+  else if (k === 'quad') { const a = 1 + rand(9), d0 = 1 + rand(4), dd = 1 + rand(3) + (hard ? 1 : 0); let cur = a, d = d0; seq.push(cur); for (let i = 0; i < 6; i++) { cur += d; d += dd; seq.push(cur); } ans = cur + d; rule = `차이가 ${dd}씩 커짐`; }
   else if (k === 'fib') { seq = [1 + rand(5), 1 + rand(6)]; for (let i = 2; i < 7; i++) seq.push(seq[i - 1] + seq[i - 2]); ans = seq[6] + seq[5]; rule = '앞의 두 수의 합'; }
   else if (k === 'square') { const c = rand(8) - 3, p = pick([2, 2, 3]); for (let i = 1; i <= 6; i++) seq.push(i ** p + c); ans = 7 ** p + c; rule = `n${p === 2 ? '²' : '³'}${c > 0 ? '+' + c : c < 0 ? String(c) : ''}`; }
   else if (k === 'inter') { const a = 1 + rand(9), d = 2 + rand(5), b = 20 + rand(30), e = pick([-1, -2, -3, -4, 3, 5, 7]); for (let i = 0; i < 4; i++) { seq.push(a + d * i); seq.push(b + e * i); } seq = seq.slice(0, 7); ans = b + e * 3; rule = `두 수열이 번갈아 (+${d} / ${e >= 0 ? '+' : ''}${e})`; }
   else if (k === 'lin') { const m = pick([2, 3]), c = pick([-3, -2, -1, 1, 2, 3]); seq = [1 + rand(4)]; for (let i = 1; i < 6; i++) seq.push(seq[i - 1] * m + c); ans = seq[5] * m + c; rule = `앞의 수 × ${m} ${c >= 0 ? '+' : '−'} ${Math.abs(c)}`; }
   else if (k === 'tri') { const c = rand(6); for (let i = 1; i <= 7; i++) seq.push(i * (i + 1) / 2 + c); ans = 36 + c; rule = `삼각수${c ? ' + ' + c : ''}`; }
+  else if (k === 'alt') { const m = pick([2, 3]), c = between(1, 6); seq = [between(1, 5)]; for (let i = 1; i < 7; i++) seq.push(i % 2 ? seq[i - 1] * m : seq[i - 1] + c); ans = 7 % 2 ? seq[6] * m : seq[6] + c; rule = `×${m}, +${c} 번갈아`; }
+  else if (k === 'trib') { seq = [between(0, 2), between(1, 3), between(1, 4)]; for (let i = 3; i < 7; i++) seq.push(seq[i - 1] + seq[i - 2] + seq[i - 3]); ans = seq[6] + seq[5] + seq[4]; rule = '앞의 세 수의 합'; }
+  else if (k === 'cubic') { const a = between(1, 3), c = between(-5, 5); for (let i = 1; i <= 6; i++) seq.push(a * i ** 3 + c); ans = a * 343 + c; rule = `${a > 1 ? a : ''}n³${c > 0 ? '+' + c : c < 0 ? c : ''} (계차가 2단계 등차)`; }
+  else if (k === 'mulinc') { const s = between(1, 3); seq = [s]; for (let i = 1; i < 6; i++) seq.push(seq[i - 1] * (i + 1) + (i % 2 ? 0 : 1)); ans = seq[5] * 7 + 1; rule = '×2, ×3+1, ×4, ×5+1, … (곱하는 수가 1씩 증가, 짝수 번째에 +1)'; }
+  else if (k === 'sqpair') { const c = between(0, 3); for (let i = 1; i <= 6; i++) seq.push(i * i + (i + c) * (i + c)); ans = 49 + (7 + c) ** 2; rule = `n² + (n+${c})²`; }
+  else if (k === 'digsum') { let x = between(11, 40); seq = [x]; for (let i = 1; i < 7; i++) { x = x + [...String(x)].reduce((a, d) => a + Number(d), 0); seq.push(x); } ans = x + [...String(x)].reduce((a, d) => a + Number(d), 0); rule = '앞의 수 + 앞의 수의 각 자리 숫자 합'; }
   else { const pr = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31], s = rand(3); seq = pr.slice(s, s + 6); ans = pr[s + 6]; rule = '소수 나열'; }
+  if (hard && seq.length >= 7) { ans = seq[6]; seq = seq.slice(0, 6); }
   return { pub: { seq }, secret: { ans }, answerText: String(ans), expl: rule };
 }
 
 /* ───────── 범인 추리 (해 1개 보장) ───────── */
-const NAMES = ['철수', '영희', '민수', '지은'];
+const PEOPLE = ['철수', '영희', '민수', '지은', '하준', '서연', '도윤', '하은', '지호', '수아', '준우', '유나', '현우', '채원'];
+const CRIMES = ['범인', '케이크를 먹은 사람', '꽃병을 깬 사람', '몰래 방귀 뀐 사람', '금고를 연 사람', '시험지를 훔친 사람'];
 const hasB = (s) => { const c = s.charCodeAt(s.length - 1) - 0xac00; return c >= 0 && c % 28 !== 0; };
 const josa = (s, a, b) => s + (hasB(s) ? a : b);
-function stmtText(st) {
-  const x = NAMES[st.x], y = NAMES[st.y];
-  if (st.k === 'is') return `범인은 ${josa(x, '이다', '다')}`;
-  if (st.k === 'not') return `${josa(x, '은', '는')} 범인이 아니다`;
-  if (st.k === 'or') return `범인은 ${josa(x, '이나', '나')} ${josa(y, '이다', '다')}`;
-  return `범인은 ${x}도 ${y}도 아니다`;
+function stmtText(st, names, crime) {
+  const x = names[st.x], y = names[st.y];
+  if (st.k === 'is') return `${josa(crime, '은', '는')} ${josa(x, '이다', '다')}`;
+  if (st.k === 'not') return `${josa(x, '은', '는')} ${josa(crime, '이', '가')} 아니다`;
+  if (st.k === 'or') return `${josa(crime, '은', '는')} ${josa(x, '이나', '나')} ${josa(y, '이다', '다')}`;
+  if (st.k === 'me') return `나는 ${josa(crime, '이', '가')} 아니다`;
+  return `${josa(crime, '은', '는')} ${x}도 ${y}도 아니다`;
 }
-function stmtTruth(st, c) { return st.k === 'is' ? c === st.x : st.k === 'not' ? c !== st.x : st.k === 'or' ? c === st.x || c === st.y : c !== st.x && c !== st.y; }
-function makeLiar() {
+function stmtTruth(st, c) { return st.k === 'is' ? c === st.x : st.k === 'not' || st.k === 'me' ? c !== st.x : st.k === 'or' ? c === st.x || c === st.y : c !== st.x && c !== st.y; }
+function makeLiar(hard) {
+  const n = hard ? 5 : 4;
   for (;;) {
-    const T = pick([1, 2, 2, 3]);
-    const stmts = NAMES.map(() => { const k = pick(['is', 'not', 'not', 'or', 'nor']); const x = rand(4); let y = rand(4); while (y === x) y = rand(4); return { k, x, y }; });
-    const sols = [0, 1, 2, 3].filter((c) => stmts.filter((s) => stmtTruth(s, c)).length === T);
+    const names = shuffle(PEOPLE).slice(0, n), crime = pick(CRIMES);
+    const T = hard ? pick([1, 2, 3, 4]) : pick([1, 2, 2, 3]);
+    const stmts = names.map((_, i) => { const k = pick(['is', 'not', 'not', 'or', 'nor', 'me']); const x = k === 'me' ? i : rand(n); let y = rand(n); while (y === x) y = rand(n); return { k, x, y }; });
+    const sols = names.map((_, c) => c).filter((c) => stmts.filter((s) => stmtTruth(s, c)).length === T);
     if (sols.length !== 1) continue;
     const c = sols[0];
-    return { pub: { names: NAMES, lines: stmts.map((s, i) => `${NAMES[i]}: “${stmtText(s)}”`), T }, secret: { ans: c }, answerText: NAMES[c], expl: stmts.map((s, i) => `${NAMES[i]} ${stmtTruth(s, c) ? '참' : '거짓'}`).join(' · ') };
+    return {
+      pub: { names, lines: stmts.map((s, i) => `${names[i]}: “${stmtText(s, names, crime)}”`), T, crime },
+      secret: { ans: c }, answerText: names[c], expl: stmts.map((s, i) => `${names[i]} ${stmtTruth(s, c) ? '참' : '거짓'}`).join(' · '),
+    };
   }
 }
 
 /* ───────── 금고 털기 (숫자야구, 해 1개 보장) ───────── */
-const ALL3 = []; for (let i = 0; i < 1000; i++) { const s = String(i).padStart(3, '0'); if (new Set(s).size === 3) ALL3.push(s); }
-function sb(g, x) { let s = 0, b = 0; for (let i = 0; i < 3; i++) { if (g[i] === x[i]) s++; else if (x.includes(g[i])) b++; } return s * 10 + b; }
-function makeCode() {
+const ALLN = { 3: [], 4: [] };
+for (let i = 0; i < 10000; i++) { for (const L of [3, 4]) { if (i >= 10 ** L) continue; const s = String(i).padStart(L, '0'); if (new Set(s).size === L) ALLN[L].push(s); } }
+const ALL3 = ALLN[3];
+function sb(g, x) { let s = 0, b = 0; for (let i = 0; i < g.length; i++) { if (g[i] === x[i]) s++; else if (x.includes(g[i])) b++; } return s * 10 + b; }
+function makeCode(hard) {
+  const L = hard ? 4 : 3, ALL = ALLN[L], maxClues = hard ? 7 : 5;
   for (let t = 0; t < 2000; t++) {
-    const secret = pick(ALL3); const clues = []; let cand = ALL3;
-    while (cand.length > 1 && clues.length < 5) {
+    const secret = pick(ALL); const clues = []; let cand = ALL;
+    while (cand.length > 1 && clues.length < maxClues) {
       let best = null;
       for (let k = 0; k < 10; k++) {
-        const g = pick(ALL3); if (g === secret || clues.some((c) => c.g === g)) continue;
+        const g = pick(ALL); if (g === secret || clues.some((c) => c.g === g)) continue;
         const r = sb(g, secret); const nc = cand.filter((x) => sb(g, x) === r);
         if (nc.length === cand.length) continue;
         if (!best || nc.length < best.nc.length) best = { g, r, nc };
@@ -509,20 +636,21 @@ function makeCode() {
       if (!best) break;
       clues.push({ g: best.g, s: Math.floor(best.r / 10), b: best.r % 10 }); cand = best.nc;
     }
-    if (cand.length === 1 && clues.length >= 3) return { pub: { clues }, secret: { ans: secret }, answerText: secret };
+    if (cand.length === 1 && clues.length >= 3) return { pub: { clues, L }, secret: { ans: secret }, answerText: secret };
   }
-  return { pub: { clues: [{ g: '012', s: 0, b: 0 }, { g: '345', s: 1, b: 0 }, { g: '367', s: 0, b: 1 }, { g: '849', s: 1, b: 1 }] }, secret: { ans: ALL3.find((x) => [['012', 0], ['345', 10], ['367', 1], ['849', 11]].every(([g, r]) => sb(g, x) === r)) }, answerText: '' };
+  return { pub: { clues: [{ g: '012', s: 0, b: 0 }, { g: '345', s: 1, b: 0 }, { g: '367', s: 0, b: 1 }, { g: '849', s: 1, b: 1 }], L: 3 }, secret: { ans: ALL3.find((x) => [['012', 0], ['345', 10], ['367', 1], ['849', 11]].every(([g, r]) => sb(g, x) === r)) }, answerText: '' };
 }
 
 /* ───────── 두뇌 ───────── */
-function makeMemory() {
-  const cells = shuffle([...Array(16).keys()]).slice(0, 5 + rand(4)).sort((a, b) => a - b);
-  return { pub: { cells, showMs: 3200 }, secret: { cells }, answerText: `${cells.length}칸` };
+function makeMemory(hard) {
+  const n = hard ? 5 : 4, k = hard ? between(8, 11) : between(5, 8);
+  const cells = shuffle([...Array(n * n).keys()]).slice(0, k).sort((a, b) => a - b);
+  return { pub: { cells, n, showMs: hard ? 3600 : 3200 }, secret: { cells }, answerText: `${cells.length}칸` };
 }
-function makeDigits() {
-  const len = 7 + rand(3); let d = ''; for (let i = 0; i < len; i++) d += rand(10);
-  const rev = Math.random() < 0.4; const ans = rev ? [...d].reverse().join('') : d;
-  return { pub: { d, rev, showMs: 3500 }, secret: { ans }, answerText: ans, expl: rev ? `보인 숫자 ${d}를 거꾸로` : '' };
+function makeDigits(hard) {
+  const len = hard ? between(10, 12) : between(7, 9); let d = ''; for (let i = 0; i < len; i++) d += rand(10);
+  const rev = Math.random() < (hard ? 0.5 : 0.4); const ans = rev ? [...d].reverse().join('') : d;
+  return { pub: { d, rev, showMs: hard ? 4500 : 3500 }, secret: { ans }, answerText: ans, expl: rev ? `보인 숫자 ${d}를 거꾸로` : '' };
 }
 const COLORS = [['빨강', '#ff4d6d'], ['파랑', '#4cc9f0'], ['초록', '#3ddc97'], ['노랑', '#ffd23f']];
 function makeStroop() {
@@ -531,29 +659,567 @@ function makeStroop() {
   return { pub: { items }, secret: { ans: items.map((it) => (it.a === 'c' ? it.c : it.w)) }, answerText: '8문제' };
 }
 
-function makeQ(type, used) {
+function makeQ(type, ctx) {
+  ctx = ctx || {};
+  const used = ctx.used || new Set(), hard = !!ctx.hard, ids = ctx.ids || [];
   switch (type) {
-    case 'calc24': return makeCalc24();
-    case 'mental': return makeMental();
-    case 'sequence': return makeSequence();
+    case 'calc24': return makeCalc24(hard);
+    case 'mental': return makeMental(hard);
+    case 'sequence': return makeSequence(hard);
     case 'fermi': return makeFermi(used);
     case 'trivia': return makeTrivia(used);
-    case 'timeline': return makeTimeline(used);
-    case 'chosung': return makeChosung(used);
-    case 'liar': return makeLiar();
-    case 'code': return makeCode();
-    case 'memory': return makeMemory();
-    case 'digits': return makeDigits();
+    case 'timeline': return makeTimeline(used, hard);
+    case 'chosung': return makeChosung(used, hard);
+    case 'liar': return makeLiar(hard);
+    case 'code': return makeCode(hard);
+    case 'memory': return makeMemory(hard);
+    case 'digits': return makeDigits(hard);
     case 'stroop': return makeStroop();
-    default: return { pub: {}, secret: {} };
+    default: return GEN2[type] ? GEN2[type](hard, ids) : { pub: {}, secret: {} };
   }
 }
-function buildPlan(n, playerCount) {
-  const types = Object.keys(TYPES).filter((t) => playerCount >= 2 || !TYPES[t].social);
+function buildPlan(n, playerCount, mode, cats) {
+  let types = Object.keys(TYPES).filter((t) => (playerCount >= 2 || !TYPES[t].social) && !(mode === 'free' && TYPES[t].speed));
+  if (cats && cats.length) { const f = types.filter((t) => cats.includes(TYPES[t].cat)); if (f.length) types = f; }
   const plan = [];
   while (plan.length < n) { const bag = shuffle(types); if (plan.length && bag[0] === plan[plan.length - 1]) bag.push(bag.shift()); plan.push(...bag); }
   return plan.slice(0, n);
 }
+
+/* ═════════════ 새 게임 생성기 ═════════════
+   GEN2[type](hard, ids) → { pub, secret, answerText, expl }
+   NORM2[type](raw, pub) → 정규화한 답 또는 null
+   JUDGE2[type](v, secret, pub) → 정답 여부
+   pub.ui 가 'num' / 'mc' 이면 공용 화면으로 그린다. */
+
+const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯';
+const circ = (i) => CIRC[i] || String(i + 1);
+const numOK = (raw) => { const v = Number(String(raw).replace(/,/g, '')); return Number.isFinite(v) && Math.abs(v) < 1e9 ? v : null; };
+const intIn = (raw, lo, hi) => { const v = Number(raw); return Number.isInteger(v) && v >= lo && v <= hi ? v : null; };
+const intArr = (raw, max, lo, hi) => (Array.isArray(raw) && raw.length <= max && raw.every((x) => Number.isInteger(x) && x >= lo && x <= hi) ? raw.slice() : null);
+const strRe = (raw, re) => { const v = String(raw == null ? '' : raw).replace(/\s+/g, ''); return v.length <= 64 && re.test(v) ? v : null; };
+
+// 행렬 계수(rank) — 선형 방정식으로 값이 하나로 정해지는지 판정할 때 쓴다
+function rankOf(rows) {
+  const m = rows.map((r) => r.slice()); let rank = 0; const cols = m.length ? m[0].length : 0;
+  for (let c = 0; c < cols && rank < m.length; c++) {
+    let p = -1, best = 1e-9;
+    for (let r = rank; r < m.length; r++) if (Math.abs(m[r][c]) > best) { best = Math.abs(m[r][c]); p = r; }
+    if (p < 0) continue;
+    [m[rank], m[p]] = [m[p], m[rank]];
+    for (let r = 0; r < m.length; r++) if (r !== rank) { const f = m[r][c] / m[rank][c]; if (f) for (let k = c; k < cols; k++) m[r][k] -= f * m[rank][k]; }
+    rank++;
+  }
+  return rank;
+}
+const determined = (rows, target) => rankOf(rows) === rankOf([...rows, target]);
+
+/* ───────── 과일 방정식 ───────── */
+const FRUITS = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍑', '🥝', '🍍', '🍋', '🍉', '🥥', '🍐'];
+function genFruit(hard) {
+  for (;;) {
+    const n = hard ? 4 : 3, f = shuffle(FRUITS).slice(0, n), v = f.map(() => between(hard ? 2 : 1, hard ? 13 : 10));
+    const lines = [`${f[0]} + ${f[0]} + ${f[0]} = ${3 * v[0]}`];
+    for (let i = 1; i < n; i++) {
+      const forms = [
+        [`${f[i - 1]} + ${f[i]} + ${f[i]}`, v[i - 1] + 2 * v[i]],
+        [`${f[i]} + ${f[i]} − ${f[i - 1]}`, 2 * v[i] - v[i - 1]],
+        [`${f[i - 1]} + ${f[i - 1]} + ${f[i]}`, 2 * v[i - 1] + v[i]],
+      ];
+      if (hard) forms.push([`${f[i - 1]} × ${f[i]}`, v[i - 1] * v[i]], [`${f[i]} × ${f[i]} − ${f[i - 1]}`, v[i] * v[i] - v[i - 1]]);
+      const [txt, val] = pick(forms); lines.push(`${txt} = ${val}`);
+    }
+    let q, ans;
+    if (!hard) { q = `${f[0]} + ${f[1]} × ${f[2]}`; ans = v[0] + v[1] * v[2]; }
+    else if (Math.random() < 0.5) { q = `${f[3]} + ${f[0]} × ${f[1]} − ${f[2]}`; ans = v[3] + v[0] * v[1] - v[2]; }
+    else { q = `${f[2]} × ${f[3]} − ${f[1]} + ${f[0]} × ${f[0]}`; ans = v[2] * v[3] - v[1] + v[0] * v[0]; }
+    if (lines.some((l) => /= -/.test(l))) continue;
+    return { pub: { ui: 'num', text: `${q} = ?`, sub: '과일 하나의 값은 늘 같다 · 곱셈 먼저', lines }, secret: { ans }, answerText: String(ans), expl: f.map((x, i) => `${x}=${v[i]}`).join(' ') };
+  }
+}
+
+/* ───────── 시계 각도 ───────── */
+function genClock(hard) {
+  const h = between(1, 12), m = hard ? between(1, 59) : 10 * between(0, 5);
+  let a = Math.abs(30 * (h % 12) - 5.5 * m) % 360; if (a > 180) a = 360 - a;
+  const txt = `${h}시 ${m}분`;
+  return {
+    pub: { ui: 'num', decimal: true, big: txt, text: '시침과 분침 사이의 작은 각도는?', sub: '단위: 도(°)' + (hard ? ' · 0.5 단위가 나올 수 있다' : '') },
+    secret: { ans: a }, answerText: `${a}°`, expl: `시침 ${30 * (h % 12) + 0.5 * m}° · 분침 ${6 * m}°`,
+  };
+}
+
+/* ───────── 마방진 ───────── */
+const LOSHU = [2, 7, 6, 9, 5, 1, 4, 3, 8];
+const MLINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+function genMagic(hard) {
+  for (;;) {
+    let g = LOSHU.slice();
+    const rot = (x) => [x[6], x[3], x[0], x[7], x[4], x[1], x[8], x[5], x[2]];
+    for (let i = rand(4); i > 0; i--) g = rot(g);
+    if (rand(2)) g = [g[2], g[1], g[0], g[5], g[4], g[3], g[8], g[7], g[6]];
+    const a = hard ? between(2, 7) : between(1, 3), b = hard ? between(0, 25) : between(0, 9);
+    g = g.map((x) => a * x + b);
+    const hidden = shuffle([...Array(9).keys()]).slice(0, hard ? 6 : 4);
+    const target = pick(hidden);
+    const rows = [];
+    for (let i = 0; i < 9; i++) if (!hidden.includes(i)) { const r = Array(10).fill(0); r[i] = 1; rows.push(r); }
+    for (const L of MLINES) { const r = Array(10).fill(0); L.forEach((i) => { r[i] = 1; }); r[9] = -1; rows.push(r); }
+    const t = Array(10).fill(0); t[target] = 1;
+    if (!determined(rows, t)) continue;
+    const grid = [0, 1, 2].map((r) => [0, 1, 2].map((c) => { const i = r * 3 + c; return i === target ? '?' : hidden.includes(i) ? '' : String(g[i]); }));
+    return { pub: { ui: 'num', text: '?에 들어갈 수는?', sub: '가로·세로·대각선 8줄의 합이 모두 같다', grid }, secret: { ans: g[target] }, answerText: String(g[target]), expl: `한 줄의 합 = ${g[0] + g[1] + g[2]}` };
+  }
+}
+
+/* ───────── 숫자 피라미드 ───────── */
+function genPyramid(hard) {
+  const n = hard ? 5 : 4;
+  for (;;) {
+    const bottom = Array.from({ length: n }, () => between(1, hard ? 12 : 9));
+    // cells[r][c] : r=0 이 맨 아래. coef = 아래 줄 숫자들에 곱해지는 계수
+    const val = [bottom.slice()], coef = [bottom.map((_, i) => bottom.map((__, j) => (i === j ? 1 : 0)))];
+    for (let r = 1; r < n; r++) { val.push([]); coef.push([]); for (let c = 0; c < n - r; c++) { val[r].push(val[r - 1][c] + val[r - 1][c + 1]); coef[r].push(coef[r - 1][c].map((x, k) => x + coef[r - 1][c + 1][k])); } }
+    const all = []; for (let r = 0; r < n; r++) for (let c = 0; c < n - r; c++) all.push([r, c]);
+    const giv = shuffle(all).slice(0, n);
+    const rest = all.filter((x) => !giv.includes(x));
+    const pref = hard ? rest.filter(([r]) => r === 0) : rest;
+    const tgt = pick(pref.length ? pref : rest);
+    const rows = giv.map(([r, c]) => coef[r][c]);
+    if (!determined(rows, coef[tgt[0]][tgt[1]])) continue;
+    // 바로 위·아래 두 칸만으로 풀리는 너무 쉬운 문제는 거른다
+    const isG = (r, c) => giv.some(([a, b]) => a === r && b === c);
+    const [tr, tc] = tgt;
+    if (tr > 0 && isG(tr - 1, tc) && isG(tr - 1, tc + 1)) continue;
+    const pyr = [];
+    for (let r = n - 1; r >= 0; r--) pyr.push(val[r].map((x, c) => (r === tr && c === tc ? '?' : isG(r, c) ? String(x) : '')));
+    return { pub: { ui: 'num', text: '?에 들어갈 수는?', sub: '각 칸 = 바로 아래 두 칸의 합', pyr }, secret: { ans: val[tr][tc] }, answerText: String(val[tr][tc]), expl: `맨 아랫줄: ${bottom.join(', ')}` };
+  }
+}
+
+/* ───────── 연산자 넣기 ───────── */
+function opsExpr(nums, ops) { let s = String(nums[0]); for (let i = 0; i < ops.length; i++) s += ops[i] + nums[i + 1]; return s; }
+function genOps(hard) {
+  const k = hard ? 5 : 4, OPS = hard ? ['+', '-', '*', '/'] : ['+', '-', '*'];
+  for (let t = 0; t < 500; t++) {
+    const nums = Array.from({ length: k }, () => between(1, 9));
+    const ops = Array.from({ length: k - 1 }, () => pick(OPS));
+    let v; try { v = Expr.evaluate(opsExpr(nums, ops)).value; } catch (e) { continue; }
+    if (v.d !== 1 || v.n < 0 || v.n > 150) continue;
+    // 해의 개수
+    let sols = 0; const all = [[]];
+    for (let i = 0; i < k - 1; i++) { const nx = []; for (const a of all) for (const o of OPS) nx.push([...a, o]); all.splice(0, all.length, ...nx); }
+    for (const o of all) { try { const w = Expr.evaluate(opsExpr(nums, o)).value; if (w.d === 1 && w.n === v.n) sols++; } catch (e) { /* */ } }
+    if (sols > (hard ? 2 : 3)) continue;
+    const show = opsExpr(nums, ops).replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−');
+    return { pub: { nums, target: v.n, ops: OPS }, secret: { nums, target: v.n }, answerText: `${show} = ${v.n}`, expl: sols > 1 ? `다른 답도 ${sols - 1}개 더 있다` : '' };
+  }
+  return genOps(false);
+}
+
+/* ───────── 문장제 ───────── */
+const WORD_T = {
+  chick() { const c = between(3, 20), r = between(2, 15), askR = rand(2); return { text: `닭과 토끼가 모두 ${c + r}마리, 다리는 모두 ${2 * c + 4 * r}개다. ${askR ? '토끼' : '닭'}는 몇 마리?`, ans: askR ? r : c, expl: `닭 ${c}, 토끼 ${r}` }; },
+  hand() { const n = between(5, 16); return { text: `${n}명이 모두 서로 한 번씩 악수를 한다. 악수는 모두 몇 번?`, ans: n * (n - 1) / 2, expl: `${n}×${n - 1}÷2` }; },
+  age() { for (;;) { const s = between(4, 14), k = pick([2, 3]), y = between(2, 12), f = k * (s + y) - y; if (f - s < 20 || f > 70) continue; return { text: `아버지는 아들보다 ${f - s}살 많다. ${y}년 뒤 아버지 나이는 아들 나이의 ${k}배가 된다. 아들은 지금 몇 살?`, ans: s, expl: `아들 ${s}살, 아버지 ${f}살` }; } },
+  work() { const [a, b, c] = pick([[3, 6, 2], [4, 12, 3], [6, 12, 4], [10, 15, 6], [12, 24, 8], [20, 30, 12], [6, 3, 2], [30, 60, 20], [12, 4, 3]]), m = pick([1, 1, 2, 3]); return { text: `A 혼자 하면 ${a * m}일, B 혼자 하면 ${b * m}일 걸리는 일이 있다. 둘이 함께 하면 며칠?`, ans: c * m, expl: `하루에 1/${a * m} + 1/${b * m} = 1/${c * m}` }; },
+  speed() { const [v1, v2, v] = pick([[30, 60, 40], [40, 60, 48], [20, 30, 24], [60, 90, 72], [12, 6, 8], [45, 90, 60], [10, 40, 16], [15, 10, 12], [60, 40, 48]]), d = between(2, 12) * 30; return { text: `${d}km 거리를 갈 때는 시속 ${v1}km, 올 때는 시속 ${v2}km로 왕복했다. 왕복 평균 시속은 몇 km?`, ans: v, expl: `산술평균(${(v1 + v2) / 2})이 아니라 2×${v1}×${v2}÷${v1 + v2} = ${v}` }; },
+  salt() { for (;;) { const a = between(1, 5) * 100, b = between(1, 5) * 100, p = between(2, 20), q = between(2, 20); if (p === q) continue; const r = (a * p + b * q) / (a + b); if (!Number.isInteger(r)) continue; return { text: `${p}% 소금물 ${a}g과 ${q}% 소금물 ${b}g을 섞으면 몇 % 소금물이 될까?`, ans: r, expl: `소금 ${a * p / 100 + b * q / 100}g ÷ ${a + b}g` }; } },
+  sale() { for (;;) { const P = between(2, 40) * 1000, x = pick([10, 20, 25, 30, 40, 50]), y = pick([10, 20, 25, 30, 50]); const f = P * (100 - x) * (100 + y) / 10000; if (!Number.isInteger(f)) continue; return { text: `정가 ${P.toLocaleString('ko-KR')}원짜리 물건을 ${x}% 할인했다가, 다시 그 가격에서 ${y}% 올렸다. 지금 가격은 몇 원?`, ans: f, expl: `${P}×${(100 - x) / 100}×${(100 + y) / 100}` }; } },
+  page() { const N = between(100, 999); return { text: `1쪽부터 ${N}쪽까지 쪽 번호를 모두 쓰면, 숫자는 모두 몇 개 쓰일까?`, ans: 9 + 180 + 3 * (N - 99), expl: `1~9: 9개, 10~99: 180개, 100~${N}: ${3 * (N - 99)}개` }; },
+  stairs() { const n = between(6, 13); const f = [1, 1]; for (let i = 2; i <= n; i++) f.push(f[i - 1] + f[i - 2]); return { text: `계단 ${n}칸을 한 번에 1칸 또는 2칸씩 오른다. 오르는 방법은 모두 몇 가지?`, ans: f[n], expl: '피보나치: 직전 두 칸의 방법 수를 더한다' }; },
+  table() { const n = between(4, 7); let f = 1; for (let i = 2; i < n; i++) f *= i; return { text: `${n}명이 원탁에 둘러앉는다. 회전해서 같은 배치는 같은 것으로 볼 때, 앉는 방법은 몇 가지?`, ans: f, expl: `(${n}−1)! = ${f}` }; },
+  multi() { const N = between(20, 60), a = pick([3, 4]), b = pick([5, 7]); let s = 0; for (let i = 1; i <= N; i++) if (i % a === 0 || i % b === 0) s += i; return { text: `1부터 ${N}까지의 자연수 중 ${a}의 배수 또는 ${b}의 배수를 모두 더하면?`, ans: s, expl: `${a}의 배수 합 + ${b}의 배수 합 − ${a * b}의 배수 합` }; },
+  train() { const t = between(10, 40), v = between(10, 30), L = between(5, 30) * 10, T = t * v - L; if (T < 100) return WORD_T.train(); return { text: `길이 ${L}m인 기차가 초속 ${v}m로 달려 길이 ${T}m인 터널을 완전히 통과하는 데 몇 초 걸릴까?`, ans: t, expl: `(${L}+${T})÷${v}` }; },
+  coins() { for (;;) { const a = between(2, 12), b = between(2, 12), tot = a + b, sum = a * 100 + b * 500; return { text: `100원짜리와 500원짜리 동전이 모두 ${tot}개, 합계 ${sum.toLocaleString('ko-KR')}원이다. 500원짜리는 몇 개?`, ans: b, expl: `100원 ${a}개, 500원 ${b}개` }; } },
+};
+function genWord(hard) {
+  const pool = hard ? ['age', 'work', 'speed', 'salt', 'page', 'stairs', 'table', 'multi', 'train', 'sale'] : ['chick', 'hand', 'age', 'work', 'speed', 'salt', 'coins', 'sale'];
+  const w = WORD_T[pick(pool)]();
+  return { pub: { ui: 'num', text: w.text, sub: '숫자만 입력' }, secret: { ans: w.ans }, answerText: String(w.ans), expl: w.expl };
+}
+
+/* ───────── 결! 합! ───────── */
+const isHap = (t, i, j, k) => [0, 1, 2].every((a) => (t[i][a] + t[j][a] + t[k][a]) % 3 === 0);
+function allHaps(t) { const out = []; for (let i = 0; i < 9; i++) for (let j = i + 1; j < 9; j++) for (let k = j + 1; k < 9; k++) if (isHap(t, i, j, k)) out.push([i, j, k]); return out; }
+function genHap(hard) {
+  for (;;) {
+    const all = []; for (let s = 0; s < 3; s++) for (let c = 0; c < 3; c++) for (let b = 0; b < 3; b++) all.push([s, c, b]);
+    const tiles = shuffle(all).slice(0, 9), haps = allHaps(tiles);
+    if (hard ? haps.length < 2 || haps.length > 9 : haps.length < 1 || haps.length > 4) continue;
+    const list = haps.map((h) => h.map((x) => x + 1).join('-')).join(', ');
+    return { pub: { tiles, mode: hard ? 'count' : 'find' }, secret: { n: haps.length }, answerText: hard ? `합 ${haps.length}개` : `합: ${list}`, expl: hard ? `합: ${list}` : `이 판의 합은 모두 ${haps.length}개` };
+  }
+}
+
+/* ───────── 불 끄기 ───────── */
+function lightsPress(b, n, i) { const r = Math.floor(i / n), c = i % n; for (const [dr, dc] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) { const R = r + dr, C = c + dc; if (R >= 0 && R < n && C >= 0 && C < n) b[R * n + C] ^= 1; } }
+function genLights(hard) {
+  const n = hard ? 5 : 4;
+  for (;;) {
+    const b = Array(n * n).fill(0), presses = shuffle([...Array(n * n).keys()]).slice(0, hard ? between(6, 9) : between(3, 5));
+    presses.forEach((i) => lightsPress(b, n, i));
+    if (b.every((x) => !x)) continue;
+    return { pub: { n, b: b.join('') }, secret: {}, answerText: `한 가지 해법: ${presses.sort((x, y) => x - y).map((i) => `${Math.floor(i / n) + 1}행${i % n + 1}열`).join(', ')}` };
+  }
+}
+
+/* ───────── 미니 스도쿠 ───────── */
+function sudokuValid(s, n, bh, bw) {
+  for (let i = 0; i < n; i++) {
+    const R = new Set(), C = new Set(), B = new Set();
+    for (let j = 0; j < n; j++) {
+      R.add(s[i * n + j]); C.add(s[j * n + i]);
+      const br = Math.floor(i / (n / bw)) * bh, bc = (i % (n / bw)) * bw;
+      B.add(s[(br + Math.floor(j / bw)) * n + bc + (j % bw)]);
+    }
+    if (R.size !== n || C.size !== n || B.size !== n) return false;
+  }
+  return true;
+}
+function sudokuCount(g, n, bh, bw, limit) {
+  const a = g.slice(); let cnt = 0;
+  const ok = (p, v) => { const r = Math.floor(p / n), c = p % n, br = r - (r % bh), bc = c - (c % bw); for (let k = 0; k < n; k++) { if (a[r * n + k] === v || a[k * n + c] === v) return false; } for (let i = 0; i < bh; i++) for (let j = 0; j < bw; j++) if (a[(br + i) * n + bc + j] === v) return false; return true; };
+  (function rec() {
+    if (cnt >= limit) return;
+    const p = a.indexOf(0); if (p < 0) { cnt++; return; }
+    for (let v = 1; v <= n; v++) if (ok(p, v)) { a[p] = v; rec(); a[p] = 0; if (cnt >= limit) return; }
+  })();
+  return cnt;
+}
+function genSudoku(hard) {
+  const n = hard ? 6 : 4, bh = 2, bw = hard ? 3 : 2;
+  const digits = shuffle([...Array(n).keys()].map((x) => x + 1));
+  const bands = shuffle([...Array(n / bh).keys()]), stacks = shuffle([...Array(n / bw).keys()]);
+  const rows = [].concat(...bands.map((b) => shuffle([...Array(bh).keys()]).map((r) => b * bh + r)));
+  const cols = [].concat(...stacks.map((s) => shuffle([...Array(bw).keys()]).map((c) => s * bw + c)));
+  const pat = (r, c) => (bw * (r % bh) + Math.floor(r / bh) + c) % n;
+  const sol = []; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) sol.push(digits[pat(rows[r], cols[c])]);
+  const g = sol.slice(), floor = hard ? 10 : 5;
+  for (const p of shuffle([...Array(n * n).keys()])) {
+    if (g.filter((x) => x).length <= floor) break;
+    const keep = g[p]; g[p] = 0;
+    if (sudokuCount(g, n, bh, bw, 2) !== 1) g[p] = keep;
+  }
+  return { pub: { n, bh, bw, g: g.join('') }, secret: { sol: sol.join('') }, answerText: '완성된 판은 아래와 같다', expl: [...Array(n).keys()].map((r) => sol.slice(r * n, r * n + n).join('')).join(' / ') };
+}
+
+/* ───────── 노노그램 ───────── */
+const runs = (arr) => { const out = []; let c = 0; for (const x of arr) { if (x) c++; else if (c) { out.push(c); c = 0; } } if (c) out.push(c); return out.length ? out : [0]; };
+function nonoClues(bits, n) {
+  const rows = [], cols = [];
+  for (let i = 0; i < n; i++) { rows.push(runs(bits.slice(i * n, i * n + n))); cols.push(runs([...Array(n).keys()].map((r) => bits[r * n + i]))); }
+  return { rows, cols };
+}
+function genNono(hard) {
+  const n = hard ? 7 : 5;
+  for (;;) {
+    const bits = Array.from({ length: n * n }, () => (Math.random() < (hard ? 0.55 : 0.6) ? 1 : 0));
+    const { rows, cols } = nonoClues(bits, n);
+    if ([...rows, ...cols].some((r) => r[0] === 0)) continue;
+    return { pub: { n, rows, cols }, secret: {}, answerText: '단서를 모두 만족하면 정답', expl: [...Array(n).keys()].map((r) => bits.slice(r * n, r * n + n).map((x) => (x ? '■' : '□')).join('')).join(' ') };
+  }
+}
+
+/* ───────── 성냥개비 ───────── */
+// 7세그먼트 비트: a=1(위) b=2(오른쪽 위) c=4(오른쪽 아래) d=8(아래) e=16(왼쪽 아래) f=32(왼쪽 위) g=64(가운데)
+const SEG = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111];
+const OPSEG = { '+': 3, '-': 1 }; // 가로=1, 세로=2
+function matchMasks(s) { return [...s].map((ch) => (ch >= '0' && ch <= '9' ? { k: 'd', m: SEG[+ch] } : ch === '=' ? { k: 'e', m: 0 } : { k: 'o', m: OPSEG[ch] })); }
+function maskChar(k, m) { if (k === 'd') { const i = SEG.indexOf(m); return i < 0 ? null : String(i); } if (k === 'o') return m === 3 ? '+' : m === 1 ? '-' : null; return '='; }
+function matchTrue(s) {
+  const mm = /^(\d+)([+-])(\d+)=(\d+)$/.exec(s); if (!mm) return false;
+  if ([mm[1], mm[3], mm[4]].some((x) => x.length > 1 && x[0] === '0')) return false;
+  return (mm[2] === '+' ? +mm[1] + +mm[3] : +mm[1] - +mm[3]) === +mm[4];
+}
+function matchMoves(s) {
+  const P = matchMasks(s), out = new Set();
+  for (let i = 0; i < P.length; i++) {
+    if (P[i].k === 'e') continue;
+    const W = P[i].k === 'd' ? 7 : 2;
+    for (let bi = 0; bi < W; bi++) {
+      if (!(P[i].m & (1 << bi))) continue;
+      const mi = P[i].m & ~(1 << bi);
+      for (let j = 0; j < P.length; j++) {
+        if (P[j].k === 'e') continue;
+        const base = j === i ? mi : P[j].m, Wj = P[j].k === 'd' ? 7 : 2;
+        for (let bj = 0; bj < Wj; bj++) {
+          if (base & (1 << bj)) continue;
+          if (j === i && bj === bi) continue;
+          const arr = P.map((x) => x.m); arr[i] = mi; arr[j] = base | (1 << bj);
+          const chars = P.map((x, k) => maskChar(x.k, arr[k]));
+          if (chars.includes(null)) continue;
+          out.add(chars.join(''));
+        }
+      }
+    }
+  }
+  return [...out];
+}
+function genMatch(hard) {
+  for (let t = 0; t < 400; t++) {
+    let a, b, op = pick(['+', '-']);
+    if (hard) { a = between(10, 99); b = between(1, 99); } else { a = between(0, 9); b = between(0, 9); }
+    if (op === '-' && a < b) [a, b] = [b, a];
+    const c = op === '+' ? a + b : a - b;
+    if (!hard && c > 19) continue;
+    const truth = `${a}${op}${b}=${c}`;
+    const wrong = matchMoves(truth).filter((s) => /^(\d+)([+-])(\d+)=(\d+)$/.test(s) && !matchTrue(s) && !/(^|[+\-=])0\d/.test(s));
+    if (!wrong.length) continue;
+    const puzzle = pick(wrong);
+    const sols = matchMoves(puzzle).filter(matchTrue);
+    if (!sols.includes(truth) || sols.length > 3) continue;
+    return { pub: { eq: puzzle }, secret: { sols }, answerText: sols.map((s) => s.replace(/-/g, '−')).join('  또는  '), expl: '‘=’는 그대로, 숫자는 숫자로, 부호는 +/− 로만 바뀐다' };
+  }
+  return { pub: { eq: '6+4=4' }, secret: { sols: ['0+4=4', '8-4=4'] }, answerText: '0+4=4 또는 8−4=4' };
+}
+
+/* ───────── 기사와 건달 ───────── */
+function knStmt(st, i, names) {
+  const nm = (x) => (x === i ? '나' : names[x]);
+  const subj = (x) => (x === i ? '나는' : josa(names[x], '은', '는'));
+  const wa = (x) => (x === i ? '나와' : josa(names[x], '과', '와'));
+  switch (st.k) {
+    case 'K': return `${subj(st.x)} 기사다`;
+    case 'N': return `${subj(st.x)} 건달이다`;
+    case 'S': return `${wa(st.x)} ${subj(st.y)} 같은 부류다`;
+    case 'D': return `${wa(st.x)} ${subj(st.y)} 서로 다른 부류다`;
+    case 'C': return `우리 중 기사는 정확히 ${st.m}명이다`;
+    default: return `${wa(st.x)} ${nm(st.y)} 중 적어도 한 명은 건달이다`;
+  }
+}
+function knTruth(st, mask) {
+  const K = (x) => !!(mask >> x & 1);
+  switch (st.k) {
+    case 'K': return K(st.x);
+    case 'N': return !K(st.x);
+    case 'S': return K(st.x) === K(st.y);
+    case 'D': return K(st.x) !== K(st.y);
+    case 'C': { let c = 0; for (let x = 0; x < 6; x++) if (K(x)) c++; return c === st.m; }
+    default: return !K(st.x) || !K(st.y);
+  }
+}
+function genKnights(hard) {
+  const n = hard ? 4 : 3;
+  for (;;) {
+    const names = shuffle(PEOPLE).slice(0, n);
+    const stmts = names.map((_, i) => {
+      const k = pick(['K', 'N', 'N', 'S', 'D', 'C', 'A']);
+      let x = rand(n), y = rand(n); while (y === x) y = rand(n);
+      if ((k === 'K' || k === 'N') && x === i) x = (i + 1 + rand(n - 1)) % n;
+      return { k, x, y, m: rand(n + 1) };
+    });
+    if (stmts.filter((s) => s.k === 'C').length > 1) continue;
+    const sols = [];
+    for (let mask = 0; mask < 1 << n; mask++) if (stmts.every((s, i) => knTruth(s, mask) === !!(mask >> i & 1))) sols.push(mask);
+    if (sols.length !== 1) continue;
+    const m = sols[0];
+    if (!hard && (m === 0 || m === (1 << n) - 1) && Math.random() < 0.6) continue;
+    return {
+      pub: { names, lines: stmts.map((s, i) => `${names[i]}: “${knStmt(s, i, names)}”`) },
+      secret: { ans: m },
+      answerText: names.map((nm, i) => `${nm} ${m >> i & 1 ? '😇' : '😈'}`).join(' · '),
+      expl: '기사 😇 / 건달 😈',
+    };
+  }
+}
+
+/* ───────── 논리 그리드 ───────── */
+const ZCATS = [
+  { vals: ['커피', '녹차', '주스', '우유', '콜라'], who: (v) => `${josa(v, '을', '를')} 마시는 사람`, yes: (v) => `${josa(v, '을', '를')} 마신다`, no: (v) => `${josa(v, '을', '를')} 마시지 않는다` },
+  { vals: ['강아지', '고양이', '앵무새', '금붕어', '햄스터'], who: (v) => `${josa(v, '을', '를')} 키우는 사람`, yes: (v) => `${josa(v, '을', '를')} 키운다`, no: (v) => `${josa(v, '을', '를')} 키우지 않는다` },
+  { vals: ['빨간', '파란', '초록', '노란', '검은'], who: (v) => `${v} 옷을 입은 사람`, yes: (v) => `${v} 옷을 입었다`, no: (v) => `${v} 옷을 입지 않았다` },
+  { vals: ['축구', '수영', '테니스', '야구', '농구'], who: (v) => `${josa(v, '을', '를')} 하는 사람`, yes: (v) => `${josa(v, '을', '를')} 한다`, no: (v) => `${josa(v, '을', '를')} 하지 않는다` },
+  { vals: ['서울', '부산', '대구', '광주', '제주'], who: (v) => `${v}에 사는 사람`, yes: (v) => `${v}에 산다`, no: (v) => `${v}에 살지 않는다` },
+];
+function perms(n) { if (n === 1) return [[0]]; const out = []; for (const p of perms(n - 1)) for (let i = 0; i <= p.length; i++) out.push([...p.slice(0, i), n - 1, ...p.slice(i)]); return out; }
+const ZCACHE = {};
+// 후보 = 범주별 순열 조합. 각 후보마다 who[c*n+v] = 값 v를 가진 사람, has[c*n+x] = 사람 x의 값
+function zebraSpace(n, k) {
+  const key = n + ':' + k; if (ZCACHE[key]) return ZCACHE[key];
+  const P = perms(n), total = P.length ** k, who = new Int8Array(total * k * n), has = new Int8Array(total * k * n);
+  for (let id = 0; id < total; id++) {
+    let r = id;
+    for (let c = 0; c < k; c++) { const p = P[r % P.length]; r = Math.floor(r / P.length); for (let x = 0; x < n; x++) { has[id * k * n + c * n + x] = p[x]; who[id * k * n + c * n + p[x]] = x; } }
+  }
+  return (ZCACHE[key] = { P, total, who, has });
+}
+function genZebra(hard) {
+  const n = hard ? 4 : 3, k = hard ? 3 : 2, Z = zebraSpace(n, k), W = k * n;
+  const holds = (cl, id) => {
+    const o = id * W;
+    if (cl.t === 'pos') return Z.has[o + cl.c * n + cl.x] === cl.v;
+    if (cl.t === 'neg') return Z.has[o + cl.c * n + cl.x] !== cl.v;
+    const same = Z.who[o + cl.c1 * n + cl.v1] === Z.who[o + cl.c2 * n + cl.v2];
+    return cl.t === 'link' ? same : !same;
+  };
+  const ALL = Array.from({ length: Z.total }, (_, i) => i);
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const names = shuffle(PEOPLE).slice(0, n);
+    const cats = shuffle(ZCATS).slice(0, k).map((c) => ({ ...c, v: shuffle(c.vals).slice(0, n) }));
+    const sid = rand(Z.total), so = sid * W;
+    const pool = [];
+    for (let c = 0; c < k; c++) for (let x = 0; x < n; x++) for (let v = 0; v < n; v++) {
+      const t = Z.has[so + c * n + x] === v;
+      pool.push({ t: t ? 'pos' : 'neg', c, x, v, w: t ? 0.7 : 0.25 });
+    }
+    for (let c1 = 0; c1 < k; c1++) for (let c2 = c1 + 1; c2 < k; c2++) for (let v1 = 0; v1 < n; v1++) for (let v2 = 0; v2 < n; v2++) {
+      const same = Z.who[so + c1 * n + v1] === Z.who[so + c2 * n + v2];
+      pool.push({ t: same ? 'link' : 'nlink', c1, c2, v1, v2, w: same ? 0.35 : 0.2 });
+    }
+    const order = pool.map((cl) => ({ cl, r: Math.random() + cl.w })).sort((a, b) => a.r - b.r).map((x) => x.cl);
+    let chosen = [], cand = ALL;
+    for (const cl of order) { const nc = cand.filter((id) => holds(cl, id)); if (nc.length < cand.length) { chosen.push(cl); cand = nc; } if (cand.length === 1) break; }
+    if (cand.length !== 1) continue;
+    // 군더더기 단서 제거
+    for (const cl of shuffle(chosen)) {
+      const rest = chosen.filter((x) => x !== cl); let cnt = 0;
+      for (let id = 0; id < Z.total && cnt < 2; id++) if (rest.every((r) => holds(r, id))) cnt++;
+      if (cnt === 1) chosen = rest;
+    }
+    if (chosen.length > (hard ? 14 : 6)) continue;
+    const txt = (cl) => {
+      if (cl.t === 'pos') return `${josa(names[cl.x], '은', '는')} ${cats[cl.c].yes(cats[cl.c].v[cl.v])}`;
+      if (cl.t === 'neg') return `${josa(names[cl.x], '은', '는')} ${cats[cl.c].no(cats[cl.c].v[cl.v])}`;
+      const who = cats[cl.c1].who(cats[cl.c1].v[cl.v1]);
+      return `${josa(who, '은', '는')} ${cl.t === 'link' ? cats[cl.c2].yes(cats[cl.c2].v[cl.v2]) : cats[cl.c2].no(cats[cl.c2].v[cl.v2])}`;
+    };
+    // 질문: 단서에 직접 나오지 않은 칸
+    const direct = new Set(chosen.filter((c) => c.t === 'pos').map((c) => c.c + ':' + c.v));
+    const qs = []; for (let c = 0; c < k; c++) for (let v = 0; v < n; v++) if (!direct.has(c + ':' + v)) qs.push([c, v]);
+    if (!qs.length) continue;
+    const [qc, qv] = pick(qs), ans = Z.who[so + qc * n + qv];
+    const table = names.map((nm, x) => `${nm}: ${cats.map((c, ci) => c.v[Z.has[so + ci * n + x]]).join('·')}`).join(' / ');
+    return { pub: { ui: 'mc', text: `${josa(cats[qc].who(cats[qc].v[qv]), '은', '는')} 누구?`, sub: `${n}명 · 각자 서로 다른 것을 하나씩`, lines: shuffle(chosen).map(txt), options: names }, secret: { ans }, answerText: names[ans], expl: table };
+  }
+  return genZebra(false);
+}
+
+/* ───────── 가짜 동전 ───────── */
+function genCoin(hard) {
+  const N = hard ? 12 : between(8, 9), maxW = hard ? 4 : 3;
+  for (let t = 0; t < 500; t++) {
+    const fake = rand(N), heavy = hard ? Math.random() < 0.5 : true;
+    let cand = []; for (let c = 0; c < N; c++) { cand.push([c, true]); if (hard) cand.push([c, false]); }
+    const ws = [];
+    while (cand.length > 1 && ws.length < maxW) {
+      const sz = between(1, Math.floor(N / 2)), order = shuffle([...Array(N).keys()]);
+      const L = order.slice(0, sz).sort((a, b) => a - b), R = order.slice(sz, 2 * sz).sort((a, b) => a - b);
+      const res = (c, h) => (L.includes(c) ? (h ? 1 : -1) : R.includes(c) ? (h ? -1 : 1) : 0);
+      const r = res(fake, heavy), nc = cand.filter(([c, h]) => res(c, h) === r);
+      if (nc.length === cand.length) continue;
+      ws.push({ L, R, r }); cand = nc;
+    }
+    if (cand.length !== 1 || ws.length < 2) continue;
+    const lines = ws.map((w) => `${w.L.map(circ).join('')}  vs  ${w.R.map(circ).join('')}  →  ${w.r > 0 ? '⬅️ 왼쪽이 무겁다' : w.r < 0 ? '➡️ 오른쪽이 무겁다' : '⚖️ 균형'}`);
+    return { pub: { N, lines, hl: hard }, secret: { ans: fake * 2 + (heavy ? 0 : 1) }, answerText: `${circ(fake)} (${heavy ? '무겁다' : '가볍다'})`, expl: '' };
+  }
+  return genCoin(false);
+}
+
+/* ───────── 최단 경로 ───────── */
+function genPaths(hard) {
+  const R = hard ? 6 : 4, C = hard ? 6 : 5;
+  for (;;) {
+    const blocked = new Set(shuffle([...Array(R * C).keys()].filter((i) => i && i !== R * C - 1)).slice(0, hard ? between(4, 7) : between(2, 3)));
+    const dp = Array(R * C).fill(0); dp[0] = 1;
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) { const i = r * C + c; if (!i || blocked.has(i)) continue; dp[i] = (r ? dp[i - C] : 0) + (c ? dp[i - 1] : 0); }
+    const ans = dp[R * C - 1];
+    if (ans < (hard ? 15 : 4)) continue;
+    const grid = [...Array(R).keys()].map((r) => [...Array(C).keys()].map((c) => { const i = r * C + c; return i === 0 ? '🚩' : i === R * C - 1 ? '🏁' : blocked.has(i) ? '■' : '·'; }));
+    return { pub: { ui: 'num', text: '🚩 → 🏁 가장 짧은 길은 몇 가지?', sub: '오른쪽·아래로만 이동 · ■는 막힌 칸', grid }, secret: { ans }, answerText: `${ans}가지`, expl: '각 칸까지의 경우의 수 = 위 칸 + 왼쪽 칸' };
+  }
+}
+
+/* ───────── 두뇌: 순서 기억 / 순간 포착 / 틀린 하나 / 순서대로 ───────── */
+function genSimon(hard) {
+  const n = hard ? 4 : 3, len = hard ? 8 : 5, seq = [];
+  while (seq.length < len) { const x = rand(n * n); if (x !== seq[seq.length - 1]) seq.push(x); }
+  return { pub: { n, seq, stepMs: hard ? 600 : 700 }, secret: { seq }, answerText: `${len}단계` };
+}
+const COUNT_SETS = [['🍎', '🍊', '🍋'], ['🐶', '🐱', '🐭'], ['⭐', '🌙', '☀️'], ['🚗', '🚕', '🚙'], ['🔴', '🟠', '🟡'], ['❤️', '💙', '💚']];
+const COUNT_HARD = [['🔴', '🟠', '🟤', '🟣'], ['😀', '😃', '😄', '😁'], ['🕐', '🕑', '🕒', '🕓'], ['🌑', '🌒', '🌓', '🌔'], ['🟥', '🟧', '🟫', '🟪'], ['♠️', '♣️', '♥️', '♦️']];
+function genCount(hard) {
+  const set = pick(hard ? COUNT_HARD : COUNT_SETS), cols = 6, rows = hard ? 6 : 5, total = hard ? between(20, 28) : between(12, 18);
+  const cells = Array(cols * rows).fill(''); const pos = shuffle([...Array(cols * rows).keys()]).slice(0, total);
+  pos.forEach((p) => { cells[p] = pick(set); });
+  const target = pick(set), ans = cells.filter((x) => x === target).length;
+  return { pub: { cells, cols, target, pre: !hard, showMs: hard ? 3000 : 2600 }, secret: { ans }, answerText: `${target} ${ans}개`, expl: `전체 ${total}개` };
+}
+const ODD_PAIRS = [['人', '入'], ['未', '末'], ['土', '士'], ['己', '已'], ['鳥', '烏'], ['大', '犬'], ['王', '玉'], ['日', '曰'], ['빚', '빛'], ['쾅', '콸'], ['읽', '잃'], ['O', 'Q'], ['8', 'B'], ['M', 'N'], ['b', 'd'], ['p', 'q'], ['6', '9'], ['E', 'F'], ['밝', '밟'], ['몫', '몪'], ['😀', '😃'], ['🙂', '😊']];
+function genOdd(hard) {
+  const [a, b] = shuffle(pick(ODD_PAIRS)), cols = hard ? 8 : 7, n = cols * (hard ? 8 : 7), idx = rand(n);
+  return { pub: { cols, cells: Array.from({ length: n }, (_, i) => (i === idx ? b : a)) }, secret: { ans: idx }, answerText: `${Math.floor(idx / cols) + 1}행 ${idx % cols + 1}열의 '${b}'` };
+}
+function genSchulte(hard) {
+  const n = hard ? 6 : 5;
+  return { pub: { n, cells: shuffle([...Array(n * n).keys()].map((x) => x + 1)) }, secret: {}, answerText: `1 → ${n * n} 완주` };
+}
+
+/* ───────── 심리전 (상황이 매번 바뀐다) ───────── */
+const MINOR_THEMES = [['짜장면', '짬뽕'], ['부먹', '찍먹'], ['산', '바다'], ['고양이', '강아지'], ['여름', '겨울'], ['아침형', '저녁형'], ['민초 찬성', '민초 반대'], ['물냉', '비냉'], ['팥붕', '슈붕'], ['A', 'B'], ['왼쪽', '오른쪽'], ['홀', '짝']];
+function genSocial(t, ids, hard) {
+  const N = Math.max(2, ids.length);
+  if (t === 'beauty') { const mul = pick([[1, 2], [2, 3], [2, 3], [3, 4], [4, 5]]), max = pick([100, 100, 100, 50]); return { pub: { mul, max }, secret: {} }; }
+  if (t === 'minority') { const th = pick(MINOR_THEMES); return { pub: { A: th[0], B: th[1] }, secret: {} }; }
+  if (t === 'lowest') return { pub: { max: Math.min(15, between(Math.max(4, N), N + 6)) }, secret: {} };
+  if (t === 'split') return { pub: { coop: between(4, 8) * 10, pot: between(10, 18) * 10, lose: between(2, 5) * 10 }, secret: {} };
+  if (t === 'indian') { const cards = {}; ids.forEach((id) => { cards[id] = between(1, 10); }); return { pub: { cards }, secret: {} }; }
+  if (t === 'goods') return { pub: { C: pick([5, 8, 10, 10, 12]), m: pick([1.5, 2, 2, 2.5, 3]) }, secret: {} };
+  if (t === 'auction') {
+    const K = Math.max(3, N), vals = Array.from({ length: K }, () => between(1, 30)), hints = {};
+    ids.forEach((id, i) => { hints[id] = vals[i]; });
+    return { pub: { K, hints, max: K * 30 }, secret: { vals } };
+  }
+  if (t === 'rps') return { pub: {}, secret: {} };
+  return { pub: {}, secret: {} };
+}
+
+const GEN2 = {
+  fruit: genFruit, clock: genClock, magic: genMagic, pyramid: genPyramid, ops: genOps, word: genWord,
+  hap: genHap, lights: genLights, sudoku: genSudoku, nono: genNono, match: genMatch, knights: genKnights, zebra: genZebra, coin: genCoin, paths: genPaths,
+  simon: genSimon, count: genCount, odd: genOdd, schulte: genSchulte,
+};
+for (const t of ['beauty', 'minority', 'lowest', 'split', 'indian', 'goods', 'auction', 'rps']) GEN2[t] = (hard, ids) => genSocial(t, ids, hard);
+
+const NORM2 = {
+  hap: (raw, pub) => {
+    if (pub.mode === 'count') return intIn(raw, 0, 84);
+    const a = intArr(raw, 3, 0, 8); return a && a.length === 3 && new Set(a).size === 3 ? a.sort((x, y) => x - y) : null;
+  },
+  lights: (raw, pub) => intArr(raw, 200, 0, pub.n * pub.n - 1),
+  sudoku: (raw, pub) => strRe(raw, new RegExp(`^[1-${pub.n}]{${pub.n * pub.n}}$`)),
+  nono: (raw, pub) => strRe(raw, new RegExp(`^[01]{${pub.n * pub.n}}$`)),
+  match: (raw) => strRe(raw, /^[0-9+\-=]{3,12}$/),
+  ops: (raw, pub) => strRe(raw, new RegExp(`^[+\\-*/]{${pub.nums.length - 1}}$`)),
+  knights: (raw, pub) => intIn(raw, 0, (1 << pub.names.length) - 1),
+  coin: (raw, pub) => intIn(raw, 0, pub.N * 2 - 1),
+  simon: (raw, pub) => intArr(raw, 20, 0, pub.n * pub.n - 1),
+  count: (raw) => intIn(raw, 0, 999),
+  odd: (raw, pub) => intIn(raw, 0, pub.cells.length - 1),
+  schulte: (raw) => intIn(raw, 0, 999),
+  indian: (raw) => intIn(raw, 0, 1),
+  goods: (raw, pub) => intIn(raw, 0, pub.C),
+  auction: (raw, pub) => intIn(raw, 0, pub.max),
+  rps: (raw) => intIn(raw, 0, 2),
+};
+const JUDGE2 = {
+  hap: (v, s, pub) => (pub.mode === 'count' ? v === s.n : isHap(pub.tiles, v[0], v[1], v[2])),
+  lights: (v, s, pub) => { const b = [...pub.b].map(Number); v.forEach((i) => lightsPress(b, pub.n, i)); return b.every((x) => !x); },
+  sudoku: (v, s, pub) => [...pub.g].every((ch, i) => ch === '0' || ch === v[i]) && sudokuValid(v, pub.n, pub.bh, pub.bw),
+  nono: (v, s, pub) => { const c = nonoClues([...v].map(Number), pub.n); return JSON.stringify(c.rows) === JSON.stringify(pub.rows) && JSON.stringify(c.cols) === JSON.stringify(pub.cols); },
+  match: (v, s) => s.sols.includes(v),
+  ops: (v, s) => { try { const w = Expr.evaluate(opsExpr(s.nums, [...v])).value; return w.d === 1 && w.n === s.target; } catch (e) { return false; } },
+  knights: (v, s) => v === s.ans,
+  coin: (v, s, pub) => (pub.hl ? v === s.ans : v >> 1 === s.ans >> 1),
+  simon: (v, s) => v.length === s.seq.length && v.every((x, i) => x === s.seq[i]),
+  count: (v, s) => v === s.ans,
+  odd: (v, s) => v === s.ans,
+  schulte: (v) => v <= 3,
+};
+// pub.ui = 'num' | 'mc' 공용
+function normGeneric(raw, pub) { if (pub.ui === 'mc') return intIn(raw, 0, pub.options.length - 1); if (pub.ui === 'num') return numOK(raw); return undefined; }
+function judgeGeneric(v, s, pub) { if (pub.ui === 'mc') return v === s.ans; return Math.abs(v - s.ans) < 1e-6; }
 
 /* ═════════════ 연결 계층 ═════════════
    claude.ai 안에서는 room capability를, 그 밖에서는 같은 주소의 중계 서버(/rt)를 쓴다.
@@ -627,7 +1293,8 @@ let toastT;
 function toast(m) { $toast.textContent = m; $toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => $toast.classList.remove('show'), 2400); }
 const cleanName = (s) => String(s || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 8) || '익명';
 const PALETTE = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff9f1c', '#f15bb5', '#9ef01a', '#00f5d4', '#ff7b00'];
-const INTRO_MS = 4500, REVEAL_MS = 12000, MAX_PLAYERS = 10;
+const INTRO_MS = 4500, REVEAL_MS = 12000, MAX_PLAYERS = 10, FREE_LIM = 20 * 60 * 1000;
+const CATS = ['수학', '상식', '퍼즐', '두뇌', '심리'];
 
 let myId = ss.get('pb:id');
 if (!myId) { myId = Math.random().toString(36).slice(2, 10); ss.set('pb:id', myId); }
@@ -663,7 +1330,7 @@ let mine = {}; // 내 입력 (ans, rdy, sab)
 const curK = () => (S ? S.k : -1);
 
 function hostCreate(code, solo) {
-  H = { code, solo, phase: 'lobby', rounds: 8, g: 1, idx: -1, plan: [], type: null, q: null, used: new Set(), pl: new Map(), phaseEnd: 0, res: null, card: null, fin: null, endGo: false };
+  H = { code, solo, phase: 'lobby', rounds: solo ? 12 : 8, mode: 'time', cats: CATS.slice(), g: 1, idx: -1, plan: [], type: null, q: null, used: new Set(), pl: new Map(), phaseEnd: 0, res: null, card: null, fin: null, endGo: false };
   role = solo ? 'solo' : 'host';
   mine = {};
   hostTimer = setInterval(hostTick, 250);
@@ -671,7 +1338,7 @@ function hostCreate(code, solo) {
 }
 function newPl(id, n) {
   const used = new Set([...H.pl.values()].map((p) => p.c));
-  return { id, n: cleanName(n), c: PALETTE.find((c) => !used.has(c)) || pick(PALETTE), s: 0, on: true, answer: null, el: 0, lim: 0, ready: false, fx: [], pending: [], stats: { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 } };
+  return { id, n: cleanName(n), c: PALETTE.find((c) => !used.has(c)) || pick(PALETTE), s: 0, on: true, answer: null, gave: false, el: 0, lim: 0, ready: false, fx: [], pending: [], stats: { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 } };
 }
 function collectInputs() {
   const m = new Map();
@@ -686,7 +1353,9 @@ function collectInputs() {
   return m;
 }
 const kOf = () => H.g * 1000 + H.idx;
-const baseLim = () => TYPES[H.type].limit * 1000;
+const isFree = () => H.mode === 'free';
+const baseLim = () => (isFree() ? FREE_LIM : TYPES[H.type].limit * 1000);
+const answered = (p) => p.answer !== null || p.gave;
 
 function hostTick() {
   if (!H) return;
@@ -705,12 +1374,13 @@ function hostTick() {
   } else if (H.phase === 'play') {
     for (const P of act) {
       const a = inp.get(P.id).ans;
-      if (P.answer === null && a && a.k === k) {
-        const v = normalize(H.type, a.v); const el = Number(a.el);
+      if (P.answer === null && !P.gave && a && a.k === k) {
+        if (a.gu) { P.gave = true; P.el = P.lim; continue; }
+        const v = normalize(H.type, a.v, H.q.pub); const el = Number(a.el);
         if (v !== null && Number.isFinite(el) && el <= P.lim + 1500) { P.answer = v; P.el = Math.max(0, Math.min(el, P.lim)); }
       }
     }
-    if (!H.endGo && act.every((p) => p.answer !== null)) { H.endGo = true; H.phaseEnd = Math.min(H.phaseEnd, now + 700); }
+    if (!H.endGo && act.length && act.every(answered)) { H.endGo = true; H.phaseEnd = Math.min(H.phaseEnd, now + 700); }
     if (now >= H.phaseEnd) resolve();
   } else if (H.phase === 'reveal') {
     for (const P of act) {
@@ -727,75 +1397,97 @@ function hostTick() {
 
 function startGame() {
   const n = [...H.pl.values()].filter((p) => p.on).length;
-  H.plan = buildPlan(H.rounds, n); H.idx = -1; H.used = new Set(); H.fin = null;
+  H.plan = buildPlan(H.rounds, n, H.mode, H.cats); H.idx = -1;
+  const dbg = (location.hash.match(/t=([\w,]+)/) || [])[1]; // 개발용: #t=hap,lights 처럼 게임을 고정
+  if (dbg) { const only = dbg.split(',').filter((t) => TYPES[t]); if (only.length) H.plan = H.plan.map((_, i) => only[i % only.length]); } H.used = new Set(); H.fin = null;
   for (const P of H.pl.values()) { P.s = 0; P.stats = { correct: 0, speedSum: 0, speedN: 0, steals: 0, best: 0 }; P.pending = []; }
   nextRound();
 }
 function nextRound() {
   H.idx++;
   if (H.idx >= H.plan.length) return finish();
-  H.type = H.plan[H.idx]; H.q = makeQ(H.type, H.used);
+  H.type = H.plan[H.idx];
+  H.q = makeQ(H.type, { used: H.used, hard: isFree(), ids: [...H.pl.values()].filter((p) => p.on).map((p) => p.id) });
   H.res = null; H.card = null; H.endGo = false;
-  for (const P of H.pl.values()) { P.answer = null; P.el = 0; P.ready = false; P.fx = []; }
+  for (const P of H.pl.values()) { P.answer = null; P.gave = false; P.el = 0; P.ready = false; P.fx = []; }
   H.phase = 'intro'; H.phaseEnd = Date.now() + INTRO_MS;
 }
 function startPlay() {
   const base = baseLim();
-  for (const P of H.pl.values()) { P.fx = P.pending; P.pending = []; P.lim = P.fx.includes('shrink') ? Math.round(base * 0.65) : base; }
+  for (const P of H.pl.values()) { P.fx = P.pending.filter((f) => !(isFree() && f === 'shrink')); P.pending = []; P.lim = P.fx.includes('shrink') ? Math.round(base * 0.65) : base; }
   H.phase = 'play'; H.phaseEnd = Date.now() + base + 900;
 }
 function applySab(P, sab) {
   const T = H.pl.get(String(sab.t)); const kind = String(sab.kind);
-  if (!SABOTAGE[kind] || !T || T === P) return;
+  if (!SABOTAGE[kind] || !T || T === P || (isFree() && SABOTAGE[kind].timeOnly)) return;
   H.card.used = true;
   if (kind === 'steal') { T.s -= 40; P.s += 40; P.stats.steals++; } else T.pending.push(kind);
   H.card.log = `${SABOTAGE[kind].emoji} ${P.n} → ${T.n} : ${SABOTAGE[kind].label}`;
 }
 
-function normalize(t, raw) {
+function normalize(t, raw, q) {
   const int = (v, lo, hi) => { v = Number(v); return Number.isInteger(v) && v >= lo && v <= hi ? v : null; };
   const arr = (v, max, lo, hi) => (Array.isArray(v) && v.length <= max ? v.map((x) => (Number.isFinite(Number(x)) ? Number(x) : null)).filter((x) => x !== null && x >= lo && x <= hi) : null);
   const str = (v, re) => { v = String(v == null ? '' : v).replace(/\s+/g, '').slice(0, 24); return re.test(v) ? v : null; };
+  q = q || {};
+  if (q.ui) return normGeneric(raw, q);
+  if (NORM2[t]) return NORM2[t](raw, q);
   switch (t) {
     case 'calc24': return typeof raw === 'string' && raw.length <= 60 ? raw : null;
-    case 'trivia': case 'liar': return int(raw, 0, 3);
+    case 'trivia': case 'liar': return int(raw, 0, (q.names || q.options || [0, 0, 0, 0]).length - 1);
     case 'fermi': { const v = Number(raw); return Number.isFinite(v) && v > 0 && v < 1e15 ? v : null; }
     case 'sequence': return int(raw, -1e12, 1e12);
-    case 'memory': { const a = arr(raw, 16, 0, 15); return a ? [...new Set(a)].sort((x, y) => x - y) : null; }
-    case 'timeline': { const a = arr(raw, 4, 0, 3); return a && a.length === 4 && new Set(a).size === 4 ? a : null; }
+    case 'memory': { const m = (q.n || 4) ** 2 - 1; const a = arr(raw, m + 1, 0, m); return a ? [...new Set(a)].sort((x, y) => x - y) : null; }
+    case 'timeline': { const n = (q.items || []).length; const a = arr(raw, n, 0, n - 1); return a && a.length === n && new Set(a).size === n ? a : null; }
     case 'mental': return arr(raw, 5, -1e6, 1e6);
     case 'stroop': return arr(raw, 8, -1, 3);
-    case 'code': return str(raw, /^\d{3}$/);
-    case 'digits': return str(raw, /^\d{1,12}$/);
+    case 'code': return str(raw, new RegExp(`^\\d{${q.L || 3}}$`));
+    case 'digits': return str(raw, /^\d{1,14}$/);
     case 'chosung': return str(raw, /^.{1,24}$/);
-    case 'beauty': return int(raw, 0, 100);
+    case 'beauty': return int(raw, 0, q.max || 100);
     case 'minority': case 'split': return int(raw, 0, 1);
-    case 'lowest': return int(raw, 1, 10);
+    case 'lowest': return int(raw, 1, q.max || 10);
   }
   return null;
 }
 function shownOf(t, v) {
   if (v === null) return '—';
   switch (t) {
-    case 'trivia': case 'liar': return ['①', '②', '③', '④'][v];
+    case 'trivia': return ['①', '②', '③', '④'][v];
+    case 'liar': case 'zebra': return (H.q.pub.names || H.q.pub.options)[v];
+    case 'knights': return H.q.pub.names.map((n, i) => (v >> i & 1 ? '😇' : '😈')).join('');
+    case 'coin': return circ(v >> 1) + (H.q.pub.hl ? (v & 1 ? '↓' : '↑') : '');
+    case 'hap': return Array.isArray(v) ? v.map((x) => x + 1).join('-') : `${v}개`;
+    case 'lights': case 'sudoku': case 'nono': return '완성 제출';
+    case 'ops': return [...v].map((o) => ({ '*': '×', '/': '÷', '-': '−' }[o] || o)).join(' ');
+    case 'match': return v.replace(/-/g, '−');
+    case 'simon': return `${v.length}단계`;
+    case 'odd': return `${Math.floor(v / H.q.pub.cols) + 1}행 ${v % H.q.pub.cols + 1}열`;
+    case 'schulte': return `실수 ${v}번`;
+    case 'indian': return v ? '🏳️ 포기' : '⚔️ 승부';
+    case 'rps': return ['✊', '✌️', '🖐️'][v];
+    case 'goods': return `${v}코인`;
+    case 'auction': return `${fmt(v)}원`;
+    case 'minority': return v ? H.q.pub.B : H.q.pub.A;
     case 'memory': return `${v.length}칸`;
     case 'timeline': return '순서 제출';
     case 'mental': case 'stroop': return `${v.length}문항`;
-    case 'minority': return v ? 'B' : 'A';
     case 'split': return v ? '🗡️ 배신' : '🤝 협력';
     case 'calc24': return v.replace(/\*/g, '×').replace(/\//g, '÷').slice(0, 18);
     case 'fermi': return fmt(v);
+    case 'clock': return v + '°';
     default: return String(v).slice(0, 14);
   }
 }
 
 function resolve() {
-  const t = H.type, sec = H.q.secret, P = [...H.pl.values()];
+  const t = H.type, sec = H.q.secret, pub = H.q.pub, P = [...H.pl.values()], free = isFree();
   const ans = P.filter((p) => p.answer !== null);
-  const sp = (p) => (p.answer === null ? 0 : Math.max(0, 1 - p.el / p.lim));
+  const sp = (p) => (p.answer === null || free ? 0 : Math.max(0, 1 - p.el / p.lim));
   const rows = [];
   let answerText = H.q.answerText || '', expl = H.q.expl || '';
-  const row = (p, ok, d, note) => rows.push({ id: p.id, n: p.n, c: p.c, sh: shownOf(t, p.answer), ok: !!ok, d, note: note || '', sp: ok ? sp(p) : 0 });
+  const miss = (p) => (p.gave ? '🏳️ 포기' : p.answer === null ? (free ? '미제출' : '시간 초과') : '');
+  const row = (p, ok, d, note) => rows.push({ id: p.id, n: p.n, c: p.c, sh: p.gave ? '🏳️' : shownOf(t, p.answer), ok: !!ok, d, note: note || '', sp: ok ? sp(p) : 0 });
   const BIN = {
     calc24: (v) => Expr.check(v, sec.nums, sec.target).ok,
     trivia: (v) => v === sec.ans, liar: (v) => v === sec.ans, sequence: (v) => v === sec.ans,
@@ -803,20 +1495,25 @@ function resolve() {
     timeline: (v) => v.every((x, i) => x === sec.ans[i]),
     code: (v) => v === sec.ans, digits: (v) => v === sec.ans, chosung: (v) => v === sec.ans,
   };
+  const judge = pub.ui ? (v) => judgeGeneric(v, sec, pub) : JUDGE2[t] && !TYPES[t].social ? (v) => JUDGE2[t](v, sec, pub) : BIN[t];
   const SER = { mental: 1, stroop: 1 };
 
-  if (BIN[t] || SER[t]) {
+  if (judge || SER[t]) {
     const J = new Map();
     for (const p of ans) {
-      if (BIN[t]) J.set(p.id, { ok: BIN[t](p.answer) });
+      if (judge) J.set(p.id, { ok: !!judge(p.answer) });
       else { const a = sec.ans; let c = 0; a.forEach((x, i) => { if (p.answer[i] === x) c++; }); J.set(p.id, { ok: c / a.length >= 0.75, acc: c / a.length, c, n: a.length }); }
     }
     const oks = ans.filter((p) => J.get(p.id).ok).sort((a, b) => a.el - b.el);
     for (const p of P) {
       const j = J.get(p.id); let d, note = '';
-      if (j && j.ok) { d = Math.round((BIN[t] ? 50 + 70 * sp(p) : 30 + 60 * j.acc + 40 * sp(p))); if (p === oks[0] && P.length > 1) { d += 25; note = '⚡ 최속 +25'; } }
-      else { d = 0; note = p.answer === null ? '시간 초과' : '오답'; }
+      if (j && j.ok) {
+        if (free) d = judge ? 100 : Math.round(40 + 70 * j.acc);
+        else d = Math.round(judge ? 50 + 70 * sp(p) : 30 + 60 * j.acc + 40 * sp(p));
+        if (p === oks[0] && P.length > 1) { d += free ? 20 : 25; note = free ? '🥇 첫 정답 +20' : '⚡ 최속 +25'; }
+      } else { d = 0; note = miss(p) || '오답'; }
       if (SER[t] && j) note = `${j.c}/${j.n} 정답` + (note ? ' · ' + note : '');
+      if (t === 'schulte' && j) note = `실수 ${p.answer}번` + (note ? ' · ' + note : '');
       row(p, j && j.ok, d, note);
     }
     if (t === 'calc24') answerText = sec.expr.replace(/\*/g, '×').replace(/\//g, '÷') + ' = ' + sec.target;
@@ -824,35 +1521,38 @@ function resolve() {
   } else if (t === 'fermi') {
     let best = Infinity; const E = new Map();
     for (const p of ans) { const e = Math.abs(Math.log(p.answer / sec.value)); E.set(p.id, e); best = Math.min(best, e); }
+    const tol = free ? 0.18 : 0.25;
     for (const p of P) {
-      const e = E.get(p.id), ok = e !== undefined && e <= 0.25; let d, note = '';
-      if (ok) { d = Math.round(40 + 80 * (1 - e / 0.25)); if (e === best) { d += 25; note = '🎯 최근접 +25'; } }
-      else { d = 0; note = e === undefined ? '시간 초과' : `${Math.round((Math.exp(e) - 1) * 100)}% 빗나감`; }
+      const e = E.get(p.id), ok = e !== undefined && e <= tol; let d, note = '';
+      if (ok) { d = Math.round(40 + 80 * (1 - e / tol)); if (e === best) { d += 25; note = '🎯 최근접 +25'; } }
+      else { d = 0; note = e === undefined ? miss(p) : `${Math.round((Math.exp(e) - 1) * 100)}% 빗나감`; }
       row(p, ok, d, note);
     }
   } else if (t === 'beauty') {
-    const avg = ans.length ? ans.reduce((a, p) => a + p.answer, 0) / ans.length : 0, target = avg * 2 / 3;
+    const [mn, md] = pub.mul || [2, 3];
+    const avg = ans.length ? ans.reduce((a, p) => a + p.answer, 0) / ans.length : 0, target = avg * mn / md;
     const bd = Math.min(...ans.map((p) => Math.abs(p.answer - target)));
     const W = ans.filter((p) => Math.abs(p.answer - target) === bd);
-    for (const p of P) { const win = W.includes(p); row(p, win, win ? Math.round(110 / (W.length > 1 ? 1.5 : 1)) : 0, p.answer === null ? '시간 초과' : win ? '🏆 승리' : `거리 ${Math.abs(p.answer - target).toFixed(1)}`); }
-    answerText = ans.length ? `평균 ${avg.toFixed(1)} × 2/3 = ${target.toFixed(1)}` : '제출 없음';
+    for (const p of P) { const win = W.includes(p); row(p, win, win ? Math.round(110 / (W.length > 1 ? 1.5 : 1)) : 0, p.answer === null ? miss(p) : win ? '🏆 승리' : `거리 ${Math.abs(p.answer - target).toFixed(1)}`); }
+    answerText = ans.length ? `평균 ${avg.toFixed(1)} × ${mn}/${md} = ${target.toFixed(1)}` : '제출 없음';
     expl = '남의 생각을 읽으려 할수록 숫자는 0으로 미끄러진다.';
   } else if (t === 'minority') {
     const c = [0, 0]; ans.forEach((p) => c[p.answer]++);
     const ws = c[0] !== c[1] && c[0] && c[1] ? (c[0] < c[1] ? 0 : 1) : -1;
+    const nm = [pub.A || 'A', pub.B || 'B'];
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
+      if (p.answer === null) row(p, false, 0, miss(p));
       else if (ws < 0) row(p, false, 0, '무승부');
       else if (p.answer === ws) row(p, true, 100, '🏆 소수파');
       else row(p, false, 0, '다수파');
     }
-    answerText = `A ${c[0]}명 : B ${c[1]}명${ws < 0 ? ' (무승부)' : ` → ${ws ? 'B' : 'A'} 승`}`;
+    answerText = `${nm[0]} ${c[0]}명 : ${nm[1]} ${c[1]}명${ws < 0 ? ' (무승부)' : ` → ${nm[ws]} 승`}`;
   } else if (t === 'lowest') {
     const cnt = {}; ans.forEach((p) => { cnt[p.answer] = (cnt[p.answer] || 0) + 1; });
     const uniq = Object.keys(cnt).filter((k) => cnt[k] === 1).map(Number).sort((a, b) => a - b);
     const win = uniq.length ? uniq[0] : null;
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
+      if (p.answer === null) row(p, false, 0, miss(p));
       else if (p.answer === win) row(p, true, 120, '🏆 유일한 최저수');
       else row(p, false, 0, cnt[p.answer] > 1 ? `${cnt[p.answer]}명 겹침` : '더 작은 유일수 있음');
     }
@@ -860,15 +1560,64 @@ function resolve() {
     expl = Object.keys(cnt).sort((a, b) => a - b).map((k) => `${k}(${cnt[k]}명)`).join(' ');
   } else if (t === 'split') {
     const co = ans.filter((p) => p.answer === 0).length, be = ans.length - co;
+    const C = pub.coop || 60, POT = pub.pot || 130, L = pub.lose || 30;
     for (const p of P) {
-      if (p.answer === null) row(p, false, 0, '시간 초과');
-      else if (be === 0) row(p, true, 60, '🤝 전원 협력');
-      else if (co === 0) row(p, false, -30, '💥 공멸');
-      else if (p.answer === 1) row(p, true, Math.round(130 / be), '🗡️ 배신 성공');
-      else row(p, false, -30, '😱 배신당함');
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (be === 0) row(p, true, C, '🤝 전원 협력');
+      else if (co === 0) row(p, false, -L, '💥 공멸');
+      else if (p.answer === 1) row(p, true, Math.round(POT / be), '🗡️ 배신 성공');
+      else row(p, false, -L, '😱 배신당함');
     }
     answerText = `🤝 협력 ${co}명 · 🗡️ 배신 ${be}명`;
     expl = be === 0 ? '모두가 믿었다.' : co === 0 ? '아무도 믿지 않았다.' : '배신자들이 보상을 나눠 가졌다.';
+  } else if (t === 'indian') {
+    const card = (p) => pub.cards[p.id] || 0;
+    const go = ans.filter((p) => p.answer === 0), fold = ans.filter((p) => p.answer === 1);
+    const top = go.length ? Math.max(...go.map(card)) : 0, maxAll = Math.max(0, ...P.map(card));
+    const W = go.filter((p) => card(p) === top), L = go.filter((p) => card(p) !== top);
+    const pot = 30 * L.length + 10 * fold.length;
+    for (const p of P) {
+      const c = card(p);
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (p.answer === 1) { const pen = c === maxAll ? 30 : 10; row(p, false, -pen, `내 카드 ${c} · 포기${pen > 10 ? ' (최고 카드를 버림!)' : ''}`); }
+      else if (W.includes(p)) row(p, true, 30 + Math.round(pot / W.length), `내 카드 ${c} · 🏆 승부 승리`);
+      else row(p, false, -30, `내 카드 ${c} · 승부 패배`);
+    }
+    answerText = P.map((p) => `${p.n} ${card(p)}`).join(' · ');
+    expl = '승부 승자: +30 + (패자 1명당 30, 포기자 1명당 10). 패자 −30, 포기 −10 (최고 카드를 버리면 −30)';
+  } else if (t === 'goods') {
+    const C = pub.C, m = pub.m, N = Math.max(1, ans.length), tot = ans.reduce((a, p) => a + p.answer, 0), share = (tot * m) / N;
+    for (const p of P) {
+      if (p.answer === null) { row(p, false, 0, miss(p)); continue; }
+      const pay = C - p.answer + share, d = Math.round(((pay - C) * 100) / C);
+      row(p, d > 0, d, `냄 ${p.answer} · 받음 ${share.toFixed(1)}`);
+    }
+    answerText = `금고 ${tot}코인 × ${m} = ${(tot * m).toFixed(1)} → 1인당 ${share.toFixed(1)}`;
+    expl = '모두 다 내면 모두가 이득, 혼자만 안 내면 더 이득. 그래서 다들 안 내면 아무도 이득이 없다.';
+  } else if (t === 'auction') {
+    const val = sec.vals.reduce((a, b) => a + b, 0);
+    const bids = ans.map((p) => p.answer), top = bids.length ? Math.max(...bids) : -1, tops = ans.filter((p) => p.answer === top);
+    const win = tops.length === 1 && top > 0 ? tops[0] : null;
+    for (const p of P) {
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (p === win) row(p, val - top > 0, val - top, `🔨 낙찰! 가치 ${val} − 입찰 ${top}`);
+      else row(p, false, 0, tops.length > 1 && p.answer === top ? '최고가 동점 → 유찰' : `입찰 ${p.answer}`);
+    }
+    answerText = `상품 가치 ${val} (${sec.vals.join('+')})`;
+    expl = win ? (val - top >= 0 ? '싸게 샀다!' : '승자의 저주 — 너무 비싸게 샀다.') : '낙찰자 없음';
+  } else if (t === 'rps') {
+    const c = [0, 0, 0]; ans.forEach((p) => c[p.answer]++);
+    const kinds = c.filter((x) => x).length;
+    let winK = -1; if (kinds === 2) { if (!c[0]) winK = 1; else if (!c[1]) winK = 2; else winK = 0; } // 바위0 가위1 보2: 바위>가위, 가위>보, 보>바위
+    const winners = winK < 0 ? 0 : c[winK], losers = ans.length - winners;
+    for (const p of P) {
+      if (p.answer === null) row(p, false, 0, miss(p));
+      else if (winK < 0) row(p, false, 0, '무승부');
+      else if (p.answer === winK) row(p, true, 30 + Math.round(90 * losers / Math.max(1, ans.length - 1)), '🏆 승리');
+      else row(p, false, -20, '패배');
+    }
+    answerText = `✊ ${c[0]} · ✌️ ${c[1]} · 🖐️ ${c[2]}` + (winK < 0 ? ' → 무승부' : ` → ${['✊', '✌️', '🖐️'][winK]} 승`);
+    expl = '이긴 사람이 적을수록, 진 사람이 많을수록 점수가 크다.';
   }
 
   for (const r of rows) {
@@ -898,7 +1647,12 @@ function finish() {
 }
 
 function hostAction(type, x) {
-  if (type === 'settings' && H.phase === 'lobby' && [8, 12, 16].includes(x.rounds)) H.rounds = x.rounds;
+  if (type === 'settings' && H.phase === 'lobby') {
+    if ([8, 12, 16, 24].includes(x.rounds)) H.rounds = x.rounds;
+    if (x.mode === 'time' || x.mode === 'free') H.mode = x.mode;
+    if (Array.isArray(x.cats)) { const c = CATS.filter((k) => x.cats.includes(k)); if (c.length) H.cats = c; }
+  }
+  if (type === 'close' && H.phase === 'play') resolve();
   if (type === 'start' && H.phase === 'lobby') startGame();
   if (type === 'rematch' && H.phase === 'final') { H.phase = 'lobby'; H.g++; H.idx = -1; H.type = null; H.fin = null; for (const P of H.pl.values()) P.s = 0; }
   hostTick();
@@ -908,11 +1662,11 @@ function buildSt() {
   const play = H.phase === 'play', base = H.type ? baseLim() : 0;
   const pl = [...H.pl.values()].map((p) => {
     const o = { id: p.id, n: p.n, c: p.c, s: p.s, on: p.on };
-    if (play) { o.dn = p.answer !== null; if (p.fx.length) o.fx = p.fx; if (p.lim !== base) o.lim = p.lim; }
+    if (play) { o.dn = answered(p); if (p.fx.length) o.fx = p.fx; if (p.lim !== base) o.lim = p.lim; }
     if (H.phase === 'reveal') o.dn = p.ready;
     return o;
   });
-  const st = { v: 2, g: H.g, ph: H.phase, code: H.code, rounds: H.rounds, idx: H.idx, total: H.plan.length, type: H.type, pl, host: myId };
+  const st = { v: 2, g: H.g, ph: H.phase, code: H.code, rounds: H.rounds, mode: H.mode, cats: H.cats, solo: H.solo, idx: H.idx, total: H.plan.length, type: H.type, pl, host: myId, lim: base };
   if (play) st.q = H.q.pub;
   if (H.phase === 'reveal') { st.res = H.res; st.card = H.card; }
   if (H.phase === 'final') st.fin = H.fin;
@@ -966,9 +1720,9 @@ function leaveRoom() {
   homeView();
 }
 function act(type, x = {}) {
-  if (['settings', 'start', 'rematch'].includes(type)) { if (H) hostAction(type, x); return; }
+  if (['settings', 'start', 'rematch', 'close'].includes(type)) { if (H) hostAction(type, x); return; }
   const k = curK(); let patch = null;
-  if (type === 'answer') patch = { ans: { k, v: x.value, el: Math.round(performance.now() - playT0) } };
+  if (type === 'answer') patch = { ans: x.giveup ? { k, v: null, gu: 1, el: 0 } : { k, v: x.value, el: Math.round(performance.now() - playT0) } };
   if (type === 'ready') patch = { rdy: k };
   if (type === 'sabotage') patch = { sab: { k, kind: x.kind, t: x.target } };
   if (!patch) return;
@@ -985,7 +1739,7 @@ function onState(st) {
   const k = st.g * 1000 + st.idx;
   const meP = st.pl.find((p) => p.id === myId);
   S = {
-    k, code: st.code, phase: st.ph, me: myId, hostPid: st.host, rounds: st.rounds, inGame: !!meP,
+    k, code: st.code, phase: st.ph, me: myId, hostPid: st.host, rounds: st.rounds, mode: st.mode || 'time', cats: st.cats || CATS, solo: !!st.solo, inGame: !!meP,
     players: st.pl.map((p) => ({ pid: p.id, name: p.n, color: p.c, score: p.s, connected: p.on, done: p.dn })),
     round: st.type ? { idx: st.idx + 1, total: st.total, type: st.type, ...TYPES[st.type] } : null,
     q: st.q, fx: (meP && meP.fx) || [], myLim: meP && meP.lim, rem: st.rem || 0,
@@ -998,7 +1752,7 @@ function onState(st) {
   if (key !== viewKey) {
     viewKey = key; locked = false; cur = null;
     if (S.phase === 'play') {
-      const base = TYPES[st.type].limit * 1000;
+      const base = st.lim || TYPES[st.type].limit * 1000;
       playT0 = performance.now() - Math.max(0, base + 900 - S.rem);
       tTotal = S.myLim || base; tEnd = playT0 + tTotal;
     } else tTotal = Math.max(1, S.rem);
@@ -1009,6 +1763,13 @@ function onState(st) {
 }
 setInterval(() => {
   const bar = document.getElementById('tbar'); if (!bar) return;
+  if (S && S.mode === 'free' && S.phase === 'play') {
+    bar.style.transform = 'scaleX(1)'; bar.parentNode.classList.add('free');
+    const e = Math.max(0, Math.floor((performance.now() - playT0) / 1000)), t = document.getElementById('tsec');
+    if (t) t.textContent = `⏱ ${Math.floor(e / 60)}:${String(e % 60).padStart(2, '0')}`;
+    return;
+  }
+  bar.parentNode.classList.remove('free');
   const rem = Math.max(0, tEnd - performance.now());
   bar.style.transform = `scaleX(${Math.min(1, rem / tTotal)})`;
   const t = document.getElementById('tsec'); if (t) t.textContent = Math.ceil(rem / 1000) + '초';
@@ -1051,21 +1812,25 @@ function takeName() {
 }
 function homeView() {
   role = null;
+  const n = Object.keys(TYPES).length;
   $app.innerHTML = `
     <div class="logo">두뇌 배틀</div>
-    <div class="tag">16가지 두뇌 대결, 최후의 1인은 누구? 🧠</div>
+    <div class="tag">${n}가지 두뇌 대결, 최후의 1인은 누구? 🧠</div>
     <div class="card col" style="margin-top:14px">
       <input id="nm" type="text" maxlength="8" placeholder="닉네임 (최대 8자)" value="${esc(myName)}" autocomplete="off">
       <div class="col" id="mp"></div>
     </div>
-    <button class="sec" id="solo">🎯 혼자 연습 (12라운드)</button>
+    <button class="sec" id="solo">🎯 혼자 연습</button>
     <div class="card small dim" style="line-height:1.7">
-      <b style="color:var(--txt)">16가지 미니게임</b><br>
-      ${['수학', '상식', '퍼즐', '두뇌', '심리'].map((c) => `<b style="color:var(--cyan)">${c}</b> ${Object.values(TYPES).filter((t) => t.cat === c).map((t) => t.emoji + ' ' + t.label).join(' · ')}`).join('<br>')}<br><br>
-      빠르고 정확하게 맞힐수록 높은 점수! 라운드 1등은 상대에게 <b style="color:var(--vio)">방해 카드</b>를 날립니다.
+      <b style="color:var(--txt)">두 가지 모드</b><br>
+      <b style="color:var(--yel)">⏱ 타임어택</b> 제한시간 안에 빠르게! 빠를수록 점수가 높다<br>
+      <b style="color:var(--vio)">♾️ 무제한</b> 어려운 문제, 시간 제한 없음. 정확하게만 풀면 된다<br><br>
+      <b style="color:var(--txt)">${n}가지 미니게임</b> — 같은 게임도 숫자와 상황이 매번 바뀐다<br>
+      ${CATS.map((c) => `<b style="color:var(--cyan)">${c}</b> ${Object.values(TYPES).filter((t) => t.cat === c).map((t) => t.emoji + ' ' + t.label).join(' · ')}`).join('<br>')}<br><br>
+      라운드 1등은 상대에게 <b style="color:var(--vio)">방해 카드</b>를 날립니다. 심리전은 더 지니어스·데블스 플랜 같은 서바이벌 예능에서 나온 게임을 바탕으로 했어요.
     </div>`;
   renderMP(document.getElementById('mp'));
-  document.getElementById('solo').onclick = () => { if (!takeName()) return; hostCreate('SOLO', true); H.rounds = 12; startGame(); hostTick(); };
+  document.getElementById('solo').onclick = () => { if (!takeName()) return; hostCreate('SOLO', true); };
 }
 
 /* ═════════════ 공통 조각 ═════════════ */
@@ -1084,27 +1849,39 @@ function topbar() { const r = S.round; return `<div class="topbar"><span class="
 
 /* ═════════════ 로비 ═════════════ */
 function lobbyView() {
+  const solo = S.solo;
   $app.innerHTML = `
-    <div class="card col">
+    ${solo ? '<div class="logo" style="font-size:34px;margin-top:3vh">혼자 연습</div>' : `<div class="card col">
       <div class="center dim small">방 코드</div>
       <div class="code">${esc(S.code)}</div>
       <div class="small dim center" style="line-height:1.5">이 페이지를 공유받은 친구가 홈 화면의 <b style="color:var(--txt)">열린 방</b>에서 누르거나<br>코드 <b style="color:var(--yel)">${esc(S.code)}</b>를 입력하면 들어옵니다</div>
     </div>
-    <div class="card col"><div class="row"><b class="grow">참가자</b><span class="dim small" id="cnt"></span></div><div class="chips" id="pl"></div></div>
+    <div class="card col"><div class="row"><b class="grow">참가자</b><span class="dim small" id="cnt"></span></div><div class="chips" id="pl"></div></div>`}
     <div class="card col" id="host"></div>
     <button class="sec" id="lv">나가기</button>`;
   document.getElementById('lv').onclick = leaveRoom;
   const upd = () => {
-    document.getElementById('pl').innerHTML = S.players.map((p) => `<span class="chip"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}${p.pid === S.hostPid ? ' 👑' : ''}${p.pid === S.me ? ' <span class="dim small">(나)</span>' : ''}</span>`).join('');
-    document.getElementById('cnt').textContent = S.players.length + '명';
+    const pl = document.getElementById('pl');
+    if (pl) {
+      pl.innerHTML = S.players.map((p) => `<span class="chip"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}${p.pid === S.hostPid ? ' 👑' : ''}${p.pid === S.me ? ' <span class="dim small">(나)</span>' : ''}</span>`).join('');
+      document.getElementById('cnt').textContent = S.players.length + '명';
+    }
     const host = document.getElementById('host');
-    if (role === 'host') {
-      host.innerHTML = `<b>라운드 수</b><div class="row">${[8, 12, 16].map((n) => `<button class="${S.rounds === n ? '' : 'sec'} grow" data-r="${n}">${n}</button>`).join('')}</div>
-        <button class="big grn" id="go">게임 시작 (${S.players.length}명)</button>
-        ${S.players.length < 2 ? '<div class="dim small center">1명이면 심리전 4종은 빠져요</div>' : ''}`;
+    const modeTxt = S.mode === 'free' ? '♾️ 무제한 · 어려운 문제 · 시간 제한 없음' : '⏱ 타임어택 · 빠를수록 고득점';
+    if (H) {
+      const pc = S.players.length;
+      const avail = Object.keys(TYPES).filter((t) => (pc >= 2 || !TYPES[t].social) && !(S.mode === 'free' && TYPES[t].speed) && S.cats.includes(TYPES[t].cat)).length;
+      host.innerHTML = `<b>모드</b>
+        <div class="two mode"><button data-m="time" class="${S.mode === 'time' ? 'sel' : ''}">⏱<br><span>타임어택</span><small>제한시간 · 속도 보너스</small></button><button data-m="free" class="${S.mode === 'free' ? 'sel' : ''}">♾️<br><span>무제한</span><small>어려운 문제 · 시간 무제한</small></button></div>
+        <b>라운드 수</b><div class="row">${[8, 12, 16, 24].map((n) => `<button class="${S.rounds === n ? '' : 'sec'} grow" data-r="${n}">${n}</button>`).join('')}</div>
+        <b>게임 종류</b><div class="chips">${CATS.map((c) => `<button class="chip ${S.cats.includes(c) ? 'on' : 'off'}" data-c="${c}">${c}</button>`).join('')}</div>
+        <div class="dim small">이 설정으로 나올 수 있는 게임 ${avail}종${pc < 2 ? ' · 1명이면 심리전은 빠져요' : ''}${S.mode === 'free' ? ' · 속도만 겨루는 게임은 빠져요' : ''}</div>
+        <button class="big grn" id="go" ${avail ? '' : 'disabled'}>게임 시작${solo ? '' : ` (${pc}명)`}</button>`;
+      host.querySelectorAll('[data-m]').forEach((b) => { b.onclick = () => act('settings', { mode: b.dataset.m }); });
       host.querySelectorAll('[data-r]').forEach((b) => { b.onclick = () => act('settings', { rounds: Number(b.dataset.r) }); });
+      host.querySelectorAll('[data-c]').forEach((b) => { b.onclick = () => { const c = b.dataset.c; const next = S.cats.includes(c) ? S.cats.filter((x) => x !== c) : [...S.cats, c]; if (!next.length) return toast('하나는 골라야 해요'); act('settings', { cats: next }); }; });
       document.getElementById('go').onclick = () => act('start');
-    } else host.innerHTML = `<div class="center dim pulse">방장이 시작하길 기다리는 중…</div><div class="center small dim">${S.rounds}라운드</div>`;
+    } else host.innerHTML = `<div class="center dim pulse">방장이 시작하길 기다리는 중…</div><div class="center small">${modeTxt}</div><div class="center small dim">${S.rounds}라운드 · ${S.cats.join(' · ')}</div>`;
   };
   upd(); cur = { update: upd };
 }
@@ -1121,7 +1898,8 @@ function introView() {
   $app.innerHTML = `
     <div class="topbar"><span class="badge">라운드 ${r.idx}/${r.total} · ${esc(r.cat)}</span><span class="badge">곧 시작</span></div>
     <div class="timer"><i id="tbar"></i></div>
-    <div class="hero pop"><div class="em">${r.emoji}</div><h2>${esc(r.label)}</h2><p>${esc(r.desc)}</p></div>
+    <div class="hero pop"><div class="em">${r.emoji}</div><h2>${esc(r.label)}</h2><p>${esc(r.desc)}</p>
+      <div class="modetag ${S.mode}">${S.mode === 'free' ? '♾️ 시간 무제한 · 어려움' : `⏱ 제한시간 ${r.limit}초`}</div></div>
     <div class="center dim pulse">준비하세요…</div>
     <div id="bd"></div>`;
   const upd = () => { document.getElementById('bd').innerHTML = boardHTML(); };
@@ -1136,10 +1914,17 @@ function playView() {
   $app.innerHTML = `${topbar()}
     ${fx.length ? `<div class="fxbar">${fx.filter((f) => FXN[f]).map((f) => FXN[f]).join('<br>')}</div>` : ''}
     <div class="row"><span class="grow"></span><span class="badge" id="tsec"></span></div>
-    <div id="stage" class="col"></div><div id="bd"></div>`;
+    <div id="stage" class="col"></div>
+    ${S.mode === 'free' ? `<div class="row" id="freebar"><button class="sec grow" id="giveup">🏳️ 포기</button>${H && !S.solo ? '<button class="sec grow" id="closeR">⏹ 라운드 마감</button>' : ''}</div>` : ''}
+    <div id="bd"></div>`;
   const stage = document.getElementById('stage');
-  const showDone = () => { stage.innerHTML = '<div class="done pop">✔ 제출 완료<br><span class="dim small">다른 사람을 기다리는 중…</span></div>'; };
-  const submit = (v) => { if (locked) return; if (performance.now() > tEnd + 300) return toast('시간이 지났어요'); locked = true; act('answer', { value: v }); showDone(); };
+  const free = S.mode === 'free';
+  const showDone = (gave) => { stage.innerHTML = `<div class="done pop">${gave || (mine.ans && mine.ans.k === S.k && mine.ans.gu) ? '🏳️ 포기했어요' : '✔ 제출 완료'}<br><span class="dim small">다른 사람을 기다리는 중…</span></div>`; const fb = document.getElementById('freebar'); if (fb && !H) fb.remove(); const g = document.getElementById('giveup'); if (g) g.remove(); };
+  const submit = (v) => { if (locked) return; if (!free && performance.now() > tEnd + 300) return toast('시간이 지났어요'); locked = true; act('answer', { value: v }); showDone(); };
+  if (free) {
+    const g = document.getElementById('giveup'); if (g) g.onclick = () => { if (locked) return; if (!confirm('이 문제를 포기할까요? (0점)')) return; locked = true; act('answer', { giveup: true }); showDone(true); };
+    const c = document.getElementById('closeR'); if (c) c.onclick = () => { if (confirm('아직 안 푼 사람이 있어도 지금 라운드를 끝낼까요?')) act('close'); };
+  }
   const upd = () => { const w = document.getElementById('who'); if (w) w.textContent = '제출 ' + doneCount(); document.getElementById('bd').innerHTML = boardHTML(); };
   cur = { update: upd }; upd();
   if (S.submitted) { showDone(); return; }
@@ -1158,7 +1943,7 @@ function playView() {
     stage.innerHTML = qbox(esc(q.text), q.cat) + `<div class="opts">${q.options.map((o, i) => `<button class="opt" data-i="${i}">${['①', '②', '③', '④'][i]}&nbsp; ${esc(o)}</button>`).join('')}</div>`;
     choice('.opt');
   } else if (T === 'liar') {
-    stage.innerHTML = qbox('범인은 누구일까?', `4명 중 정확히 ${q.T}명만 진실을 말한다`) +
+    stage.innerHTML = qbox(`${esc(q.crime || '범인')}${q.crime && /[가-힣]/.test(q.crime) && hasB(q.crime) ? '은' : '는'} 누구일까?`, `${q.names.length}명 중 정확히 ${q.T}명만 진실을 말한다 · ${q.crime || '범인'}은 1명`) +
       `<div class="col${cls}">${q.lines.map((l) => `<div class="card" style="padding:12px;font-weight:700;font-size:17px">${esc(l)}</div>`).join('')}</div>
       <div class="opts" style="grid-template-columns:1fr 1fr">${q.names.map((n, i) => `<button class="opt" style="text-align:center" data-i="${i}">${esc(n)}</button>`).join('')}</div>`;
     choice('.opt');
@@ -1172,32 +1957,17 @@ function playView() {
     stage.innerHTML = qbox(`<span style="font-size:44px;letter-spacing:6px;color:var(--yel)">${esc(q.cho)}</span>`, `분류: ${q.cat} · 띄어쓰기 없이`) + numInput('단어 입력', 'text');
     bindInput((v) => (v ? v.replace(/\s+/g, '') : (toast('단어를 입력하세요'), undefined)));
   } else if (T === 'code') {
-    stage.innerHTML = qbox('세 자리 비밀번호는?', '0~9 서로 다른 숫자 · S=숫자·자리 일치, B=숫자만 일치') +
-      `<div class="col${cls}">${q.clues.map((c) => `<div class="card row" style="padding:10px 14px"><b style="font-size:24px;letter-spacing:6px" class="grow">${c.g}</b><b>${c.s || c.b ? `${c.s ? `<span class="pos">${c.s}S</span> ` : ''}${c.b ? `<span style="color:var(--yel)">${c.b}B</span>` : ''}` : '<span class="neg">OUT</span>'}</b></div>`).join('')}</div>` + numInput('예: 482');
-    bindInput((v) => (/^\d{3}$/.test(v) && new Set(v).size === 3 ? v : (toast('서로 다른 숫자 3자리를 입력하세요'), undefined)));
+    const L = q.L || 3;
+    stage.innerHTML = qbox(`${L === 4 ? '네' : '세'} 자리 비밀번호는?`, '0~9 서로 다른 숫자 · S=숫자·자리 일치, B=숫자만 일치') +
+      `<div class="col${cls}">${q.clues.map((c) => `<div class="card row" style="padding:10px 14px"><b style="font-size:24px;letter-spacing:6px" class="grow">${c.g}</b><b>${c.s || c.b ? `${c.s ? `<span class="pos">${c.s}S</span> ` : ''}${c.b ? `<span style="color:var(--yel)">${c.b}B</span>` : ''}` : '<span class="neg">OUT</span>'}</b></div>`).join('')}</div>` + numInput(L === 4 ? '예: 4829' : '예: 482');
+    bindInput((v) => (new RegExp(`^\\d{${L}}$`).test(v) && new Set(v).size === L ? v : (toast(`서로 다른 숫자 ${L}자리를 입력하세요`), undefined)));
   } else if (T === 'timeline') timelineUI(stage, q, cls, submit);
   else if (T === 'calc24') calcUI(stage, q, cls, submit);
   else if (T === 'memory') memoryUI(stage, q, submit);
   else if (T === 'digits') digitsUI(stage, q, cls, submit);
   else if (T === 'mental') mentalUI(stage, q, cls, submit);
   else if (T === 'stroop') stroopUI(stage, q, cls, submit);
-  else if (T === 'beauty') {
-    stage.innerHTML = qbox('모두의 평균 × 2/3에<br>가장 가까운 숫자는?', '0 ~ 100') + `<div class="bignum" id="bn">50</div><input class="slider" id="sl" type="range" min="0" max="100" value="50"><button class="big" id="ok">이 숫자로 확정</button>`;
-    const sl = document.getElementById('sl'); sl.oninput = () => { document.getElementById('bn').textContent = sl.value; };
-    document.getElementById('ok').onclick = () => submit(Number(sl.value));
-  } else if (T === 'minority' || T === 'split') {
-    const L = T === 'split' ? ['🤝<br><span style="font-size:18px">협력</span>', '🗡️<br><span style="font-size:18px">배신</span>'] : ['A', 'B'];
-    stage.innerHTML = qbox(T === 'split' ? '전원 협력: 모두 +60<br>배신자 있음: 배신자끼리 130 나눠 갖기, 협력자 −30<br>전원 배신: 모두 −30' : '사람이 더 적은 쪽이 이깁니다', T === 'split' ? '' : '소수결') +
-      `<div class="two"><button data-i="0">${L[0]}</button><button data-i="1">${L[1]}</button></div><button class="big" id="ok" disabled>확정</button>`;
-    let sel = null;
-    stage.querySelectorAll('.two button').forEach((b) => { b.onclick = () => { sel = Number(b.dataset.i); stage.querySelectorAll('.two button').forEach((x) => x.classList.toggle('sel', x === b)); document.getElementById('ok').disabled = false; }; });
-    document.getElementById('ok').onclick = () => { if (sel !== null) submit(sel); };
-  } else if (T === 'lowest') {
-    stage.innerHTML = qbox('나만 고른 수 중 가장 작으면 승리', '1 ~ 10') + `<div class="nums" style="grid-template-columns:repeat(5,1fr)">${[...Array(10)].map((_, i) => `<button data-i="${i + 1}">${i + 1}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;
-    let sel = null;
-    stage.querySelectorAll('.nums button').forEach((b) => { b.onclick = () => { sel = Number(b.dataset.i); stage.querySelectorAll('.nums button').forEach((x) => x.classList.toggle('used', x !== b)); document.getElementById('ok').disabled = false; }; });
-    document.getElementById('ok').onclick = () => { if (sel !== null) submit(sel); };
-  }
+  else if (UI2[T] || q.ui) (q.ui ? UI2.generic : UI2[T])({ stage, q, cls, submit, qbox, numInput, bindInput, choice, T });
   unfog();
 }
 
@@ -1206,7 +1976,7 @@ function timelineUI(stage, q, cls, submit) {
   const draw = () => {
     stage.innerHTML = `<div class="q${cls}"><small>오래된 것부터 차례로 누르세요</small>역사 줄 세우기</div>
       <div class="opts">${q.items.map((it, i) => { const n = order.indexOf(i); return `<button class="opt ${n >= 0 ? 'sel' : ''}" data-i="${i}"><b style="color:var(--yel);display:inline-block;width:28px">${n >= 0 ? n + 1 : '·'}</b>${esc(it)}</button>`; }).join('')}</div>
-      <div class="row"><button class="sec grow" id="bk">⌫ 되돌리기</button><button class="big grow" id="ok" ${order.length === 4 ? '' : 'disabled'}>제출</button></div>`;
+      <div class="row"><button class="sec grow" id="bk">⌫ 되돌리기</button><button class="big grow" id="ok" ${order.length === q.items.length ? '' : 'disabled'}>제출</button></div>`;
     stage.querySelectorAll('.opt').forEach((b) => { b.onclick = () => { const i = Number(b.dataset.i); if (!order.includes(i)) order.push(i); draw(); }; });
     document.getElementById('bk').onclick = () => { order.pop(); draw(); };
     document.getElementById('ok').onclick = () => submit(order.slice());
@@ -1245,7 +2015,7 @@ function memoryUI(stage, q, submit) {
   let showing = performance.now() - playT0 < q.showMs;
   const draw = () => {
     stage.innerHTML = `<div class="q"><small>패턴 기억</small>${showing ? '빛나는 칸을 외우세요!' : `기억한 칸을 모두 누르세요 <span class="dim">(${q.cells.length}칸)</span>`}</div>
-      <div class="grid4">${[...Array(16).keys()].map((i) => `<button class="cell ${showing && q.cells.includes(i) ? 'lit' : ''} ${!showing && picks.has(i) ? 'pick' : ''}" data-i="${i}" ${showing ? 'disabled' : ''}></button>`).join('')}</div>
+      <div class="grid4" style="grid-template-columns:repeat(${q.n || 4},1fr)">${[...Array((q.n || 4) ** 2).keys()].map((i) => `<button class="cell ${showing && q.cells.includes(i) ? 'lit' : ''} ${!showing && picks.has(i) ? 'pick' : ''}" data-i="${i}" ${showing ? 'disabled' : ''}></button>`).join('')}</div>
       <button class="big" id="ok" ${showing || !picks.size ? 'disabled' : ''}>제출 (${picks.size}칸)</button>`;
     stage.querySelectorAll('.cell').forEach((c) => { c.onclick = () => { const i = Number(c.dataset.i); picks.has(i) ? picks.delete(i) : picks.add(i); draw(); }; });
     document.getElementById('ok').onclick = () => submit([...picks]);
@@ -1321,7 +2091,7 @@ function updReveal() {
     if (mine.sab && mine.sab.k === S.k) { box.innerHTML = '<div class="card2 center pulse">카드 발동 중…</div>'; return; }
     const targets = S.players.filter((p) => p.pid !== S.me);
     box.innerHTML = `<div class="card2 col"><b style="color:var(--vio)">🏆 라운드 1등 — 방해 카드를 쓰세요</b>
-      <div class="sab">${Object.entries(SABOTAGE).map(([k, v]) => `<button data-k="${k}" class="${selKind === k ? 'sel' : ''}">${v.emoji} ${v.label}<small>${v.desc}</small></button>`).join('')}</div>
+      <div class="sab">${Object.entries(SABOTAGE).filter(([, v]) => !(S.mode === 'free' && v.timeOnly)).map(([k, v]) => `<button data-k="${k}" class="${selKind === k ? 'sel' : ''}">${v.emoji} ${v.label}<small>${v.desc}</small></button>`).join('')}</div>
       <div class="chips">${targets.map((p) => `<button class="chip" style="${selTarget === p.pid ? 'background:var(--vio);color:#10122a' : 'color:var(--txt)'};padding:8px 12px;font-size:15px" data-t="${p.pid}"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}</button>`).join('')}</div>
       <button class="pink" id="fire" ${selKind && selTarget ? '' : 'disabled'}>발동!</button></div>`;
     box.querySelectorAll('[data-k]').forEach((b) => { b.onclick = () => { selKind = b.dataset.k; updReveal(); }; });
@@ -1351,6 +2121,302 @@ function finalView() {
   cur = { update() { } };
 }
 
+
+/* ═════════════ 새 게임 화면 ═════════════
+   UI2[type]({ stage, q, cls, submit, qbox, numInput, bindInput, choice, T }) */
+const alive = (stage) => !locked && document.getElementById('stage') === stage;
+const linesHTML = (lines, cls) => (lines && lines.length ? `<div class="col clues${cls}">${lines.map((l) => `<div class="clue">${esc(l)}</div>`).join('')}</div>` : '');
+// 선택 후 확정 버튼으로 제출
+function pickConfirm(u, sel, render) {
+  let cur = null;
+  u.stage.querySelectorAll(sel).forEach((b) => { b.onclick = () => { cur = Number(b.dataset.i); u.stage.querySelectorAll(sel).forEach((x) => x.classList.toggle('sel', x === b)); if (render) render(cur); document.getElementById('ok').disabled = false; }; });
+  document.getElementById('ok').onclick = () => { if (cur !== null) u.submit(cur); };
+}
+
+const UI2 = {
+  /* 공용: 숫자 입력 / 객관식 */
+  generic(u) {
+    const q = u.q;
+    let body = '';
+    if (q.big) body += `<div class="bignum${u.cls}" style="font-size:52px">${esc(q.big)}</div>`;
+    body += linesHTML(q.lines, u.cls);
+    if (q.grid) body += `<div class="dgrid${u.cls}" style="grid-template-columns:repeat(${q.grid[0].length},1fr)">${[].concat(...q.grid).map((x) => `<span class="${x === '?' ? 'qm' : x === '■' ? 'blk' : x === '' ? 'emp' : ''}">${esc(x)}</span>`).join('')}</div>`;
+    if (q.pyr) body += `<div class="pyr${u.cls}">${q.pyr.map((r) => `<div>${r.map((x) => `<span class="${x === '?' ? 'qm' : x === '' ? 'emp' : ''}">${esc(x)}</span>`).join('')}</div>`).join('')}</div>`;
+    if (q.ui === 'mc') {
+      u.stage.innerHTML = u.qbox(esc(q.text), q.sub) + body + `<div class="opts" style="grid-template-columns:1fr 1fr">${q.options.map((o, i) => `<button class="opt" style="text-align:center" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
+      u.choice('.opt');
+    } else {
+      u.stage.innerHTML = u.qbox(esc(q.text), q.sub) + body + u.numInput('정답 입력', q.decimal ? 'decimal' : 'text');
+      u.bindInput((v) => { const n = Number(v.replace(/,/g, '')); return v !== '' && Number.isFinite(n) ? n : (toast('숫자를 입력하세요'), undefined); });
+    }
+  },
+
+  /* 결! 합! */
+  hap(u) {
+    const q = u.q, picks = [];
+    const SH = ['circle', 'tri', 'sq'], CO = ['#ff4d6d', '#4cc9f0', '#ffd23f'], BG = ['#f4f4f8', '#7d8199', '#14151f'];
+    const tile = (t) => { const c = CO[t[1]]; const shape = t[0] === 0 ? `<circle cx="30" cy="30" r="17" fill="${c}"/>` : t[0] === 1 ? `<polygon points="30,10 49,46 11,46" fill="${c}"/>` : `<rect x="13" y="13" width="34" height="34" rx="3" fill="${c}"/>`; return `<svg viewBox="0 0 60 60"><rect width="60" height="60" rx="9" fill="${BG[t[2]]}"/>${shape}</svg>`; };
+    const count = q.mode === 'count';
+    const draw = () => {
+      u.stage.innerHTML = u.qbox(count ? '이 판에 「합」은 모두 몇 개?' : '「합」 하나를 찾아 3장을 눌러라', '모양·색·배경 각각이 3장 모두 같거나 모두 달라야 합') +
+        `<div class="hapg${u.cls}">${q.tiles.map((t, i) => `<button class="hapt ${picks.includes(i) ? 'sel' : ''}" data-i="${i}">${tile(t)}<b>${i + 1}</b></button>`).join('')}</div>` +
+        (count ? u.numInput('합의 개수') : `<button class="big" id="ok" ${picks.length === 3 ? '' : 'disabled'}>합! (${picks.length}/3)</button>`);
+      if (count) { u.bindInput((v) => (/^\d+$/.test(v) ? Number(v) : (toast('숫자를 입력하세요'), undefined))); return; }
+      u.stage.querySelectorAll('.hapt').forEach((b) => { b.onclick = () => { const i = Number(b.dataset.i); const k = picks.indexOf(i); if (k >= 0) picks.splice(k, 1); else if (picks.length < 3) picks.push(i); draw(); }; });
+      document.getElementById('ok').onclick = () => u.submit(picks.slice());
+    };
+    draw();
+  },
+
+  /* 불 끄기 */
+  lights(u) {
+    const q = u.q, n = q.n, b = [...q.b].map(Number), presses = [];
+    const draw = () => {
+      const left = b.filter((x) => x).length;
+      u.stage.innerHTML = u.qbox(left ? `켜진 불 ${left}개` : '모두 꺼졌다! 🎉', '누른 칸 + 상하좌우가 뒤집힌다') +
+        `<div class="grid4 lights${u.cls}" style="grid-template-columns:repeat(${n},1fr)">${b.map((x, i) => `<button class="cell ${x ? 'on' : ''}" data-i="${i}"></button>`).join('')}</div>
+        <div class="row"><button class="sec grow" id="rs">↺ 처음부터 (${presses.length}번 누름)</button></div>
+        <button class="big" id="ok" ${left ? 'disabled' : ''}>${left ? '불을 모두 끄면 제출할 수 있어요' : '제출'}</button>`;
+      u.stage.querySelectorAll('.cell').forEach((c) => { c.onclick = () => { const i = Number(c.dataset.i); lightsPress(b, n, i); presses.push(i); draw(); }; });
+      document.getElementById('rs').onclick = () => { b.splice(0, b.length, ...[...q.b].map(Number)); presses.length = 0; draw(); };
+      document.getElementById('ok').onclick = () => u.submit(presses.slice(-200));
+    };
+    draw();
+  },
+
+  /* 미니 스도쿠 */
+  sudoku(u) {
+    const q = u.q, n = q.n, g = [...q.g].map(Number), cur = g.slice(); let sel = cur.indexOf(0);
+    const bad = () => { const out = new Set(); for (let i = 0; i < n * n; i++) { if (!cur[i]) continue; const r = Math.floor(i / n), c = i % n; for (let j = 0; j < n * n; j++) { if (j === i || cur[j] !== cur[i]) continue; const r2 = Math.floor(j / n), c2 = j % n; if (r === r2 || c === c2 || (Math.floor(r / q.bh) === Math.floor(r2 / q.bh) && Math.floor(c / q.bw) === Math.floor(c2 / q.bw))) out.add(i); } } return out; };
+    const draw = () => {
+      const B = bad(), full = cur.every((x) => x);
+      u.stage.innerHTML = u.qbox(`${n}×${n} 스도쿠`, `가로·세로·굵은 칸(${q.bh}×${q.bw})마다 1~${n}이 한 번씩`) +
+        `<div class="sdk${u.cls}" style="grid-template-columns:repeat(${n},1fr)">${cur.map((x, i) => { const r = Math.floor(i / n), c = i % n; const cl = [g[i] ? 'giv' : '', i === sel ? 'sel' : '', B.has(i) ? 'bad' : '', c % q.bw === 0 && c ? 'bl' : '', r % q.bh === 0 && r ? 'bt' : ''].join(' '); return `<button class="${cl}" data-i="${i}">${x || ''}</button>`; }).join('')}</div>
+        <div class="nums" style="grid-template-columns:repeat(${n + 1},1fr)">${[...Array(n).keys()].map((k) => `<button data-v="${k + 1}">${k + 1}</button>`).join('')}<button data-v="0" class="sec">⌫</button></div>
+        <button class="big" id="ok" ${full && !B.size ? '' : 'disabled'}>${full ? (B.size ? '겹치는 숫자가 있어요' : '제출') : '빈칸을 모두 채우세요'}</button>`;
+      u.stage.querySelectorAll('.sdk button').forEach((c) => { c.onclick = () => { const i = Number(c.dataset.i); if (!g[i]) { sel = i; draw(); } }; });
+      u.stage.querySelectorAll('[data-v]').forEach((c) => { c.onclick = () => { if (sel < 0 || g[sel]) return; cur[sel] = Number(c.dataset.v); if (cur[sel]) { const nx = cur.findIndex((x, j) => j > sel && !x); if (nx >= 0) sel = nx; } draw(); }; });
+      document.getElementById('ok').onclick = () => u.submit(cur.join(''));
+    };
+    draw();
+  },
+
+  /* 노노그램 */
+  nono(u) {
+    const q = u.q, n = q.n, st = Array(n * n).fill(0); // 0 빈칸 1 칠함 2 X표
+    const mx = Math.max(...q.cols.map((c) => c.length));
+    const draw = () => {
+      const bits = st.map((x) => (x === 1 ? 1 : 0)), c = nonoClues(bits, n);
+      const rOk = q.rows.map((r, i) => JSON.stringify(r) === JSON.stringify(c.rows[i])), cOk = q.cols.map((r, i) => JSON.stringify(r) === JSON.stringify(c.cols[i]));
+      const done = rOk.every(Boolean) && cOk.every(Boolean);
+      const sz = n >= 7 ? 34 : 44;
+      let h = `<div class="nono${u.cls}" style="grid-template-columns:auto repeat(${n},${sz}px)"><span></span>`;
+      for (let j = 0; j < n; j++) h += `<span class="cc ${cOk[j] ? 'ok' : ''}">${Array(mx - q.cols[j].length).fill('').concat(q.cols[j]).map((x) => `<i>${x === '' ? '&nbsp;' : x}</i>`).join('')}</span>`;
+      for (let i = 0; i < n; i++) {
+        h += `<span class="rc ${rOk[i] ? 'ok' : ''}">${q.rows[i].join(' ')}</span>`;
+        for (let j = 0; j < n; j++) { const k = i * n + j; h += `<button class="nc s${st[k]}" data-i="${k}" style="height:${sz}px">${st[k] === 2 ? '✕' : ''}</button>`; }
+      }
+      h += '</div>';
+      u.stage.innerHTML = u.qbox(`${n}×${n} 노노그램`, '숫자 = 연속으로 칠한 칸의 길이 (순서대로) · 탭: 칠함 → ✕ → 빈칸') + h +
+        `<div class="row"><button class="sec grow" id="rs">↺ 지우기</button></div><button class="big" id="ok">${done ? '제출 (단서 모두 일치!)' : '제출'}</button>`;
+      u.stage.querySelectorAll('.nc').forEach((b) => { b.onclick = () => { const k = Number(b.dataset.i); st[k] = (st[k] + 1) % 3; draw(); }; });
+      document.getElementById('rs').onclick = () => { st.fill(0); draw(); };
+      document.getElementById('ok').onclick = () => u.submit(bits.join(''));
+    };
+    draw();
+  },
+
+  /* 성냥개비 */
+  match(u) {
+    const q = u.q; let typed = '';
+    u.stage.innerHTML = u.qbox('성냥개비 하나만 옮겨 참인 식을 만들어라', '‘=’는 그대로 · 숫자는 숫자로, 부호는 + 또는 − 로') +
+      `<div class="mtc${u.cls}">${matchSVG(q.eq)}</div>
+      <div class="expr" id="ty"></div>
+      <div class="ops" style="grid-template-columns:repeat(7,1fr)">${['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '−', '=', '⌫'].map((k) => `<button data-k="${k}">${k}</button>`).join('')}</div>
+      <div class="row"><button class="sec grow" id="cp">원래 식 불러오기</button></div>
+      <button class="big" id="ok">제출</button>`;
+    const show = () => { document.getElementById('ty').innerHTML = typed ? esc(typed) : '<span class="dim">고친 식을 입력</span>'; };
+    u.stage.querySelectorAll('[data-k]').forEach((b) => { b.onclick = () => { const k = b.dataset.k; if (k === '⌫') typed = typed.slice(0, -1); else if (typed.length < 12) typed += k; show(); }; });
+    document.getElementById('cp').onclick = () => { typed = q.eq.replace(/-/g, '−'); show(); };
+    document.getElementById('ok').onclick = () => { const v = typed.replace(/−/g, '-'); if (!/^\d+[+-]\d+=\d+$/.test(v)) return toast('“숫자 부호 숫자 = 숫자” 꼴로 입력하세요'); u.submit(v); };
+    show();
+  },
+
+  /* 기사와 건달 */
+  knights(u) {
+    const q = u.q, st = q.names.map(() => null);
+    const draw = () => {
+      u.stage.innerHTML = u.qbox('누가 기사이고 누가 건달일까?', '😇 기사: 항상 참 · 😈 건달: 항상 거짓') + linesHTML(q.lines, u.cls) +
+        `<div class="opts" style="grid-template-columns:1fr 1fr">${q.names.map((n, i) => `<button class="opt kn" data-i="${i}" style="text-align:center">${esc(n)}<br><span style="font-size:26px">${st[i] === null ? '❔' : st[i] ? '😇' : '😈'}</span></button>`).join('')}</div>
+        <button class="big" id="ok" ${st.includes(null) ? 'disabled' : ''}>${st.includes(null) ? '모두 정하면 제출 (눌러서 바꾸기)' : '제출'}</button>`;
+      u.stage.querySelectorAll('.kn').forEach((b) => { b.onclick = () => { const i = Number(b.dataset.i); st[i] = st[i] === null ? true : !st[i]; draw(); }; });
+      document.getElementById('ok').onclick = () => u.submit(st.reduce((m, x, i) => m | (x ? 1 << i : 0), 0));
+    };
+    draw();
+  },
+
+  /* 가짜 동전 */
+  coin(u) {
+    const q = u.q; let c = null, h = q.hl ? null : 0;
+    const draw = () => {
+      u.stage.innerHTML = u.qbox(`동전 ${q.N}개 중 가짜 하나는?`, q.hl ? '가짜는 진짜보다 무겁거나 가볍다 (어느 쪽인지 모름)' : '가짜는 진짜보다 무겁다') + linesHTML(q.lines, u.cls) +
+        `<div class="nums" style="grid-template-columns:repeat(${q.N > 9 ? 6 : q.N > 8 ? 5 : 4},1fr)">${[...Array(q.N).keys()].map((i) => `<button data-c="${i}" class="${c === i ? 'csel' : ''}" style="font-size:24px">${circ(i)}</button>`).join('')}</div>
+        ${q.hl ? `<div class="two" style="gap:8px"><button data-h="0" class="${h === 0 ? 'sel' : ''}" style="padding:16px 0;font-size:18px">⬆️ 무겁다</button><button data-h="1" class="${h === 1 ? 'sel' : ''}" style="padding:16px 0;font-size:18px">⬇️ 가볍다</button></div>` : ''}
+        <button class="big" id="ok" ${c !== null && h !== null ? '' : 'disabled'}>제출</button>`;
+      u.stage.querySelectorAll('[data-c]').forEach((b) => { b.onclick = () => { c = Number(b.dataset.c); draw(); }; });
+      u.stage.querySelectorAll('[data-h]').forEach((b) => { b.onclick = () => { h = Number(b.dataset.h); draw(); }; });
+      document.getElementById('ok').onclick = () => u.submit(c * 2 + h);
+    };
+    draw();
+  },
+
+  /* 연산자 넣기 */
+  ops(u) {
+    const q = u.q, sl = q.nums.slice(1).map(() => null), SHOW = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+    const draw = () => {
+      let live = '';
+      if (!sl.includes(null)) { try { const v = Expr.evaluate(opsExpr(q.nums, sl)).value; live = `= ${v.d === 1 ? v.n : v.n + '/' + v.d}`; } catch (e) { live = '계산 불가'; } }
+      const ok = !sl.includes(null) && live === `= ${q.target}`;
+      u.stage.innerHTML = u.qbox('빈칸을 눌러 연산자를 바꿔라', `${q.ops.map((o) => SHOW[o]).join(' ')} 사용 · 곱셈·나눗셈 먼저`) +
+        `<div class="opsrow${u.cls}">${q.nums.map((n, i) => `<b>${n}</b>${i < sl.length ? `<button data-s="${i}" class="${sl[i] ? 'f' : ''}">${sl[i] ? SHOW[sl[i]] : '?'}</button>` : ''}`).join('')}<b>=</b><b class="tg">${q.target}</b></div>
+        <div class="center ${ok ? 'pos' : 'dim'}" style="font-weight:800;min-height:22px">${esc(live)}</div>
+        <button class="big" id="ok" ${ok ? '' : 'disabled'}>${ok ? '제출 (정답!)' : '등식이 맞으면 제출할 수 있어요'}</button>`;
+      u.stage.querySelectorAll('[data-s]').forEach((b) => { b.onclick = () => { const i = Number(b.dataset.s); sl[i] = q.ops[(q.ops.indexOf(sl[i]) + 1) % q.ops.length]; draw(); }; });
+      document.getElementById('ok').onclick = () => u.submit(sl.join(''));
+    };
+    draw();
+  },
+
+  /* 순서 기억 */
+  simon(u) {
+    const q = u.q, n = q.n, seq = q.seq, t0 = 600, picks = [];
+    const showEnd = t0 + seq.length * q.stepMs;
+    const grid = (lit, dis) => `<div class="grid4 simon" style="grid-template-columns:repeat(${n},1fr)">${[...Array(n * n).keys()].map((i) => `<button class="cell ${i === lit ? 'lit' : ''}" data-i="${i}" ${dis ? 'disabled' : ''}></button>`).join('')}</div>`;
+    const ask = () => {
+      u.stage.innerHTML = `<div class="q"><small>순서 기억 · ${seq.length}단계</small>본 순서대로 누르세요 <span class="dim">(${picks.length}/${seq.length})</span></div>${grid(-1, false)}<button class="sec" id="rs">↺ 다시 입력</button>`;
+      u.stage.querySelectorAll('.cell').forEach((c) => { c.onclick = () => { picks.push(Number(c.dataset.i)); c.classList.add('pick'); if (picks.length >= seq.length) u.submit(picks.slice()); else setTimeout(() => { if (alive(u.stage)) ask(); }, 120); }; });
+      document.getElementById('rs').onclick = () => { picks.length = 0; ask(); };
+    };
+    const tick = () => {
+      if (!alive(u.stage)) return;
+      const e = performance.now() - playT0;
+      if (e >= showEnd) return ask();
+      const k = Math.floor((e - t0) / q.stepMs), within = (e - t0) % q.stepMs < q.stepMs * 0.72;
+      u.stage.innerHTML = `<div class="q"><small>순서 기억 · ${seq.length}단계</small>${e < t0 ? '잘 보세요…' : `${k + 1}번째`}</div>${grid(e >= t0 && within ? seq[k] : -1, true)}`;
+      setTimeout(tick, 60);
+    };
+    tick();
+  },
+
+  /* 순간 포착 */
+  count(u) {
+    const q = u.q, left = q.showMs - (performance.now() - playT0);
+    const ask = () => {
+      u.stage.innerHTML = u.qbox(`<span style="font-size:46px">${q.target}</span><br>몇 개였을까?`, '순간 포착') + u.numInput('개수');
+      u.bindInput((v) => (/^\d+$/.test(v) ? Number(v) : (toast('숫자를 입력하세요'), undefined)));
+      document.getElementById('in').focus();
+    };
+    if (left <= 0) return ask();
+    u.stage.innerHTML = `<div class="q"><small>순간 포착</small>${q.pre ? `<span style="font-size:30px">${q.target}</span> 의 개수를 세세요!` : '잘 보세요! 무엇을 물을지는 비밀'}</div>
+      <div class="cgrid${u.cls}" style="grid-template-columns:repeat(${q.cols},1fr)">${q.cells.map((x) => `<span>${x}</span>`).join('')}</div>`;
+    setTimeout(() => { if (alive(u.stage)) ask(); }, left);
+  },
+
+  /* 틀린 하나 */
+  odd(u) {
+    const q = u.q;
+    u.stage.innerHTML = u.qbox('하나만 다르다. 찾아서 누르세요!', '한 번만 누를 수 있어요') +
+      `<div class="oddg${u.cls}" style="grid-template-columns:repeat(${q.cols},1fr)">${q.cells.map((x, i) => `<button data-i="${i}">${esc(x)}</button>`).join('')}</div>`;
+    u.stage.querySelectorAll('.oddg button').forEach((b) => { b.onclick = () => u.submit(Number(b.dataset.i)); });
+  },
+
+  /* 순서대로 터치 */
+  schulte(u) {
+    const q = u.q, N = q.n * q.n; let next = 1, miss = 0;
+    u.stage.innerHTML = `<div class="q"><small>순서대로 터치</small>다음: <b id="nx" style="color:var(--yel)">1</b> <span class="dim small" id="ms"></span></div>
+      <div class="oddg schulte${u.cls}" style="grid-template-columns:repeat(${q.n},1fr)">${q.cells.map((x) => `<button data-v="${x}">${x}</button>`).join('')}</div>`;
+    u.stage.querySelectorAll('.schulte button').forEach((b) => {
+      b.onclick = () => {
+        if (Number(b.dataset.v) === next) { b.classList.add('done2'); b.disabled = true; next++; if (next > N) return u.submit(miss); document.getElementById('nx').textContent = next; }
+        else { miss++; b.classList.add('wrong'); setTimeout(() => b.classList.remove('wrong'), 250); document.getElementById('ms').textContent = `실수 ${miss}${miss > 3 ? ' (4번부터 실격)' : ''}`; }
+      };
+    });
+  },
+
+  /* ── 심리전 ── */
+  beauty(u) {
+    const q = u.q, [mn, md] = q.mul || [2, 3], max = q.max || 100, mid = Math.round(max / 2);
+    u.stage.innerHTML = u.qbox(`모두의 평균 × <b style="color:var(--yel)">${mn}/${md}</b>에<br>가장 가까운 숫자는?`, `0 ~ ${max} · 이번 배율 ${mn}/${md}`) + `<div class="bignum" id="bn">${mid}</div><input class="slider" id="sl" type="range" min="0" max="${max}" value="${mid}"><button class="big" id="ok">이 숫자로 확정</button>`;
+    const sl = document.getElementById('sl'); sl.oninput = () => { document.getElementById('bn').textContent = sl.value; };
+    document.getElementById('ok').onclick = () => u.submit(Number(sl.value));
+  },
+  minority(u) {
+    const q = u.q;
+    u.stage.innerHTML = u.qbox('사람이 더 적은 쪽이 이깁니다', '소수결 · 동점이면 무승부') +
+      `<div class="two"><button data-i="0" style="font-size:24px">${esc(q.A || 'A')}</button><button data-i="1" style="font-size:24px">${esc(q.B || 'B')}</button></div><button class="big" id="ok" disabled>확정</button>`;
+    pickConfirm(u, '.two button');
+  },
+  split(u) {
+    const q = u.q, C = q.coop || 60, POT = q.pot || 130, L = q.lose || 30;
+    u.stage.innerHTML = u.qbox(`전원 협력: 모두 <span class="pos">+${C}</span><br>배신자 있음: 배신자끼리 <span class="pos">${POT}</span> 나눠 갖기, 협력자 <span class="neg">−${L}</span><br>전원 배신: 모두 <span class="neg">−${L}</span>`, '이번 판 보상') +
+      '<div class="two"><button data-i="0">🤝<br><span style="font-size:18px">협력</span></button><button data-i="1">🗡️<br><span style="font-size:18px">배신</span></button></div><button class="big" id="ok" disabled>확정</button>';
+    pickConfirm(u, '.two button');
+  },
+  lowest(u) {
+    const max = u.q.max || 10;
+    u.stage.innerHTML = u.qbox('나만 고른 수 중 가장 작으면 승리', `1 ~ ${max}`) + `<div class="nums" style="grid-template-columns:repeat(5,1fr)">${[...Array(max)].map((_, i) => `<button data-i="${i + 1}">${i + 1}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;
+    let sel = null;
+    u.stage.querySelectorAll('.nums button').forEach((b) => { b.onclick = () => { sel = Number(b.dataset.i); u.stage.querySelectorAll('.nums button').forEach((x) => x.classList.toggle('used', x !== b)); document.getElementById('ok').disabled = false; }; });
+    document.getElementById('ok').onclick = () => { if (sel !== null) u.submit(sel); };
+  },
+  indian(u) {
+    const q = u.q, others = S.players.filter((p) => p.pid !== S.me && q.cards[p.pid]);
+    u.stage.innerHTML = u.qbox('내 카드만 안 보인다!', '카드 1~10 · 승부한 사람 중 가장 높은 카드가 승리') +
+      `<div class="icards${u.cls}"><div class="ic me"><b>❓</b><span>나</span></div>${others.map((p) => `<div class="ic"><b>${q.cards[p.pid]}</b><span style="color:${p.color}">${esc(p.name)}</span></div>`).join('')}</div>
+      <div class="small dim center" style="line-height:1.5">승부 승자 +30 + 패자 1명당 30 + 포기자 1명당 10<br>승부 패배 −30 · 포기 −10 (단, 최고 카드를 들고 포기하면 −30)</div>
+      <div class="two"><button data-i="0">⚔️<br><span style="font-size:18px">승부</span></button><button data-i="1">🏳️<br><span style="font-size:18px">포기</span></button></div><button class="big" id="ok" disabled>확정</button>`;
+    pickConfirm(u, '.two button');
+  },
+  goods(u) {
+    const q = u.q;
+    u.stage.innerHTML = u.qbox(`내 돈 <b style="color:var(--yel)">${q.C}코인</b>. 공동 금고에 얼마를 낼까?`, `금고의 돈은 ×${q.m} 불어나 참가자 모두에게 똑같이 나뉜다`) +
+      `<div class="bignum" id="bn">0</div><input class="slider" id="sl" type="range" min="0" max="${q.C}" value="0">
+      <div class="small dim center" id="hint"></div><button class="big" id="ok">이만큼 낸다</button>`;
+    const n = Math.max(2, S.players.filter((p) => p.connected).length);
+    const sl = document.getElementById('sl'), upd = () => { const x = Number(sl.value); document.getElementById('bn').textContent = x; document.getElementById('hint').textContent = `모두가 ${x}씩 내면 각자 ${(q.C - x + x * q.m).toFixed(1)}코인 · 나만 ${x} 내고 남은 안 내면 ${(q.C - x + (x * q.m) / n).toFixed(1)}코인`; };
+    sl.oninput = upd; upd();
+    document.getElementById('ok').onclick = () => u.submit(Number(sl.value));
+  },
+  auction(u) {
+    const q = u.q, mine = q.hints[S.me];
+    u.stage.innerHTML = u.qbox(`상품 가치 = 숨은 숫자 ${q.K}개의 합`, '숫자 하나는 1~30 · 최고가 1명이 낙찰 (동점이면 유찰)') +
+      `<div class="card center"><div class="dim small">내가 아는 숫자</div><div class="bignum" style="font-size:56px">${mine == null ? '?' : mine}</div><div class="dim small">나머지 ${q.K - 1}개는 모른다 (평균 15.5)</div></div>
+      <div class="small dim center">낙찰자 점수 = 가치 − 입찰가 (마이너스가 될 수도!) · 나머지 0점</div>` + u.numInput(`입찰가 (0~${q.max})`);
+    u.bindInput((v) => { const n = Number(v); return Number.isInteger(n) && n >= 0 && n <= q.max ? n : (toast(`0~${q.max} 정수`), undefined); });
+  },
+  rps(u) {
+    u.stage.innerHTML = u.qbox('단체 가위바위보!', '두 가지만 나오면 승부 · 한 가지나 세 가지 다 나오면 무승부') +
+      `<div class="three">${['✊', '✌️', '🖐️'].map((x, i) => `<button data-i="${i}">${x}</button>`).join('')}</div><button class="big" id="ok" disabled>확정</button>`;
+    pickConfirm(u, '.three button');
+  },
+};
+
+/* 성냥개비 SVG */
+function matchSVG(eq) {
+  const W = 46, H = 78, stick = (x1, y1, x2, y2, on) => (on ? `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#f2c27b" stroke-width="6" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="4.6" fill="#e5383b"/>` : `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2b3166" stroke-width="3" stroke-dasharray="3 4" stroke-linecap="round"/>`);
+  const SEGXY = [[9, 6, 35, 6], [38, 10, 38, 35], [38, 43, 38, 68], [9, 72, 35, 72], [6, 43, 6, 68], [6, 10, 6, 35], [9, 39, 35, 39]];
+  let x = 0, out = '';
+  for (const ch of eq) {
+    out += `<g transform="translate(${x},0)">`;
+    if (ch >= '0' && ch <= '9') { const m = SEG[+ch]; SEGXY.forEach((s, i) => { out += stick(...s, !!(m & (1 << i))); }); }
+    else if (ch === '+' || ch === '-') { out += stick(8, 39, 36, 39, true); out += ch === '+' ? stick(22, 25, 22, 53, true) : ''; }
+    else if (ch === '=') { out += stick(8, 31, 36, 31, true) + stick(8, 47, 36, 47, true); }
+    out += '</g>'; x += W + 6;
+  }
+  return `<svg viewBox="-4 0 ${x} ${H}" style="width:100%;max-height:110px">${out}</svg>`;
+}
+
+// 시작
 homeView();
 
 })();
