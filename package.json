@@ -1,0 +1,9 @@
+{
+  "name": "brain-battle",
+  "version": "2.0.0",
+  "description": "두뇌 배틀 — 수학·상식·퍼즐·두뇌·심리 16종 미니게임을 친구들과 겨루는 실시간 웹게임",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "build": "node build.js", "test": "node test/gen_test.js" },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}
