@@ -13,5 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/upload-pages-artifact@v5
         with: { path: public }
+      # 업로드 직후엔 GitHub가 아티팩트를 바로 못 찾는 경우가 있어 잠깐 기다린다
+      - run: sleep 30
       - id: d
         uses: actions/deploy-pages@v5
