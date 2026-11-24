@@ -225,3 +225,25 @@ button.chip{padding:8px 14px;font-size:15px}
 .arr{font-size:30px;color:var(--dim)}
 .sw{font-size:72px;font-weight:900;text-align:center;font-variant-numeric:tabular-nums;color:var(--cyan)}
 .badge:empty{display:none}
+.pcount{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pcount button{background:var(--panel2);color:var(--txt);border:2px solid var(--line);padding:12px 4px;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.pcount button span{display:flex;gap:3px;min-height:22px;align-items:center;font-size:20px}
+.pcount button i{width:12px;height:12px;border-radius:50%;display:block}
+.pcount button.sel{border-color:var(--yel);background:#2b2a12}
+.scard{min-height:30vh;display:flex;align-items:center;justify-content:center;background:var(--panel);border:2px solid var(--line);border-radius:22px}
+.smark{text-align:center;font-weight:900;font-size:20px;min-height:28px}
+.smark.ok{color:var(--grn)}.smark.no{color:var(--pink)}
+.cell.relay{background:color-mix(in srgb,var(--pc) 35%,#0e1130);border-color:var(--pc)}
+.cell.relay i{display:block;width:100%;height:100%;border-radius:12px;background:var(--pc);box-shadow:0 0 20px var(--pc)}
+.cell.relay.flash{animation:rflash .3s}
+@keyframes rflash{0%{background:var(--pc)}100%{}}
+.bombi{font-size:84px;text-align:center;animation:shake 1s infinite}
+@keyframes shake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.06)}}
+.opt.wrongopt{border-color:var(--pink);opacity:.4}
+.bjt{display:flex;flex-direction:column;gap:6px}
+.bjr{display:flex;align-items:center;gap:10px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:8px 12px}
+.bjr.cur{border-color:var(--c)}
+.bjr b{width:44px;color:var(--c)}
+.bjr span{flex:1;display:flex;gap:4px;flex-wrap:wrap}
+.bjr span i{font-style:normal;background:#fff;color:#14151f;border-radius:6px;padding:4px 7px;font-weight:900;font-size:16px}
+.bjr em{font-style:normal;font-weight:900;font-size:22px}

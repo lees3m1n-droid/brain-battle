@@ -8,7 +8,7 @@ const byId = (ctx, id) => ctx.players.find((p) => p.id === id);
 
 // 버저 화면: 4명 이상이면 절반은 화면 위쪽(뒤집힌 버튼)에 앉은 사람 몫
 function buzzScreen(ctx, onBuzz) {
-  const ps = ctx.players, half = ps.length >= 4 ? Math.floor(ps.length / 2) : 0;
+  const ps = ctx.seats || ctx.players, half = ps.length >= 4 ? Math.floor(ps.length / 2) : 0; // 버저 자리는 고정
   const top = ps.slice(0, half), bot = ps.slice(half);
   const btn = (p) => `<button class="buzz" data-p="${p.id}" style="--c:${p.c}"><b>${esc(p.n)}</b><small id="bs_${p.id}">0</small></button>`;
   $app.innerHTML = `<div class="pty">
@@ -67,9 +67,10 @@ PARTY.hap = (ctx) => {
   const D = zeroD(ctx), found = [], log = [];
   let picker = null, picks = [], pickEnd = 0, ended = false;
   const endAt = ctx.timed ? Date.now() + ctx.limit : Infinity;
+  const HAP_PICK = () => (ctx.timed ? 5000 : 10000); // 버저 후 3장 고르는 시간
   const B = buzzScreen(ctx, (id) => {
     if (picker || ended) return;
-    picker = byId(ctx, id); picks = []; pickEnd = Date.now() + (ctx.timed ? 10000 : 30000); B.enable([]); draw();
+    picker = byId(ctx, id); picks = []; pickEnd = Date.now() + HAP_PICK(); B.enable([]); draw();
   });
   const finish = (why) => {
     if (ended) return; ended = true;
@@ -104,7 +105,7 @@ PARTY.hap = (ctx) => {
   draw(); B.score(D);
   every(() => {
     if (ended) return;
-    barTo(picker ? pickEnd : endAt, picker ? (ctx.timed ? 10000 : 30000) : ctx.limit);
+    barTo(picker ? pickEnd : endAt, picker ? HAP_PICK() : ctx.limit);
     B.info(picker ? `${Math.max(0, Math.ceil((pickEnd - Date.now()) / 1000))}초` : endAt === Infinity ? '시간 무제한' : `${Math.ceil((endAt - Date.now()) / 1000)}초`);
     if (picker && Date.now() > pickEnd) { D[picker.id] -= 10; log.push(`⏰ ${picker.n}: 시간 초과`); release(); }
     if (!picker && Date.now() > endAt) finish('⏰ 시간 종료');
@@ -113,9 +114,9 @@ PARTY.hap = (ctx) => {
 
 /* ───────── 👯 짝꿍 그림 ───────── */
 PARTY.pair = (ctx) => {
-  const cards = ctx.hard ? 7 : 5, k = ctx.hard ? 8 : 6, D = zeroD(ctx);
+  const cards = ctx.hard ? 7 : 5, k = ctx.hard ? 8 : 6, D = zeroD(ctx), PICK = ctx.timed ? 3000 : 6000;
   let ci = -1, cur = null, picker = null, out = new Set(), pickEnd = 0, cardEnd = 0, busy = false, wins = {};
-  const B = buzzScreen(ctx, (id) => { if (picker || busy) return; picker = byId(ctx, id); pickEnd = Date.now() + (ctx.timed ? 6000 : 15000); B.enable([]); draw(); });
+  const B = buzzScreen(ctx, (id) => { if (picker || busy) return; picker = byId(ctx, id); pickEnd = Date.now() + PICK; B.enable([]); draw(); });
   const sym = (e, side) => { const sz = ctx.hard ? 24 + rand(22) : 32 + rand(10), rot = ctx.hard ? rand(360) : rand(40) - 20; return `<button class="sym" data-e="${e}" ${picker ? '' : 'disabled'} style="font-size:${sz}px;transform:rotate(${rot}deg)">${e}</button>`; };
   const draw = (msg) => {
     B.mid.innerHTML = `<div class="q"><small>카드 ${ci + 1}/${cards} · 두 카드에 똑같이 있는 그림은 딱 하나 · 정답 +25 · 오답 −10</small>${msg || (picker ? `${pname(picker)} — 겹치는 그림을 누르세요!` : '찾았으면 자기 버튼!')}</div>
@@ -141,7 +142,7 @@ PARTY.pair = (ctx) => {
   next();
   every(() => {
     if (busy) return;
-    barTo(picker ? pickEnd : cardEnd, picker ? (ctx.timed ? 6000 : 15000) : 20000);
+    barTo(picker ? pickEnd : cardEnd, picker ? PICK : 20000);
     if (picker && Date.now() > pickEnd) { D[picker.id] -= 10; out.add(picker.id); toast(`⏰ ${picker.n} 시간 초과`); picker = null; afterMiss(); }
     else if (!picker && Date.now() > cardEnd) reveal(`⏰ 시간 초과 — 정답은 ${cur.shared}`);
   }, 150);
@@ -180,7 +181,7 @@ PARTY.reaction = (ctx) => {
 /* ───────── 🔔 버저 퀴즈 ───────── */
 function quizQ(hard, used) {
   const k = pick(['trivia', 'trivia', 'trivia', 'chosung', 'chosung', 'sequence', 'fruit', 'calc', 'clock']);
-  if (k === 'trivia') { const q = makeTrivia(used); return { kind: 'mc', text: q.pub.text, sub: q.pub.cat, options: q.pub.options, ans: q.secret.ans, at: q.answerText, ex: q.expl }; }
+  if (k === 'trivia') { const q = makeTrivia(used, hard); return { kind: 'mc', text: q.pub.text, sub: q.pub.cat, options: q.pub.options, ans: q.secret.ans, at: q.answerText, ex: q.expl }; }
   if (k === 'chosung') { const q = makeChosung(used, hard); return { kind: 'text', big: q.pub.cho, text: '초성 퀴즈', sub: hard ? '분류는 비밀' : `분류: ${q.pub.cat}`, ans: q.secret.ans, at: q.answerText }; }
   if (k === 'sequence') { const q = makeSequence(hard); return { kind: 'num', text: '다음에 올 수는?', big: q.pub.seq.join(', ') + ', ?', ans: q.secret.ans, at: String(q.secret.ans), ex: q.expl }; }
   if (k === 'fruit') { const q = genFruit(hard); return { kind: 'num', text: q.pub.text, lines: q.pub.lines, sub: '곱셈 먼저', ans: q.secret.ans, at: q.answerText, ex: q.expl }; }
@@ -192,7 +193,8 @@ function quizQ(hard, used) {
 PARTY.quiz = (ctx) => {
   const total = ctx.hard ? 8 : 6, D = zeroD(ctx), used = G ? G.used : new Set();
   let qi = -1, Q = null, picker = null, out = new Set(), pickEnd = 0, qEnd = 0, busy = false;
-  const B = buzzScreen(ctx, (id) => { if (picker || busy) return; picker = byId(ctx, id); pickEnd = Date.now() + (ctx.timed ? 10000 : 30000); B.enable([]); draw(); });
+  const PICK = () => (Q.kind === 'mc' ? (ctx.timed ? 4000 : 8000) : (ctx.timed ? 7000 : 15000)); // 버저 후 답하는 시간
+  const B = buzzScreen(ctx, (id) => { if (picker || busy) return; picker = byId(ctx, id); pickEnd = Date.now() + PICK(); B.enable([]); draw(); });
   const body = () => `${Q.big ? `<div class="bignum" style="font-size:${Q.big.length > 12 ? 30 : 44}px">${esc(Q.big)}</div>` : ''}${Q.lines ? `<div class="col clues">${Q.lines.map((l) => `<div class="clue">${esc(l)}</div>`).join('')}</div>` : ''}`;
   const draw = (msg) => {
     let ans = '';
@@ -227,7 +229,7 @@ PARTY.quiz = (ctx) => {
   next();
   every(() => {
     if (busy) return;
-    barTo(picker ? pickEnd : qEnd, picker ? (ctx.timed ? 10000 : 30000) : 25000);
+    barTo(picker ? pickEnd : qEnd, picker ? PICK() : 25000);
     if (picker && Date.now() > pickEnd) { D[picker.id] -= 10; out.add(picker.id); toast(`⏰ ${picker.n} 시간 초과`); picker = null; afterMiss(); }
     else if (!picker && Date.now() > qEnd) reveal('⏰ 시간 초과');
   }, 150);
@@ -470,4 +472,189 @@ PARTY.liarw = (ctx) => {
     }; });
   };
   see(0);
+};
+
+/* ───────── 흘러가는 카드에 버저: 스냅 · 합 스냅 · 색깔 버저 ───────── */
+// cfg: { rule, gen(items, force), hit(items), show(item) }
+function streamGame(ctx, cfg) {
+  const D = zeroD(ctx), total = cfg.count || 24, gap = cfg.gap || (ctx.hard ? 1600 : 1250), cool = {};
+  const items = []; let taken = false, hits = 0, caught = 0, ended = false;
+  const B = buzzScreen(ctx, (id) => {
+    if (ended || !items.length || (cool[id] && cool[id] > Date.now())) return;
+    if (taken) { B.flash(id, 'bad'); return; }
+    if (cfg.hit(items)) { taken = true; caught++; D[id] += 20; B.flash(id, 'good'); mark('⭕ ' + byId(ctx, id).n, 'ok'); }
+    else { D[id] -= 10; cool[id] = Date.now() + 1500; B.flash(id, 'bad'); mark('❌ ' + byId(ctx, id).n, 'no'); }
+    B.score(D);
+  });
+  const mark = (t, c) => { const el = document.getElementById('smark'); if (el) { el.textContent = t; el.className = 'smark ' + c; } };
+  const draw = () => {
+    B.mid.innerHTML = `<div class="q"><small>맞으면 +20 (가장 먼저 누른 사람만) · 틀리면 −10</small>${cfg.rule}</div>
+      <div class="scard pop">${cfg.show(items[items.length - 1])}</div>
+      <div class="smark" id="smark"></div><div class="dim small center">${items.length}/${total}</div>`;
+  };
+  const step = () => {
+    if (items.length >= total) { ended = true; return later(() => ctx.done(D, `카드 ${total}장 · 버저 찬스 ${hits}번 중 ${caught}번 성공`, cfg.rule.replace(/<[^>]+>/g, '')), 900); }
+    const force = items.length >= 2 && Math.random() < 0.28;
+    items.push(cfg.gen(items, force)); taken = false;
+    if (cfg.hit(items)) hits++;
+    draw(); later(step, gap);
+  };
+  barTo(Infinity); B.score(D);
+  B.mid.innerHTML = `<div class="q"><small>규칙</small>${cfg.rule}</div><div class="center dim">곧 시작해요…</div>`;
+  later(step, 2200);
+}
+const SNAP_SETS = [['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒'], ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼'], ['🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '🟤'], ['⭐', '🌙', '☀️', '⚡', '❄️', '🔥', '💧']];
+PARTY.snap = (ctx) => {
+  const set = pick(SNAP_SETS).slice(0, ctx.hard ? 7 : 5), back = ctx.hard ? 2 : 1;
+  streamGame(ctx, {
+    rule: back === 1 ? '<b>바로 앞 카드와 같으면</b> 버저!' : '<b>두 장 앞 카드와 같으면</b> 버저!',
+    gen: (it, force) => (force && it.length >= back ? it[it.length - back] : pick(set)),
+    hit: (it) => it.length > back && it[it.length - 1] === it[it.length - 1 - back],
+    show: (x) => `<span style="font-size:96px">${x}</span>`,
+  });
+};
+PARTY.sum = (ctx) => {
+  const T = ctx.hard ? between(11, 17) : pick([10, 10, 9, 11, 12]);
+  streamGame(ctx, {
+    rule: `<b>바로 앞 숫자와 더해서 ${T}</b>이면 버저!`,
+    gen: (it, force) => { const prev = it[it.length - 1]; if (force && prev && T - prev >= 1 && T - prev <= 9) return T - prev; return between(1, 9); },
+    hit: (it) => it.length >= 2 && it[it.length - 1] + it[it.length - 2] === T,
+    show: (x) => `<span style="font-size:110px;font-weight:900;color:var(--yel)">${x}</span>`,
+  });
+};
+PARTY.colorbz = (ctx) => {
+  const C = COLORS; // [이름, 색]
+  const mk = () => ({ w: rand(4), c: rand(4) });
+  streamGame(ctx, ctx.hard ? {
+    rule: '<b>글자 색</b>이 <b>바로 앞 카드의 글자 뜻</b>과 같으면 버저!',
+    gen: (it, force) => { const x = mk(); if (force && it.length) x.c = it[it.length - 1].w; return x; },
+    hit: (it) => it.length >= 2 && it[it.length - 1].c === it[it.length - 2].w,
+    show: (x) => `<span style="font-size:80px;font-weight:900;color:${C[x.c][1]}">${C[x.w][0]}</span>`,
+  } : {
+    rule: '<b>글자 뜻과 글자 색이 같으면</b> 버저!',
+    gen: (it, force) => { const x = mk(); if (force) x.c = x.w; else if (Math.random() < 0.8) while (x.c === x.w) x.c = rand(4); return x; },
+    hit: (it) => it[it.length - 1].c === it[it.length - 1].w,
+    show: (x) => `<span style="font-size:80px;font-weight:900;color:${C[x.c][1]}">${C[x.w][0]}</span>`,
+  });
+};
+
+/* ───────── 🎹 기억 릴레이 ───────── */
+PARTY.relay = (ctx) => {
+  const n = ctx.hard ? 4 : 3, PADC = ['#ff4d6d', '#4cc9f0', '#3ddc97', '#ffd23f', '#b388ff', '#ff9f1c', '#f15bb5', '#9ef01a', '#00f5d4', '#e0e0e0', '#7d8199', '#ff7b00', '#5e60ce', '#80ffdb', '#c77dff', '#ffd6a5'];
+  const D = zeroD(ctx), alive = ctx.players.slice(), seq = [rand(n * n), rand(n * n)], per = ctx.timed ? 4000 : 8000;
+  let ti = 0, pos = 0, adding = false, tapEnd = 0, busy = true, rounds = 0;
+  const V = plainScreen(); V.score(ctx, D);
+  const pads = (lit) => `<div class="grid4 simon" style="grid-template-columns:repeat(${n},1fr)">${[...Array(n * n).keys()].map((i) => `<button class="cell relay" data-i="${i}" style="--pc:${PADC[i]}" ${busy ? 'disabled' : ''}>${i === lit ? '<i></i>' : ''}</button>`).join('')}</div>`;
+  const intro = () => {
+    let k = -1; V.mid.innerHTML = `<div class="q"><small>처음 ${seq.length}개를 외우세요</small>잘 보세요!</div>${pads(-1)}`;
+    const show = () => { k++; if (k >= seq.length * 2) { busy = false; return turn(); } V.mid.innerHTML = `<div class="q"><small>처음 ${seq.length}개를 외우세요</small>잘 보세요!</div>${pads(k % 2 === 0 ? seq[k / 2] : -1)}`; later(show, k % 2 === 0 ? 650 : 250); };
+    later(show, 600);
+  };
+  const out = (p, why) => {
+    busy = true; D[p.id] -= 20; alive.splice(alive.indexOf(p), 1); V.score(ctx, D);
+    V.mid.innerHTML = `<div class="boom pop">🙅</div><div class="q">${pname(p)} 탈락!<br><small>${esc(why)} · 지금까지 ${seq.length}개</small></div>`;
+    later(() => {
+      if (alive.length <= (ctx.players.length > 1 ? 1 : 0)) { if (alive[0]) D[alive[0].id] += 40; return ctx.done(D, alive[0] ? `🏆 ${alive[0].n} 최후의 1인! (${seq.length}개)` : `최고 기록 ${seq.length - 1}개`, ''); }
+      ti = ti % alive.length; busy = false; turn();
+    }, 1800);
+  };
+  const turn = () => {
+    const p = alive[ti % alive.length]; pos = 0; adding = false; tapEnd = Date.now() + per;
+    V.mid.innerHTML = `<div class="q"><small>지금까지 나온 순서대로 ${seq.length}개를 누른 뒤, 하나를 새로 추가 · 성공할 때마다 +10</small>${pname(p)} 차례</div><div class="center dim" id="rinfo">1/${seq.length}</div>${pads(-1)}`;
+    V.mid.querySelectorAll('.relay').forEach((b) => { b.onclick = () => {
+      if (busy) return; const i = Number(b.dataset.i); b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); tapEnd = Date.now() + per;
+      if (adding) { seq.push(i); D[p.id] += 10; V.score(ctx, D); rounds++; busy = true; later(() => { busy = false; ti = (ti + 1) % alive.length; turn(); }, 500); return; }
+      if (i !== seq[pos]) return out(p, `${pos + 1}번째가 틀렸다`);
+      pos++; const ri = document.getElementById('rinfo');
+      if (pos >= seq.length) { adding = true; if (ri) ri.innerHTML = '<b style="color:var(--yel)">좋아요! 이제 하나를 추가하세요</b>'; } else if (ri) ri.textContent = `${pos + 1}/${seq.length}`;
+    }; });
+  };
+  intro();
+  every(() => { if (busy) return; barTo(tapEnd, per); if (Date.now() > tapEnd) out(alive[ti % alive.length], '시간 초과'); }, 150);
+};
+
+/* ───────── 💣 시한폭탄 ───────── */
+PARTY.bomb = (ctx) => {
+  const fuse = (ctx.hard ? between(18, 35) : between(15, 30)) * 1000, D = zeroD(ctx), boomAt = Date.now() + fuse;
+  let hi = 0, passes = 0, over = false;
+  const V = plainScreen(); V.score(ctx, D); barTo(Infinity);
+  const task = () => {
+    if (over) return;
+    const p = ctx.players[hi % ctx.players.length];
+    let a, b, op, ans;
+    if (ctx.hard) { op = pick(['×', '+', '−']); a = between(6, 19); b = between(3, 12); ans = op === '×' ? a * b : op === '+' ? a + b : a - b; }
+    else { op = pick(['+', '−']); a = between(5, 30); b = between(2, 15); ans = op === '+' ? a + b : a - b; }
+    const opts = shuffle([ans, ans + pick([1, 2, 10]), ans - pick([1, 2, 10]), ans + pick([3, -3, 5, -5])].filter((x, i, arr) => arr.indexOf(x) === i)).slice(0, 4);
+    while (opts.length < 4) opts.push(ans + opts.length * 7);
+    V.mid.innerHTML = `<div class="bombi">💣</div><div class="q"><small>맞히면 다음 사람에게 넘어가요 · 터질 때 들고 있으면 −50, 나머지 +20</small>${pname(p)}이 들고 있다!</div>
+      <div class="bignum" style="font-size:52px">${a} ${op} ${b}</div>
+      <div class="opts" style="grid-template-columns:1fr 1fr">${shuffle(opts).map((x) => `<button class="opt" data-v="${x}" style="text-align:center;font-size:26px;border-color:${p.c}">${x}</button>`).join('')}</div>`;
+    V.mid.querySelectorAll('[data-v]').forEach((b2) => { b2.onclick = () => {
+      if (over) return;
+      if (Number(b2.dataset.v) === ans) { passes++; hi++; task(); } else { b2.disabled = true; b2.classList.add('wrongopt'); toast('❌ 틀렸어요! 다른 걸 골라요'); }
+    }; });
+  };
+  task();
+  every(() => {
+    if (over) return;
+    const left = boomAt - Date.now(), b = document.querySelector('.bombi');
+    if (b) b.style.animationDuration = (left < 4000 ? 0.25 : left < 9000 ? 0.5 : 1) + 's';
+    if (left <= 0) {
+      over = true; const p = ctx.players[hi % ctx.players.length];
+      ctx.players.forEach((q) => { D[q.id] = q === p ? -50 : 20; }); V.score(ctx, D);
+      V.mid.innerHTML = `<div class="boom pop">💥</div><div class="q">${pname(p)}의 손에서 펑!</div>`;
+      later(() => ctx.done(D, `💥 ${p.n} — ${(fuse / 1000).toFixed(0)}초 만에 폭발`, `폭탄은 ${passes}번 넘어갔다`), 2000);
+    }
+  }, 150);
+};
+
+/* ───────── 🃏 블랙잭 (목표 숫자는 매번 다르다) ───────── */
+PARTY.bj = (ctx) => {
+  const T = ctx.hard ? pick([24, 27, 31]) : pick([21, 21, 18, 24]), D = zeroD(ctx), hands = {}, per = ctx.timed ? ctx.limit : Infinity;
+  const deck = shuffle([].concat(...[1, 2, 3, 4].map(() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10])));
+  let pi = 0, turnEnd = 0, busy = false;
+  const V = plainScreen(); V.score(ctx, D);
+  const sum = (h) => h.reduce((a, b) => a + b, 0);
+  ctx.players.forEach((p) => { hands[p.id] = [deck.pop(), deck.pop()]; });
+  const table = () => `<div class="bjt">${ctx.players.map((p, i) => `<div class="bjr ${i === pi && !busy ? 'cur' : ''}" style="--c:${p.c}"><b>${esc(p.n)}</b><span>${hands[p.id].map((c) => `<i>${c}</i>`).join('')}</span><em class="${sum(hands[p.id]) > T ? 'neg' : ''}">${sum(hands[p.id])}</em></div>`).join('')}</div>`;
+  const draw = (msg) => {
+    const p = ctx.players[pi]; turnEnd = Date.now() + per;
+    V.mid.innerHTML = `<div class="q"><small>${T}에 가장 가까운 사람이 승리 · ${T}을 넘으면 버스트(−10) · 그림 카드는 10</small>목표 <b style="color:var(--yel)">${T}</b> · ${pname(p)} 차례</div>${table()}
+      ${msg ? `<div class="center" style="font-weight:800">${msg}</div>` : ''}
+      <div class="two"><button id="hit">🃏<br><span style="font-size:18px">한 장 더</span></button><button id="stand">✋<br><span style="font-size:18px">멈춤</span></button></div>`;
+    document.getElementById('hit').onclick = () => { if (busy) return; hands[p.id].push(deck.pop()); if (sum(hands[p.id]) > T) { busy = true; draw('💥 버스트!'); V.mid.querySelector('.two').remove(); later(nextP, 1300); } else draw(); };
+    document.getElementById('stand').onclick = () => { if (!busy) nextP(); };
+  };
+  const nextP = () => {
+    busy = false; pi++;
+    if (pi < ctx.players.length) return draw();
+    const ok = ctx.players.filter((p) => sum(hands[p.id]) <= T), best = ok.length ? Math.max(...ok.map((p) => sum(hands[p.id]))) : -1, notes = {};
+    const W = ok.filter((p) => sum(hands[p.id]) === best);
+    ctx.players.forEach((p) => { const s = sum(hands[p.id]); D[p.id] = s > T ? -10 : W.includes(p) ? Math.round((ctx.players.length > 1 ? 60 : s === T ? 100 : 40) / W.length) + (s === T ? 20 : 0) : 0; notes[p.id] = `${hands[p.id].join('+')} = ${s}${s > T ? ' 버스트' : s === T ? ' 🎯 딱 맞음!' : ''}`; });
+    ctx.done(D, `목표 ${T} · ${W.length ? W.map((p) => p.n).join(', ') + ' 승리' : '모두 버스트'}`, '', notes);
+  };
+  draw();
+  every(() => { if (busy) return; barTo(turnEnd, per); if (Date.now() > turnEnd) nextP(); }, 150);
+};
+
+/* ───────── 👆 연타 대결 ───────── */
+PARTY.mash = (ctx) => {
+  const dur = pick([5000, 6000, 7000]), D = zeroD(ctx), cnt = {}; ctx.players.forEach((p) => { cnt[p.id] = 0; });
+  let phase = 'ready', endAt = 0;
+  const B = buzzScreen(ctx, (id) => { if (phase !== 'go') return; cnt[id]++; const el = document.getElementById('bs_' + id); if (el) el.textContent = cnt[id] + '회'; });
+  B.enable(ctx.players.map((p) => p.id));
+  const show = (t) => { B.mid.innerHTML = `<div class="q"><small>${dur / 1000}초 동안 자기 버튼을 최대한 많이!</small>연타 대결</div><div class="rpad" style="background:#20264f">${t}</div>`; };
+  show('준비…'); let n = 3;
+  const cd = () => { if (n > 0) { show(String(n)); n--; later(cd, 700); } else { phase = 'go'; endAt = Date.now() + dur; show('누르세요!'); } };
+  later(cd, 700);
+  every(() => {
+    if (phase !== 'go') return; barTo(endAt, dur);
+    if (Date.now() > endAt) {
+      phase = 'end'; B.enable([]);
+      const rk = ctx.players.slice().sort((a, b) => cnt[b.id] - cnt[a.id]), pts = [50, 25, 10, 0], notes = {};
+      rk.forEach((p, i) => { D[p.id] = ctx.players.length > 1 ? (i > 0 && cnt[p.id] === cnt[rk[i - 1].id] ? D[rk[i - 1].id] : pts[i]) : Math.min(80, cnt[p.id]); notes[p.id] = `${cnt[p.id]}회 (초당 ${(cnt[p.id] / (dur / 1000)).toFixed(1)}회)`; });
+      show(`🏁 ${esc(rk[0].n)} ${cnt[rk[0].id]}회!`);
+      later(() => ctx.done(D, `${dur / 1000}초 연타 · 1등 ${rk[0].n} ${cnt[rk[0].id]}회`, '', notes), 1500);
+    }
+  }, 100);
 };

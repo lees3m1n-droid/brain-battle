@@ -2,7 +2,7 @@
 const vm = require('vm'), fs = require('fs'), path = require('path');
 const ctx = { Buffer, console, Math, JSON, Set, Map, Number, String, Array, Object, RegExp, Date };
 vm.createContext(ctx);
-for (const f of ['expr.js', 'data.js', 'data2.js', 'gen.js', 'gen2.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '../src', f), 'utf8').replace(/^const /gm, 'var '), ctx);
+for (const f of ['expr.js', 'data.js', 'data2.js', 'data3.js', 'gen.js', 'gen2.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '../src', f), 'utf8').replace(/^const /gm, 'var '), ctx);
 vm.runInContext(`
 const fail = (m) => { throw new Error(m); };
 const used = new Set(), ids = ['aa', 'bb', 'cc', 'dd'];

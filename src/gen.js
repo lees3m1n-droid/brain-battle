@@ -57,10 +57,17 @@ const TYPES = {
   quiz:     { emoji: '🔔', label: '버저 퀴즈',     cat: '파티', limit: 150, style: 'party', minP: 2, desc: '문제를 보고 아는 사람이 먼저 버저! 틀리면 그 문제는 다시 못 누른다' },
   reaction: { emoji: '🚦', label: '반응속도',      cat: '파티', limit: 60, style: 'party', minP: 2, speed: true, desc: '화면이 초록색이 되는 순간 자기 버튼을 눌러라. 먼저 누르면 감점!' },
   nunchi:   { emoji: '🙈', label: '눈치 게임',     cat: '파티', limit: 20, style: 'party', minP: 3, desc: '한 명씩 차례로 버튼! 동시에 누르면 둘 다 탈락, 끝까지 못 누르면 탈락' },
-  updown:   { emoji: '💣', label: '업다운 폭탄',   cat: '파티', limit: 12, style: 'party', minP: 2, desc: '숨은 폭탄 숫자를 피해 차례로 숫자를 부른다. 폭탄을 부르면 펑!' },
+  updown:   { emoji: '🔢', label: '업다운 폭탄',   cat: '파티', limit: 12, style: 'party', minP: 2, desc: '숨은 폭탄 숫자를 피해 차례로 숫자를 부른다. 폭탄을 부르면 펑!' },
   g369:     { emoji: '👏', label: '369 게임',      cat: '파티', limit: 3, style: 'party', minP: 2, desc: '차례대로 숫자를 세다가 규칙에 걸리면 짝! 규칙과 시작 숫자는 매번 바뀐다' },
   hilo:     { emoji: '📈', label: '하이 로우',     cat: '파티', limit: 8, style: 'party', desc: '다음 카드가 더 높을까 낮을까? 연속으로 맞힐수록 점수가 쌓인다' },
   stopwatch:{ emoji: '⏱️', label: '타이밍 스톱',   cat: '파티', limit: 30, style: 'party', desc: '눈 감고도 시간을 셀 수 있을까? 목표 시간에 가장 가깝게 멈춰라' },
+  snap:     { emoji: '🖐️', label: '같은 그림 스냅', cat: '파티', limit: 60, style: 'party', desc: '카드가 한 장씩 넘어간다. 앞 카드와 같은 그림이 나오면 버저! (어려움: 두 장 앞)' },
+  sum:      { emoji: '🔟', label: '합 스냅',       cat: '파티', limit: 60, style: 'party', desc: '숫자가 한 장씩 넘어간다. 바로 앞 숫자와 더해 목표 숫자가 되면 버저! 목표는 매번 바뀐다' },
+  colorbz:  { emoji: '🌈', label: '색깔 버저',     cat: '파티', limit: 60, style: 'party', desc: '글자 뜻과 색이 같을 때만 버저! (어려움: 색이 앞 카드의 뜻과 같을 때)' },
+  relay:    { emoji: '🎹', label: '기억 릴레이',   cat: '파티', limit: 60, style: 'party', desc: '앞사람까지의 순서를 그대로 누르고 하나를 더한다. 틀리면 탈락, 최후의 1인이 승리' },
+  bomb:     { emoji: '💣', label: '시한폭탄',      cat: '파티', limit: 40, style: 'party', minP: 2, desc: '계산을 맞혀야 다음 사람에게 넘길 수 있다. 언제 터질지는 아무도 모른다' },
+  bj:       { emoji: '🂡', label: '블랙잭',        cat: '파티', limit: 15, style: 'party', desc: '카드를 더 받을까 멈출까? 목표 숫자에 가장 가까우면 승리. 넘으면 버스트!' },
+  mash:     { emoji: '👆', label: '연타 대결',     cat: '파티', limit: 10, style: 'party', minP: 2, speed: true, desc: '정해진 시간 동안 자기 버튼을 누구보다 많이 눌러라!' },
   liarw:    { emoji: '🤥', label: '라이어 게임',   cat: '파티', limit: 120, style: 'party', minP: 3, desc: '모두 같은 제시어를 받지만 라이어만 모른다. 설명을 듣고 라이어를 찾아라' },
 };
 for (const t of Object.values(TYPES)) { if (!t.style) t.style = t.social ? 'secret' : 'turn'; if (!t.minP) t.minP = t.social ? 2 : 1; }
@@ -129,8 +136,13 @@ function fromPool(list, used, tag) {
   if (!idx.length) idx = list.map((_, i) => i);
   const i = pick(idx); used.add(tag + i); return list[i];
 }
-function makeTrivia(used) {
-  const [cat, text, right, ...rest] = fromPool(TRIVIA, used, 't');
+// 어려움(무제한)은 어려운 문제만, 타임어택은 절반 정도 섞는다
+function makeTrivia(used, hard) {
+  const hardOnly = hard || Math.random() < 0.5, lo = hardOnly ? TRIVIA_HARD_START : 0, hi = hardOnly ? TRIVIA.length : TRIVIA_HARD_START;
+  let idx = []; for (let i = lo; i < hi; i++) if (!used.has('t' + i)) idx.push(i);
+  if (!idx.length) for (let i = lo; i < hi; i++) idx.push(i);
+  const ti = pick(idx); used.add('t' + ti);
+  const [cat, text, right, ...rest] = TRIVIA[ti];
   const options = shuffle([right, ...rest.slice(0, 3)]);
   return { pub: { cat, text, options }, secret: { ans: options.indexOf(right) }, answerText: right, expl: rest[3] || '' };
 }
@@ -260,7 +272,7 @@ function makeQ(type, ctx) {
     case 'mental': return makeMental(hard);
     case 'sequence': return makeSequence(hard);
     case 'fermi': return makeFermi(used);
-    case 'trivia': return makeTrivia(used);
+    case 'trivia': return makeTrivia(used, hard);
     case 'timeline': return makeTimeline(used, hard);
     case 'chosung': return makeChosung(used, hard);
     case 'liar': return makeLiar(hard);
@@ -271,10 +283,21 @@ function makeQ(type, ctx) {
     default: return GEN2[type] ? GEN2[type](hard, ids) : { pub: {}, secret: {} };
   }
 }
+// 파티 게임 비중: 2명 이상이면 라운드의 절반 정도를 파티로
 function buildPlan(n, playerCount, mode, cats) {
   let types = Object.keys(TYPES).filter((t) => playerCount >= TYPES[t].minP && !(mode === 'free' && TYPES[t].speed));
   if (cats && cats.length) { const f = types.filter((t) => cats.includes(TYPES[t].cat)); if (f.length) types = f; }
+  const party = types.filter((t) => TYPES[t].cat === '파티'), rest = types.filter((t) => TYPES[t].cat !== '파티');
+  const share = !party.length ? 0 : !rest.length ? 1 : playerCount >= 2 ? 0.5 : 0.3;
+  const bags = { p: [], r: [] }, draw = (k, list) => { if (!bags[k].length) bags[k] = shuffle(list); return bags[k].pop(); };
   const plan = [];
-  while (plan.length < n) { const bag = shuffle(types); if (plan.length && bag[0] === plan[plan.length - 1]) bag.push(bag.shift()); plan.push(...bag); }
-  return plan.slice(0, n);
+  let quota = Math.round(n * share);
+  for (let i = 0; i < n; i++) {
+    const wantP = party.length && (quota > 0 && (Math.random() < quota / (n - i) || !rest.length));
+    let t = wantP ? draw('p', party) : draw('r', rest);
+    if (plan.length && t === plan[plan.length - 1]) t = wantP ? draw('p', party) : draw('r', rest);
+    if (wantP) quota--;
+    plan.push(t);
+  }
+  return plan;
 }

@@ -1,7 +1,7 @@
 {
   "name": "brain-battle",
-  "version": "4.0.0",
-  "description": "두뇌 배틀 — 한 기기로 여럿이 하는 49종 두뇌·파티 게임 (타임어택·무제한 모드)",
+  "version": "4.1.0",
+  "description": "두뇌 배틀 — 한 기기로 1~4명이 하는 56종 두뇌·파티 게임 (타임어택·무제한 모드)",
   "scripts": {
     "build": "node build.js",
     "test": "node test/gen_test.js"

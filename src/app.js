@@ -11,9 +11,10 @@ const sgn = (n) => (n > 0 ? '+' : n < 0 ? '−' : '±') + fmt(Math.abs(n));
 let toastT;
 function toast(m) { $toast.textContent = m; $toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => $toast.classList.remove('show'), 2400); }
 const cleanName = (s) => String(s || '').replace(/[<>\u0000-\u001f]/g, '').trim().slice(0, 8);
-const PALETTE = ['#ff4d6d', '#ffd23f', '#3ddc97', '#4cc9f0', '#b388ff', '#ff9f1c', '#f15bb5', '#9ef01a'];
+const PALETTE = ['#ff4d6d', '#4cc9f0', '#3ddc97', '#ffd23f'];
+const PNAMES = ['빨강', '파랑', '초록', '노랑'];
 const CATS = ['수학', '상식', '퍼즐', '두뇌', '심리', '파티'];
-const MAX_PLAYERS = 8;
+const MAX_PLAYERS = 4;
 const STYLE_TXT = {
   turn: ['📱', '차례대로 돌려 가며', '한 명씩 기기를 넘겨받아 각자 자기 문제를 풀어요. 다른 사람 화면은 보지 마세요!'],
   secret: ['🤫', '몰래 고르기', '한 명씩 기기를 넘겨받아 아무도 모르게 고른 뒤, 마지막에 한꺼번에 공개해요.'],
@@ -22,7 +23,8 @@ const STYLE_TXT = {
 
 /* ═════════════ 설정 (기기에 저장) ═════════════ */
 let setup = (() => { try { return JSON.parse(ls.get('bb:setup')) || null; } catch (e) { return null; } })();
-if (!setup || !Array.isArray(setup.names)) setup = { names: [], mode: 'time', rounds: 10, cats: CATS.slice() };
+if (!setup || typeof setup !== 'object') setup = { mode: 'time', rounds: 10, cats: CATS.slice() };
+if (!(setup.count >= 1 && setup.count <= MAX_PLAYERS)) setup.count = 2;
 if (![6, 10, 15, 20].includes(setup.rounds)) setup.rounds = 10;
 setup.cats = (setup.cats || []).filter((c) => CATS.includes(c)); if (!setup.cats.length) setup.cats = CATS.slice();
 if (!setup.cats.includes('파티') && !setup.sawParty) { setup.cats.push('파티'); setup.sawParty = 1; }
@@ -40,9 +42,9 @@ const shim = (meId) => { S = { me: meId, players: G.players.map((p) => ({ pid: p
 function availTypes(n, mode, cats) { return Object.keys(TYPES).filter((t) => n >= TYPES[t].minP && !(mode === 'free' && TYPES[t].speed) && cats.includes(TYPES[t].cat)); }
 
 function startGame() {
-  const names = setup.names.length ? setup.names : ['나'];
+  const names = setup.count === 1 ? ['나'] : PNAMES.slice(0, setup.count);
   G = {
-    players: names.map((n, i) => ({ id: 'p' + i, n, c: PALETTE[i % PALETTE.length], s: 0, fx: [], stats: { correct: 0, best: 0, steals: 0, speedSum: 0, speedN: 0 } })),
+    players: names.map((n, i) => ({ id: 'p' + i, n, c: PALETTE[i], s: 0, stats: { correct: 0, best: 0, steals: 0, speedSum: 0, speedN: 0 } })),
     mode: setup.mode, rounds: setup.rounds, cats: setup.cats.slice(), idx: -1, used: new Set(),
   };
   G.plan = buildPlan(G.rounds, G.players.length, G.mode, G.cats);
@@ -115,14 +117,12 @@ function runTurns() {
 }
 function playTurn(p, onDone) {
   const t = G.type, Q = makeQ(t, { used: G.used, hard: hard(), ids: G.players.map((x) => x.id) });
-  const fx = p.fx.filter((f) => !(f === 'shrink' && !timed())); p.fx = [];
-  const base = TYPES[t].limit * 1000, lim = timed() ? (fx.includes('shrink') ? Math.round(base * 0.65) : base) : 0;
-  const FXN = { fog: '🌫️ 안개 — 문제가 흐릿하게 시작돼요', mirror: '🪞 거울 — 문제가 뒤집혔어요', shrink: '⏳ 시간 단축 — 제한시간 35% 감소' };
+  const fx = [];
+  const lim = timed() ? TYPES[t].limit * 1000 : 0;
   shim(p.id);
   $app.innerHTML = `
     <div class="topbar">${roundBadge()}<span class="badge" style="border-color:${p.c};color:${p.c}">${esc(p.n)}</span></div>
     <div class="timer ${lim ? '' : 'free'}"><i id="tbar"></i></div>
-    ${fx.length ? `<div class="fxbar">${fx.map((f) => FXN[f]).join('<br>')}</div>` : ''}
     <div class="row"><span class="grow"></span><span class="badge" id="tsec"></span></div>
     <div id="stage" class="col"></div>
     ${lim ? '' : '<button class="sec" id="giveup">🏳️ 포기</button>'}`;
@@ -228,7 +228,7 @@ function runSecret() {
 /* ═════════════ 다같이 (파티) ═════════════ */
 function runParty() {
   PARTY[G.type]({
-    players: order(), hard: hard(), timed: timed(), limit: TYPES[G.type].limit * 1000,
+    players: order(), seats: G.players, hard: hard(), timed: timed(), limit: TYPES[G.type].limit * 1000,
     done: (deltas, at, ex, notes) => {
       // 한 라운드에서 잃는 점수는 최대 100점까지
       const rows = G.players.map((p) => { const d = Math.max(-100, deltas[p.id] || 0); return { id: p.id, ok: d > 0, d, note: ((notes && notes[p.id]) || '') + (d !== (deltas[p.id] || 0) ? ' (감점은 최대 −100)' : ''), sh: '' }; });
@@ -260,29 +260,7 @@ function revealView(res) {
     <button class="big" id="nx">${last ? '최종 결과 🏆' : '다음 라운드 ▶'}</button>`;
   document.getElementById('qt').onclick = quit;
   document.getElementById('nx').onclick = nextRound;
-  if (winner && !last) sabotagePanel(winner);
 }
-function sabotagePanel(w) {
-  const box = document.getElementById('card'); let kind = null, target = null;
-  const kinds = Object.entries(SABOTAGE).filter(([, v]) => !(G.mode === 'free' && v.timeOnly));
-  const draw = () => {
-    box.innerHTML = `<div class="card2 col"><b style="color:var(--vio)">🏆 라운드 1등 ${pname(w)} — 방해 카드를 쓸 수 있어요</b>
-      <div class="sab">${kinds.map(([k, v]) => `<button data-k="${k}" class="${kind === k ? 'sel' : ''}">${v.emoji} ${v.label}<small>${v.desc}${k === 'steal' ? '' : ' (다음 차례 게임)'}</small></button>`).join('')}</div>
-      <div class="chips">${G.players.filter((p) => p !== w).map((p) => `<button class="chip" style="${target === p.id ? 'background:var(--vio);color:#10122a' : 'color:var(--txt)'};padding:8px 12px;font-size:15px" data-t="${p.id}"><i class="dot" style="background:${p.c}"></i>${esc(p.n)}</button>`).join('')}</div>
-      <div class="row"><button class="sec grow" id="skip">안 쓸래요</button><button class="pink grow" id="fire" ${kind && target ? '' : 'disabled'}>발동!</button></div></div>`;
-    box.querySelectorAll('[data-k]').forEach((b) => { b.onclick = () => { kind = b.dataset.k; draw(); }; });
-    box.querySelectorAll('[data-t]').forEach((b) => { b.onclick = () => { target = b.dataset.t; draw(); }; });
-    document.getElementById('skip').onclick = () => { box.innerHTML = ''; };
-    document.getElementById('fire').onclick = () => {
-      const T = G.players.find((p) => p.id === target); const v = SABOTAGE[kind];
-      if (kind === 'steal') { const amt = Math.min(40, Math.max(0, T.s)); T.s -= amt; w.s += amt; w.stats.steals++; } else T.fx.push(kind);
-      box.innerHTML = `<div class="card2 center pop"><div class="small dim">방해 카드 발동</div><b style="font-size:18px">${v.emoji} ${esc(w.n)} → ${esc(T.n)} : ${v.label}</b></div>`;
-      const bd = document.querySelector('.board'); if (bd) bd.outerHTML = boardHTML();
-    };
-  };
-  draw();
-}
-
 /* ═════════════ 최종 ═════════════ */
 function finalView() {
   PT.clear();
@@ -292,7 +270,6 @@ function finalView() {
   if (P.length > 1) {
     const mc = by((p) => p.stats.correct); if (mc.stats.correct) aw.push(['🎓', '정답왕', mc, `${mc.stats.correct}라운드 득점`]);
     const sp = P.filter((p) => p.stats.speedN); if (sp.length) { const f = sp.sort((a, b) => b.stats.speedSum / b.stats.speedN - a.stats.speedSum / a.stats.speedN)[0]; aw.push(['⚡', '번개손', f, '정답 속도 1위']); }
-    const th = by((p) => p.stats.steals); if (th.stats.steals) aw.push(['🫳', '소매치기', th, `${th.stats.steals}회 강탈`]);
     const bw = by((p) => p.stats.best); if (bw.stats.best > 0) aw.push(['💥', '한 방', bw, `한 라운드 +${bw.stats.best}`]);
   }
   const order3 = [rk[1], rk[0], rk[2]].filter(Boolean), hts = [150, 110, 80], medal = ['🥇', '🥈', '🥉'];
@@ -325,45 +302,28 @@ setInterval(() => {
 /* ═════════════ 처음 화면 (설정) ═════════════ */
 function homeView() {
   PT.clear(); turnActive = null;
-  const n = setup.names.length, avail = availTypes(Math.max(1, n), setup.mode, setup.cats);
+  const n = setup.count, avail = availTypes(n, setup.mode, setup.cats);
   $app.innerHTML = `
     <div class="logo">두뇌 배틀</div>
     <div class="tag">한 기기로 다같이! ${Object.keys(TYPES).length}가지 두뇌 대결 🧠</div>
     <div class="card col">
-      <div class="row"><b class="grow">참가자</b><span class="dim small">${n ? `${n}명` : '없으면 혼자 연습'} · 최대 ${MAX_PLAYERS}명</span></div>
-      <div class="chips">${setup.names.map((nm, i) => `<span class="chip"><i class="dot" style="background:${PALETTE[i]}"></i>${esc(nm)} <button class="rm" data-i="${i}" aria-label="빼기">✕</button></span>`).join('')}</div>
-      ${n < MAX_PLAYERS ? `<div class="row"><input id="nm" type="text" maxlength="8" placeholder="이름 (최대 8자)" autocomplete="off"><button class="sec" id="add" style="flex:none">추가</button></div>` : ''}
-    </div>
-    <div class="card col">
+      <b>몇 명이서 할까요?</b>
+      <div class="pcount">${[1, 2, 3, 4].map((k) => `<button data-n="${k}" class="${n === k ? 'sel' : ''}"><span>${k === 1 ? '🙋' : [...Array(k)].map((_, i) => `<i style="background:${PALETTE[i]}"></i>`).join('')}</span>${k === 1 ? '혼자' : k + '명'}</button>`).join('')}</div>
       <b>모드</b>
       <div class="two mode"><button data-m="time" class="${setup.mode === 'time' ? 'sel' : ''}">⏱<br><span>타임어택</span><small>제한시간 · 빠를수록 고득점</small></button><button data-m="free" class="${setup.mode === 'free' ? 'sel' : ''}">♾️<br><span>무제한</span><small>어려운 문제 · 시간 무제한</small></button></div>
       <b>라운드 수</b><div class="row">${[6, 10, 15, 20].map((r) => `<button class="${setup.rounds === r ? '' : 'sec'} grow" data-r="${r}">${r}</button>`).join('')}</div>
       <b>게임 종류</b><div class="chips">${CATS.map((c) => `<button class="chip ${setup.cats.includes(c) ? 'on' : 'off'}" data-c="${c}">${c}</button>`).join('')}</div>
-      <div class="dim small">나올 수 있는 게임 ${avail.length}종${n < 2 ? ' · 혼자면 심리전·일부 파티 게임은 빠져요' : n < 3 ? ' · 3명부터 라이어 게임·눈치 게임·이심전심이 나와요' : ''}${setup.mode === 'free' ? ' · 속도만 겨루는 게임은 빠져요' : ''}</div>
-      <button class="big grn" id="go" ${avail.length ? '' : 'disabled'}>게임 시작 ${n > 1 ? `(${n}명)` : '(혼자)'}</button>
+      <div class="dim small">나올 수 있는 게임 ${avail.length}종${n < 2 ? ' · 혼자면 심리전·대결형 파티 게임은 빠져요' : n < 3 ? ' · 3명부터 라이어 게임·눈치 게임·이심전심이 나와요' : ''}${setup.mode === 'free' ? ' · 속도만 겨루는 게임은 빠져요' : ''}</div>
+      <button class="big grn" id="go" ${avail.length ? '' : 'disabled'}>게임 시작</button>
     </div>
     <div class="card small dim" style="line-height:1.7">
-      <b style="color:var(--txt)">이렇게 놀아요</b><br>
-      📱 <b style="color:var(--txt)">차례 게임</b> 기기를 돌려 가며 각자 자기 문제를 푼다 (문제는 사람마다 새로 만들어진다)<br>
+      📱 <b style="color:var(--txt)">차례 게임</b> 기기를 돌려 가며 각자 자기 문제를 푼다<br>
       🤫 <b style="color:var(--txt)">심리전</b> 한 명씩 몰래 고르고 한꺼번에 공개<br>
-      🫶 <b style="color:var(--txt)">파티</b> 기기를 가운데 두고 둘러앉아 자기 버튼으로 버저!<br><br>
-      ${CATS.map((c) => `<b style="color:var(--cyan)">${c}</b> ${Object.values(TYPES).filter((t) => t.cat === c).map((t) => t.emoji + ' ' + t.label).join(' · ')}`).join('<br>')}<br><br>
-      라운드 1등은 다른 사람에게 <b style="color:var(--vio)">방해 카드</b>를 날릴 수 있어요. 심리전·파티 게임 일부는 더 지니어스·데블스 플랜 같은 서바이벌 예능의 게임을 바탕으로 했어요.
+      🫶 <b style="color:var(--txt)">파티</b> 기기를 가운데 두고 둘러앉아 자기 색 버튼으로 버저!
     </div>`;
-  const add = () => {
-    const el = document.getElementById('nm'); const v = cleanName(el.value);
-    if (!v) return toast('이름을 입력하세요');
-    if (setup.names.includes(v)) return toast('같은 이름이 있어요');
-    setup.names.push(v); saveSetup(); homeView();
-    const e2 = document.getElementById('nm'); if (e2) e2.focus();
-  };
-  const addB = document.getElementById('add'); if (addB) { addB.onclick = add; document.getElementById('nm').onkeydown = (e) => { if (e.key === 'Enter') add(); }; }
-  $app.querySelectorAll('.rm').forEach((b) => { b.onclick = () => { setup.names.splice(Number(b.dataset.i), 1); saveSetup(); homeView(); }; });
+  $app.querySelectorAll('[data-n]').forEach((b) => { b.onclick = () => { setup.count = Number(b.dataset.n); saveSetup(); homeView(); }; });
   $app.querySelectorAll('[data-m]').forEach((b) => { b.onclick = () => { setup.mode = b.dataset.m; saveSetup(); homeView(); }; });
   $app.querySelectorAll('[data-r]').forEach((b) => { b.onclick = () => { setup.rounds = Number(b.dataset.r); saveSetup(); homeView(); }; });
   $app.querySelectorAll('[data-c]').forEach((b) => { b.onclick = () => { const c = b.dataset.c; const nx = setup.cats.includes(c) ? setup.cats.filter((x) => x !== c) : [...setup.cats, c]; if (!nx.length) return toast('하나는 골라야 해요'); setup.cats = nx; saveSetup(); homeView(); }; });
-  document.getElementById('go').onclick = () => {
-    const el = document.getElementById('nm'); if (el && cleanName(el.value)) { add(); return toast('이름을 추가했어요. 한 번 더 누르면 시작!'); }
-    startGame();
-  };
+  document.getElementById('go').onclick = startGame;
 }
